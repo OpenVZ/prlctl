@@ -1,0 +1,75 @@
+///////////////////////////////////////////////////////////////////////////////
+///
+/// @file PrlCtl.cpp"
+///
+/// main()
+///
+/// @author igor@
+///
+/// Copyright (c) 2005-2015 Parallels IP Holdings GmbH
+///
+/// This file is part of OpenVZ. OpenVZ is free software; you can redistribute
+/// it and/or modify it under the terms of the GNU General Public License as
+/// published by the Free Software Foundation; either version 2 of the License,
+/// or (at your option) any later version.
+/// 
+/// This program is distributed in the hope that it will be useful,
+/// but WITHOUT ANY WARRANTY; without even the implied warranty of
+/// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+/// GNU General Public License for more details.
+/// 
+/// You should have received a copy of the GNU General Public License
+/// along with this program; if not, write to the Free Software
+/// Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+/// 02110-1301, USA.
+///
+/// Our contact details: Parallels IP Holdings GmbH, Vordergasse 59, 8200
+/// Schaffhausen, Switzerland.
+///
+///////////////////////////////////////////////////////////////////////////////
+
+#include "PrlSrv.h"
+#include "CmdParam.h"
+#include "PrlCleanup.h"
+#include "Utils.h"
+
+#include <string.h>
+
+int main(int argc, char **argv)
+{
+	int ret = 1;
+
+	cmdParam cmd;
+	PrlSrv *srv = new PrlSrv();
+	PrlCleanup::set_cleanup_handler();
+	if (!strcmp(prl_basename(argv[0]), "prlctl") ||
+		!strcmp(prl_basename(argv[0]), "prlctl.exe"))
+	{
+		CmdParamData param = cmd.get_vm(argc, argv);
+		param.original_id = param.id;
+		normalize_uuid(param.original_id, param.id);
+		if (param.action != InvalidAction)
+		{
+			if (init_sdk_lib())
+				return 1;
+
+			ret = srv->run_action(param);
+		}
+
+		ret = get_error(param.action, ret);
+	} else {
+		CmdParamData param = cmd.get_disp(argc, argv);
+		if (param.action != InvalidAction)
+		{
+			if (init_sdk_lib())
+				return 1;
+
+			ret = srv->run_disp_action(param);
+		}
+	}
+	delete srv;
+
+	deinit_sdk_lib();
+
+	return prlerr2exitcode(ret);
+}
