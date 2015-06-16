@@ -4584,7 +4584,7 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 	else if (!strcmp(argv[i], "prepare-for-uninstall"))
 		return get_disp_param(argc, argv, SrvPrepareForUninstallAction,
 				no_options, ++i);
-	else if (!strcmp(argv[i], "list"))
+	else if (!strcmp(argv[i], "list-network-config"))
 		return get_disp_param(argc, argv, DispListAction,
 				no_options, ++i);
 	else if (!strcmp(argv[i], "up-listen-interface"))

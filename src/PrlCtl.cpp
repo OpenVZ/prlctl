@@ -42,31 +42,19 @@ int main(int argc, char **argv)
 	cmdParam cmd;
 	PrlSrv *srv = new PrlSrv();
 	PrlCleanup::set_cleanup_handler();
-	if (!strcmp(prl_basename(argv[0]), "prlctl") ||
-		!strcmp(prl_basename(argv[0]), "prlctl.exe"))
+
+	CmdParamData param = cmd.get_vm(argc, argv);
+	param.original_id = param.id;
+	normalize_uuid(param.original_id, param.id);
+	if (param.action != InvalidAction)
 	{
-		CmdParamData param = cmd.get_vm(argc, argv);
-		param.original_id = param.id;
-		normalize_uuid(param.original_id, param.id);
-		if (param.action != InvalidAction)
-		{
-			if (init_sdk_lib())
-				return 1;
+		if (init_sdk_lib())
+			return 1;
 
-			ret = srv->run_action(param);
-		}
-
-		ret = get_error(param.action, ret);
-	} else {
-		CmdParamData param = cmd.get_disp(argc, argv);
-		if (param.action != InvalidAction)
-		{
-			if (init_sdk_lib())
-				return 1;
-
-			ret = srv->run_disp_action(param);
-		}
+		ret = srv->run_action(param);
 	}
+
+	ret = get_error(param.action, ret);
 	delete srv;
 
 	deinit_sdk_lib();
