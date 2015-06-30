@@ -4711,8 +4711,9 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	if (!get_ioprio(&val) && val != (unsigned int) -1)
 		f.add("ioprio", val, "", true);
 
-	if (!get_iolimit(&val) && val != (unsigned int) -1)
-		f.add("iolimit", val, "", true);
+	if (!get_iolimit(&val) && val != (unsigned int) -1) {
+		f.add("iolimit", ui2string(val), "", true);
+	}
 
 	if (!get_iopslimit(&val) &&
 			val != (unsigned int) -1 && val != 0) {
