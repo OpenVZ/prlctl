@@ -354,9 +354,7 @@ static Option set_options[] = {
 	{"destroy-image-force",	'\0', OptNoArg, CMD_DESTROY_HDD_FORCE },
 	{"detach-only",		'\0', OptNoArg, CMD_DETACH_HDD},
 	{"password-to-edit",'\0', OptNoArg, CMD_SET_RESTRICT_EDITING},
-#if defined(PRL_PROD_SERVER) || defined(_DEBUG)
 	{"autocompact",		'\0', OptRequireArg, CMD_AUTOCOMPACT},
-#endif
         OPTION_END
 };
 
@@ -825,10 +823,8 @@ static void usage_vm(const char * argv0)
 "	--device-add hdd --device <real_name>\n"
 "		[--iface <ide|scsi|sata>] [--passthr] [--position <n>]\n"
 "		[--subtype <buslogic|lsi-spi|lsi-sas>]\n"
-#if defined(PRL_PROD_SERVER)
 "	--backup-add <ID> [--disk <disk_name>]\n"
 "	--backup-del <ID|all>\n"
-#endif
 "	--device-add cdrom {--device <name> | --image <image>}\n"
 "		[--iface <ide|scsi|sata>] [--passthr] [--position <n>]\n"
 "		[--subtype <buslogic|lsi-spi|lsi-sas>]\n"
