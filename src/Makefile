@@ -49,9 +49,9 @@ depend:
 	g++ $(CFLAGS) -M $(OBJS:.o=.cpp) -M $(prlctl_OBJS:.o=.cpp) -M $(prlsrvctl_OBJS:.o=.cpp) > depend
 
 install:
-	install -d $(DESTDIR)/usr/sbin
-	install -m 755 $(prlctl_BINARY) $(DESTDIR)/usr/sbin
-	install -m 755 $(prlsrvctl_BINARY) $(DESTDIR)/usr/sbin
+	install -d $(DESTDIR)/usr/bin
+	install -m 755 $(prlctl_BINARY) $(DESTDIR)/usr/bin
+	install -m 755 $(prlsrvctl_BINARY) $(DESTDIR)/usr/bin
 
 clean:
 	rm -f *.o $(prlctl_BINARY) $(prlsrvctl_BINARY) depend
