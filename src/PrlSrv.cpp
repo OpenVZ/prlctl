@@ -2587,11 +2587,11 @@ void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
 			else
 				f.tbl_add_item("Type", "%s  ", "shared");
 
-            /* BoundTo */
-            print_boundto_host_only(phVirtNet, f, detailed);
+			/* BoundTo */
+			print_boundto_host_only(phVirtNet, f, detailed);
 
-            if (f.type == OUT_FORMATTER_PLAIN)
-                f.add("", "\n", true, false, true);
+			if (f.type == OUT_FORMATTER_PLAIN)
+				f.add("", "\n", true, false, true);
 
 			print_nat_info(*phVirtNet, f);
 
@@ -2601,8 +2601,20 @@ void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
 			else
 				f.tbl_add_item("Type", "%s  ", "host-only");
 
-            /* BoundTo */
-            print_boundto_host_only(phVirtNet, f, detailed);
+			/* BoundTo */
+			print_boundto_host_only(phVirtNet, f, detailed);
+		}
+		if (detailed)
+		{
+			len = sizeof(buf);
+			ret = PrlVirtNet_GetAdapterName(phVirtNet->get_handle(), buf, &len);
+			if (PRL_SUCCEEDED(ret))
+				f.add("Bridge", buf);
+			else
+			{
+				prl_log(L_ERR, "Error: PrlVirtNet_GetAdapterName"
+					" failed: %s", get_error_str(ret).c_str());
+			}
 		}
 	}
 
