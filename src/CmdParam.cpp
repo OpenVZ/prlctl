@@ -761,7 +761,6 @@ static void usage_vm(const char * argv0)
 "  umount <ID | NAME>\n"
 #endif
 "  move <vm_id|vm_name> --dst <path>\n"
-"  change-passwd <ID | NAME>\n"
 "  problem-report <ID | NAME> <-d,--dump|-s,--send [--proxy [user[:password]@proxyhost[:port]]]> "
 	"[--no-proxy] [--name <your name>] [--email <your E-mail>] [--description <problem description>]\n"
 "  set <ID | NAME>\n"
