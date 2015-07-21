@@ -4625,7 +4625,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	if (get_vm_type() == PVT_CT)
 #endif
 	{
-		f.add("EnvID", get_ctid(), "");
+		f.add("EnvID", get_ctid());
 	}
 
 	f.add("Name", get_name());
