@@ -1672,6 +1672,20 @@ std::string PrlDevNet::get_mac()
 	return out;
 }
 
+std::string PrlDevNet::get_veth_name() const
+{
+	char buf[64] = "";
+	PRL_RESULT ret;
+	unsigned int l = sizeof(buf);
+
+	if ((ret = PrlVmDevNet_GetHostInterfaceName(m_hDev, buf, &l))) {
+		prl_log(L_WARN, "PrlVmDevNet_GetHostInterfaceName:%s",
+			get_error_str(ret).c_str());
+	}
+
+	return std::string(buf);
+}
+
 void PrlDevNet::append_info(PrlOutFormatter &f)
 {
 
@@ -1701,7 +1715,7 @@ void PrlDevNet::append_info(PrlOutFormatter &f)
 
 	std::string vnet = get_vnetwork();
 #ifdef _LIN_
-	f.add("dev", get_veth_name(vm_type, 0, get_idx()), true, true);
+	f.add("dev", get_veth_name(), true, true);
 	std::string ifname = get_sname();
 	if (!ifname.empty())
 		f.add("ifname", ifname.c_str(), true, true);

@@ -4577,7 +4577,8 @@ std::string PrlVm::get_netdev_name()
 			continue;
 		if (!out.empty())
 			out += ",";
-		out += get_veth_name(get_vm_type(), 0, (*it)->get_idx());
+		PrlDevNet *net = dynamic_cast<PrlDevNet *>(*it);
+		out += net->get_veth_name();
 	}
 	return out;
 }

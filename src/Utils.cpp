@@ -1751,19 +1751,6 @@ std::string convert_time(const char *date)
 	return std::string(buf);
 }
 
-std::string get_veth_name(PRL_VM_TYPE type, unsigned int envid, unsigned int id)
-{
-	char buf[64];
-
-	if (type == PVT_CT)
-		snprintf(buf, sizeof(buf), "veth%d.%d", envid, id);
-	else
-		snprintf(buf, sizeof(buf), "vme%08x.%d", envid, id);
-
-	return std::string(buf);
-}
-
-
 static bool s_full_info_mode = false;
 void set_full_info_mode()
 {

@@ -179,6 +179,7 @@ public:
 	void append_info(PrlOutFormatter &f);
 	std::string get_mac();
 
+	std::string get_veth_name() const;
 	virtual ~PrlDevNet()
 	{}
 
