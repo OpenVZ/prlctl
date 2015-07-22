@@ -131,7 +131,6 @@ int normalize_uuid(const std::string &str, std::string &out);
 int get_error(int action, PRL_RESULT res);
 std::string convert_time(const char *date);
 int parse_cpulimit(const char *str, PRL_CPULIMIT_DATA *param);
-std::string get_veth_name(PRL_VM_TYPE type, unsigned int envid, unsigned int id);
 void set_full_info_mode();
 bool is_full_info_mode();
 void normalize_ip(std::string &val);

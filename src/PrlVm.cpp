@@ -4577,7 +4577,8 @@ std::string PrlVm::get_netdev_name()
 			continue;
 		if (!out.empty())
 			out += ",";
-		out += get_veth_name(get_vm_type(), 0, (*it)->get_idx());
+		PrlDevNet *net = dynamic_cast<PrlDevNet *>(*it);
+		out += net->get_veth_name();
 	}
 	return out;
 }
@@ -4625,7 +4626,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	if (get_vm_type() == PVT_CT)
 #endif
 	{
-		f.add("EnvID", get_ctid(), "");
+		f.add("EnvID", get_ctid());
 	}
 
 	f.add("Name", get_name());
