@@ -104,7 +104,11 @@ _prlctl()
 	else
 		for i in $actions_on_vmid; do
 			if [ "${prev}" = "${i}" ]; then
-				opts=$(get_vm_ids)
+				if [ -z "${cur}" ]; then
+					opts=$(get_vms)
+				else
+					opts=$(get_vm_ids)
+				fi
 				break
 			fi
 		done
