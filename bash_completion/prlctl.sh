@@ -4,6 +4,14 @@ get_vms() {
 	prlctl list -a -o name | awk '{if (NR > 1) print $1}'
 }
 
+get_uuids() {
+	prlctl list -a -o uuid | awk '{if (NR > 1) print substr($1,2,36)}'
+}
+
+get_vm_ids() {
+	echo "$(get_vms) \n$(get_uuids)"
+}
+
 get_snaps_names() {
 	# TODO Don't know how to find snaps names easily
 	true
@@ -55,7 +63,7 @@ _prlctl()
 		pause reset resume start stop snapshot snapshot-delete \
 		snapshot-list snapshot-switch suspend statistics unregister \
 		set backup restore backup-list backup-delete reset-uptime \
-		move"
+		move exec"
 	local actions_without_vmid="create list register server"
 
 	local capture_flags='--file'
@@ -96,7 +104,7 @@ _prlctl()
 	else
 		for i in $actions_on_vmid; do
 			if [ "${prev}" = "${i}" ]; then
-				opts=$(get_vms)
+				opts=$(get_vm_ids)
 				break
 			fi
 		done
@@ -133,7 +141,7 @@ _prlctl()
 			opts=$(get_ostemplates)
 			;;
 		--output)
-			opts=$(get_vms)
+			opts=$(get_vm_ids)
 			;;
 		-s|--sort)
 			opts='name -name'
@@ -209,7 +217,7 @@ _prlctl()
 			if [ "${COMP_WORDS[1]}" = 'create' ]; then
 				opts=$(get_ostypes)
 			else
-				opts=$(get_vms)
+				opts=$(get_vm_ids)
 			fi
 			;;
 		-i)
