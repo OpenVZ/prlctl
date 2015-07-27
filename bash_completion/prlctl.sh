@@ -9,7 +9,7 @@ get_uuids() {
 }
 
 get_vm_ids() {
-	echo "$(get_vms) \n$(get_uuids)"
+	printf "$(get_vms)\n$(get_uuids)\n"
 }
 
 get_snaps_names() {
