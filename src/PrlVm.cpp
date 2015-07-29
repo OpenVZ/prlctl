@@ -44,6 +44,7 @@
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlOses.h>
+#include <boost/foreach.hpp>
 
 #include "EventSyncObject.h"
 //#include "Interfaces/ParallelsDomModel.h"
@@ -153,6 +154,7 @@ PRL_VM_TYPE PrlVm::get_vm_type() const
 PrlDev *PrlVm::new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx)
 {
 	PrlDev *dev = 0;
+	PrlDevNet *netDev = 0;
 
 	switch (type) {
 	case DEV_HDD:
@@ -163,8 +165,9 @@ PrlDev *PrlVm::new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx)
 		dev = new PrlDevCdrom(*this, hDev, type, idx);
 		break;
 	case DEV_NET:
-		dev = new PrlDevNet(*this, hDev, type, idx);
-		break;
+		netDev = new PrlDevNet(*this, hDev, type, idx);
+		dev = netDev;
+		m_DevNetList.push_back(netDev);
 	case DEV_FDD:
 		dev = new PrlDevFdd(*this, hDev, type, idx);
 		break;
@@ -4569,16 +4572,11 @@ std::string PrlVm::get_netdev_name()
 
 	get_dev_info();
 
-	PrlDevList::const_iterator it = m_DevList.begin(),
-		eit = m_DevList.end();
-
-	for (; it != eit; ++it) {
-		if ((*it)->get_type() != DEV_NET)
-			continue;
+	BOOST_FOREACH(PrlDevNet *net, m_DevNetList) {
 		if (!out.empty())
 			out += ",";
-		PrlDevNet *net = dynamic_cast<PrlDevNet *>(*it);
-		out += net->get_veth_name();
+		if (net != NULL)
+			out += net->get_veth_name();
 	}
 	return out;
 }
