@@ -40,6 +40,7 @@
 #include <PrlApiCore.h>
 #include <PrlApiVm.h>
 #define VENET0_STR	"venet0"
+#define VENET0_ID	"net4294967295"
 
 #define JOB_INFINIT_WAIT_TIMEOUT UINT_MAX //default infinit job wait timeout
 

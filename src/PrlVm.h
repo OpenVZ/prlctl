@@ -52,6 +52,7 @@ public:
 };
 
 typedef PrlList<PrlDev *> PrlDevList;
+typedef std::vector<PrlDevNet *> PrlDevNetList;
 
 class PrlOutFormatter;
 
@@ -66,6 +67,7 @@ private:
 	bool m_template;
 	std::string m_owner;
 	PrlDevList m_DevList;
+	PrlDevNetList m_DevNetList;
 	VIRTUAL_MACHINE_STATE m_VmState;
 	PrlList<PrlSharedFolder *> m_shf_list;
 	PRL_BOOL m_shf_host_enabled;
@@ -118,6 +120,10 @@ public:
 	PrlDevList &get_devs()
 	{
 		return m_DevList;
+	}
+	const PrlDevNetList &get_net_devs() const
+	{
+		return m_DevNetList;
 	}
 
 	int update_state();

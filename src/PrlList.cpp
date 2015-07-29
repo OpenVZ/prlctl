@@ -32,6 +32,7 @@
 #include <string.h>
 #include <algorithm>
 #include <vector>
+#include <boost/foreach.hpp>
 
 #include "PrlTypes.h"
 #include "Utils.h"
@@ -175,17 +176,11 @@ static std::string _get_ip(PrlVm *vm, bool print_real)
 
 	vm->get_vm_info();
 
-	PrlList<PrlDev *>::iterator it = vm->get_devs().begin(),
-		eit = vm->get_devs().end();
-
-	for (; it != eit; ++it) {
+	BOOST_FOREACH(PrlDevNet *net, vm->get_net_devs()) {
 		ip_list_t _ips;
-		if ((*it)->get_type() == DEV_NET) {
+		if (net != NULL && net->get_ip(_ips) == 0) {
 			net_dev_exists = true;
-			PrlDevNet *net = dynamic_cast<PrlDevNet * > (*it);
-			if (net->get_ip(_ips) == 0) {
-				ips.insert(ips.end(), _ips.begin(), _ips.end());
-			}
+			ips.insert(ips.end(), _ips.begin(), _ips.end());
 		}
 	}
 
@@ -229,13 +224,9 @@ static std::string get_mac(PrlVm *vm)
 {
 	vm->get_vm_info();
 
-	PrlList<PrlDev *>::iterator it = vm->get_devs().begin(),
-		eit = vm->get_devs().end();
-
 	std::string out;
-	for (; it != eit; ++it) {
-		if ((*it)->get_type() == DEV_NET) {
-			PrlDevNet *net = dynamic_cast<PrlDevNet * > (*it);
+	BOOST_FOREACH(PrlDevNet *net, vm->get_net_devs()) {
+		if (net != NULL) {
 			out += net->get_mac();
 			out += " ";
 		}
@@ -247,13 +238,9 @@ static std::string get_netif(PrlVm *vm)
 {
 	vm->get_vm_info();
 
-	PrlList<PrlDev *>::iterator it = vm->get_devs().begin(),
-		eit = vm->get_devs().end();
-
 	std::string out;
-	for (; it != eit; ++it) {
-		if ((*it)->get_type() == DEV_NET) {
-			PrlDevNet *net = dynamic_cast<PrlDevNet * > (*it);
+	BOOST_FOREACH(PrlDevNet *net, vm->get_net_devs()) {
+		if (net != NULL) {
 			out += net->get_name();
 			out += " ";
 		}

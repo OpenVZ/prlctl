@@ -1678,12 +1678,18 @@ std::string PrlDevNet::get_veth_name() const
 	PRL_RESULT ret;
 	unsigned int l = sizeof(buf);
 
-	if ((ret = PrlVmDevNet_GetHostInterfaceName(m_hDev, buf, &l))) {
+	if ((get_id() != VENET0_ID) &&
+			PRL_FAILED(ret = PrlVmDevNet_GetHostInterfaceName(m_hDev, buf, &l))) {
 		prl_log(L_WARN, "PrlVmDevNet_GetHostInterfaceName:%s",
 			get_error_str(ret).c_str());
 	}
 
 	return std::string(buf);
+}
+
+std::string PrlDevNet::get_name() const
+{
+	return (get_id() == VENET0_ID ? "" : get_id());
 }
 
 void PrlDevNet::append_info(PrlOutFormatter &f)

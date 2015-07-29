@@ -99,7 +99,7 @@ public:
 	unsigned int get_idx() const { return m_idx; }
 	void set_idx(unsigned int idx);
 	const std::string &get_id() const { return m_id; }
-	const std::string &get_name() const { return get_id(); }
+	virtual std::string get_name() const { return get_id(); }
 	std::string get_fname() const;
 	int set_fname(const std::string& name);
 	int set_fname2(const std::string& name);
@@ -180,6 +180,7 @@ public:
 	std::string get_mac();
 
 	std::string get_veth_name() const;
+	virtual std::string get_name() const;
 	virtual ~PrlDevNet()
 	{}
 

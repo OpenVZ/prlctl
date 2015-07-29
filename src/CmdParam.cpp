@@ -2182,7 +2182,7 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 #ifdef _LIN_
 			// FIXME: venet0 is net4294967295
 			if (val == VENET0_STR)
-				val = "net4294967295";
+				val = VENET0_ID;
 #endif
 			param.dev.type = str2devtype(val.substr(0,
 					val.find_first_of("0123456789")));
@@ -2208,7 +2208,7 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 #ifdef _LIN_
 			// FIXME: venet0 is net4294967295
 			if (val == VENET0_STR)
-				val = "net4294967295";
+				val = VENET0_ID;
 #endif
 			param.dev.name = val;
 			param.dev.cmd = Del;
