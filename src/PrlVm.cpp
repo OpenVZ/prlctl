@@ -168,6 +168,7 @@ PrlDev *PrlVm::new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx)
 		netDev = new PrlDevNet(*this, hDev, type, idx);
 		dev = netDev;
 		m_DevNetList.push_back(netDev);
+		break;
 	case DEV_FDD:
 		dev = new PrlDevFdd(*this, hDev, type, idx);
 		break;
