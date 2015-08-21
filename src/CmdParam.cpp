@@ -373,6 +373,7 @@ static Option disp_set_options[] = {
 		{"def-backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
 		{"default-backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
 	{"backup-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
+	{"idle-connection-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
 
 	{"default-encryption-plugin", '\0', OptRequireArg, CMD_SET_ECNCRYPTION_PLUGIN},
 	{"reset-default-encryption-plugin", '\0', OptNoArg, CMD_RESET_ECNCRYPTION_PLUGIN},
@@ -879,7 +880,7 @@ static void usage_disp(const char * argv0)
 "  update-license\n"
 "  set [--mem-limit <auto|size>] [-s,--min-security-level <low|normal|high>]\n"
 "	[--mng-settings <allow|deny>] [{--device <device> --assignment <host|vm>}]\n"
-"	[-c,--cep <on|off>] [--backup-path <path>] [--backup-timeout <timeout>]\n"
+"	[-c,--cep <on|off>] [--backup-path <path>] [--idle-connection-timeout <timeout>]\n"
 "	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
@@ -1433,7 +1434,7 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 		case CMD_BACKUP_TIMEOUT:
 			if (parse_ui(val.c_str(), &param.disp.backup_timeout )) {
 				fprintf(stderr, "An incorrect value for"
-					" --backup-timeout is specified: %s\n",
+					" --idle-connection-timeout is specified: %s\n",
 					val.c_str());
 				return invalid_action;
 			}

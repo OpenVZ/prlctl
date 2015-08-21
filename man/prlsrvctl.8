@@ -9,7 +9,7 @@ prlsrvctl \fBset\fR [\fR--mem-limit\fR <\fIauto\fR|\fIsize\fR>] [\fR-s,--min-sec
 [\fR-c,--cep\fR <\fIon\fR|\fIoff\fR>]
 [{\fR--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>}]
 [\fR--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR] [\fR--backup-path\fR <\fIpath\fR>]
-[\fR--backup-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
+[\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
 [\fR--allow-attach-screenshots\fR <\fIon\fR|\fIoff\fR>]
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fBOPTIONS\fR]
@@ -109,8 +109,8 @@ Set assignment mode for VTd devices.
 \fB--backup-path\fR <\fIpath\fR>
 Set the backup location on the local server.
 .TP
-\fB--backup-timeout\fR <\fItimeout\fR>
-Set the backup/restore timeout in seconds.
+\fB--idle-connection-timeout\fR <\fItimeout\fR>
+Sets a timeout interval in seconds after which, if no data has been received from the storage server or backup client, the process of backup/restore is terminated.
 .TP
 \fB--backup-tmpdir\fR <\fBtmpdir\fR>
 Set the backup directory for temporary snapshot creation.
