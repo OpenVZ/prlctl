@@ -94,9 +94,6 @@ int init_sdk_lib()
 	// Disable logging output to console
 	PrlApi_SwitchConsoleLogging(0);
 
-	//Install Parallels crash handler
-	PrlApi_InitCrashHandler(0);
-
 	PRL_UINT32 nFlags = 0;
 	nFlags |= g_problem_report_cmd ? PAIF_USE_GRAPHIC_MODE : 0;
 
