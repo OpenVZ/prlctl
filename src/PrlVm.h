@@ -115,7 +115,7 @@ public:
 	int console();
 	int enter();
 	int exec(char **argv, Action action);
-	int set_userpasswd(const std::string &userpasswd);
+	int set_userpasswd(const std::string &userpasswd, bool crypted);
 	int internal_cmd(char **argv);
 	PrlDevList &get_devs()
 	{

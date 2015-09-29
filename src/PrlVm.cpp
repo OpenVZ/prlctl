@@ -933,7 +933,7 @@ int PrlVm::exec(char **argv, Action action)
 	return ret;
 }
 
-int PrlVm::set_userpasswd(const std::string &userpasswd)
+int PrlVm::set_userpasswd(const std::string &userpasswd, bool crypted)
 {
 	PRL_RESULT ret;
 	std::string err;
@@ -962,7 +962,8 @@ int PrlVm::set_userpasswd(const std::string &userpasswd)
 			passwd = userpasswd.substr(pos + 1);
 		}
 		PrlHandle hJob(PrlVmGuest_SetUserPasswd(hVmGuest.get_handle(),
-				user.c_str(), passwd.c_str(), 0));
+				user.c_str(), passwd.c_str(),
+				crypted ? PSPF_PASSWD_CRYPTED : 0));
 
 		if ((ret = PrlJob_Wait(hJob.get_handle(), g_nJobTimeout))) {
 			prl_err(ret, "Unable to commit %s configuration: %s",
@@ -3858,7 +3859,7 @@ int PrlVm::set(const CmdParamData &param)
 			set_updated();
 	}
 	if (!param.userpasswd.empty()) {
-		if ((ret = set_userpasswd(param.userpasswd)))
+		if ((ret = set_userpasswd(param.userpasswd, param.crypted)))
 			return ret;
 	}
 	/* Use default answers enabling sign */
