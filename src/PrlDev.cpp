@@ -485,9 +485,11 @@ int PrlDevHdd::set_subtype(const std::string &subtype)
 		type = PCD_LSI_SPI;
 	else if (subtype == "lsi-sas")
 		type = PCD_LSI_SAS;
+	else if (subtype == "virtio-scsi")
+		type = PCD_VIRTIO_SCSI;
 	else
 			return prl_err(-1, "Invalid subtype: %s,"
-					" supported one: buslogic, lsi-spi, lsi-sas",
+					" supported one: buslogic, lsi-spi, lsi-sas, virtio-scsi",
 					subtype.c_str());
 	if ((ret = PrlVmDev_SetSubType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetSubType: %s",
@@ -830,6 +832,9 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 			tmp = "lsi-spi"; break;
 		case PCD_LSI_SAS:
 			tmp = "lsi-sas"; break;
+		case PCD_VIRTIO_SCSI:
+			tmp = "virtio-scsi";
+			break;
 		default:
 			tmp = "unknown";
 		}
@@ -910,9 +915,11 @@ int PrlDevCdrom::set_subtype(const std::string &subtype)
 		type = PCD_LSI_SPI;
 	else if (subtype == "lsi-sas")
 		type = PCD_LSI_SAS;
+	else if (subtype == "virtio-scsi")
+		type = PCD_VIRTIO_SCSI;
 	else
 			return prl_err(-1, "Invalid subtype: %s,"
-					" supported one: buslogic, lsi-spi, lsi-sas",
+					" supported one: buslogic, lsi-spi, lsi-sas, virtio-scsi",
 					subtype.c_str());
 	if ((ret = PrlVmDev_SetSubType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetSubType: %s",
@@ -1027,6 +1034,9 @@ void PrlDevCdrom::append_info(PrlOutFormatter &f)
 			tmp = "lsi-spi"; break;
 		case PCD_LSI_SAS:
 			tmp = "lsi-sas"; break;
+		case PCD_VIRTIO_SCSI:
+			tmp = "virtio-scsi";
+			break;
 		default:
 			tmp = "unknown";
 		}
