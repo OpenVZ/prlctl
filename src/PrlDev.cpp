@@ -461,9 +461,11 @@ int PrlDevHdd::set_iface(const std::string &iface)
 		type = PMS_IDE_DEVICE;
 	else if (iface == "sata")
 		type = PMS_SATA_DEVICE;
+	else if (iface == "virtio")
+		type = PMS_VIRTIO_BLOCK_DEVICE;
 	else
 		return prl_err(-1, "An invalid interface is specified: %s.,"
-				" The following interfaces are supported: ide, scsi.",
+				" The following interfaces are supported: ide, scsi, sata, virtio.",
 				iface.c_str());
 	if ((ret = PrlVmDev_SetIfaceType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetIfaceType: %s",
@@ -758,6 +760,9 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 			tmp = "sata"; break;
 		case PMS_SCSI_DEVICE:
 			tmp = "scsi"; break;
+		case PMS_VIRTIO_BLOCK_DEVICE:
+			tmp = "virtio";
+			break;
 		default:
 			break;
 
@@ -891,9 +896,11 @@ int PrlDevCdrom::set_iface(const std::string &iface)
 		type = PMS_IDE_DEVICE;
 	else if (iface == "sata")
 		type = PMS_SATA_DEVICE;
+	else if (iface == "virtio")
+		type = PMS_VIRTIO_BLOCK_DEVICE;
 	else
 			return prl_err(-1, "Invalid interface: %s,"
-					" supported one: ide, scsi",
+					" supported one: ide, scsi, sata, virtio",
 					iface.c_str());
 	if ((ret = PrlVmDev_SetIfaceType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetIfaceType: %s",
@@ -1007,6 +1014,9 @@ void PrlDevCdrom::append_info(PrlOutFormatter &f)
 			tmp = "ide"; break;
 		case PMS_SATA_DEVICE:
 			tmp = "sata"; break;
+		case PMS_VIRTIO_BLOCK_DEVICE:
+			tmp = "virtio";
+			break;
 		default:
 			tmp = "scsi";
 	}
