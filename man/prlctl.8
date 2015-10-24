@@ -1,59 +1,59 @@
-.TH prlctl 8 "14 April 2011" "Parallels Server"
+.TH prlctl 8 "14 April 2011" "Virtuozzo"
 .SH NAME
-prlctl \- utility for managing Parallels servers and virtual machines residing on them.
+prlctl \- utility for managing Virtuozzo servers and virtual environments residing on them.
 .SH SYNOPSIS
-prlctl \fBbackup\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB-u,--uncompressed\fR]
+prlctl \fBcreate\fR <\fIve_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
-prlctl \fBbackup-list\fR [\fIvm_id\fR|\fIvm_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB-u,--uncompressed\fR]
 .PP
-prlctl \fBbackup-delete\fR {\fB<vm_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
-prlctl \fBrestore\fR {\fB<vm_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+.PP
+prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]
 .PP
-prlctl \fBcapture\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--file\fR <\fIname\fR>
+prlctl \fBcapture\fR <\fIve_id\fR|\fIve_name\fR> \fB--file\fR <\fIname\fR>
 .PP
-prlctl \fBclone\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
+prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
 .PP
 prlctl \fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]
 .PP
-prlctl \fBcreate\fR <\fIvm_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
+prlctl \fBdelete\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBdelete\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBexec\fR <\fIve_id\fR|\fIve_name\fR> <\fBcommand\fR>
 .PP
-prlctl \fBexec\fR <\fIvm_id\fR|\fIvm_name\fR> <\fBcommand\fR>
+prlctl \fBenter\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
-prlctl \fBenter\fR <\fIvm_id\fR|\fIvm_name\fR>
-.PP
-prlctl \fBconsole\fR <\fIvm_id\fR|\fIvm_name\fR>
+prlctl \fBconsole\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
 prlctl \fBlist\fR [\fB-a,--all\fR] [\fB-L\fR] [\fB-o,--output \fIfield\fR[,\fIfield\fR...]] 
 [\fB-s,--sort \fR<\fIfield\fR|-\fIfield\fR>] [\fB-t,--template\fR] 
 [\fB--vmtype \fR<\fIct\fR|\fIvm\fR|\fIall\fR>] [\fB-j,--json\fR]
 .PP
-prlctl \fBlist\fR -i,--info [\fB-f,--full\fR] [\fIvm_id\fR|\fIvm_name\fR]
+prlctl \fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR]
 [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR] 
 .PP
 prlctl \fBmigrate\fR <[\fBsrc_node/\fR]\fBID\fR> <\fBdst_node\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>]
 [\fB--changesid\fR] [\fB--keep-src\fR] [\fB--ssh\fR <\fIoptions\fR>]
 .PP
-prlctl \fBpause\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBpause\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBproblem-report\fR <\fIvm_id\fR|\fIvm_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]
+prlctl \fBproblem-report\fR <\fIve_id\fR|\fIve_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]
 .PP
 prlctl \fBregister\fR <\fIpath\fR> [\fB--preserve-uuid\fR | \fB--uuid\fR <\fIUUID\fR>] [\fB--regenerate-src-uuid\fR] [\fB--force\fR] [\fBOPTIONS\fR]
 .PP
-prlctl \fBreset\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBreset\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBresume\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBresume\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBrestart\fR <\fIvm_id\fR|\fIvm_name\fR>
+prlctl \fBrestart\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
 prlctl \fBserver\fR {\fBshutdown\fR|\fBinfo\fR} [\fBOPTIONS\fR]
 .PP
-prlctl \fBreset-uptime\fR <\fIvm_id\fR|\fIvm_name\fR>
+prlctl \fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
-prlctl \fBset\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--memsize\fR <\fIn\fR>] [\fB--videosize\fR <\fIn\fR>]
+prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--memsize\fR <\fIn\fR>] [\fB--videosize\fR <\fIn\fR>]
 .br
 	[\fB--3d-accelerate\fR <\fIoff\fR|\fIhighest\fR|\fIdx9\fR>] [\fB--vertical-sync\fR <\fIon\fR|\fIoff\fR>]
 .br
@@ -124,130 +124,128 @@ prlctl \fBset\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--backup-del\fR <\fIbackup_id\fR|\fIall\fR>]
 .PP
-prlctl \fBstart\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBstart\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBstop\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB--kill\fR] [\fBOPTIONS\fR]
+prlctl \fBstop\fR <\fIve_id\fR|\fIve_name\fR> [\fB--kill\fR] [\fBOPTIONS\fR]
 .PP
-prlctl \fBsnapshot\fR <\fIvmid\fR|\fIname\fR> [\fB-n\fR,\fB--name\fR <\fIname\fR>] [\fB-d\fR,\fB--description\fR <\fIdesc\fR>]
+prlctl \fBsnapshot\fR <\fIve_id\fR|\fIname\fR> [\fB-n\fR,\fB--name\fR <\fIname\fR>] [\fB-d\fR,\fB--description\fR <\fIdesc\fR>]
 .PP
-prlctl \fBsnapshot-list\fR <\fIvmid\fR|\fIname\fR> [{\fB-t\fR,\fB--tree\fR | \fB-i\fR,\fB--id\fR <\fIsnapid\fR>}]
+prlctl \fBsnapshot-list\fR <\fIve_id\fR|\fIname\fR> [{\fB-t\fR,\fB--tree\fR | \fB-i\fR,\fB--id\fR <\fIsnapid\fR>}]
 .PP
-prlctl \fBsnapshot-delete\fR <\fIvmid\fR|\fIname\fR>" \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]
+prlctl \fBsnapshot-delete\fR <\fIve_id\fR|\fIname\fR>" \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]
 .PP
-prlctl \fBsnapshot-switch\fR <\fIvmid\fR|\fIname\fR>" \fB-i\fR,\fB--id\fR <\fIsnapid\fR>
+prlctl \fBsnapshot-switch\fR <\fIve_id\fR|\fIname\fR>" \fB-i\fR,\fB--id\fR <\fIsnapid\fR>
 .PP
-prlctl \fBsuspend\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBsuspend\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBunregister\fR <\fIvm_id\fR|\fIvm_name\fR> [\fBOPTIONS\fR]
+prlctl \fBunregister\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
-prlctl \fBmount\fR <\fIvm_id\fR|\fIvm_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]
+prlctl \fBmount\fR <\fIve_id\fR|\fIve_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]
 .PP
-prlctl \fBumount\fR <\fIvm_id\fR|\fIvm_name\fR>
+prlctl \fBumount\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
-prlctl \fBmove\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--dst\fR <\fIpath\fR>
+prlctl \fBmove\fR <\fIve_id\fR|\fIve_name\fR> \fB--dst\fR <\fIpath\fR>
 
 .SH DESCRIPTION
-The \fBprlctl\fR utility is used to manage Parallels servers and virtual machines (VMs) residing on them.
-A virtual machine can be referred to by its ID or name assigned to the VM during its creation.
+The \fBprlctl\fR utility is used to manage Virtuozzo servers and virtual environments (VEs) residing on them.
+A virtual environment can be referred to by its ID or name assigned to the VE during its creation.
 .SH OPTIONS
 .SS Flags
 The following flags can be used with the majority of \fBprlctl\fR commands.
 .IP "\fB-l,--login user[[:passwd]@server\fR" 4
-Connect to the remote Parallels server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlctl\fR assumes that the command is run on the local server. 
+Connect to the remote Virtuozzo server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlctl\fR assumes that the command is run on the local server. 
 .IP "\fB-p,--read-passwd\fR <\fIfile\fR>" 4
-Use the password from the \fBfile\fR file to log in to the remote Parallels server whose connection parameters are specified after the \fB--login\fR option.
+Use the password from the \fBfile\fR file to log in to the remote Virtuozzo server whose connection parameters are specified after the \fB--login\fR option.
 .IP "\fB-v,--verbose <n>\fR" 4
 Configure the \fBprlctl\fR logging level.
 .IP "\fB--timeout <sec>\fR" 4
 Specify a custom operation timeout in seconds. By default, timeouts for all operation are unlimited.
-.SS Managing virtual machines
-.IP "\fBcreate\fR <\fIvm_name\fR> \fB--ostemplate\fR <\fIname\fR> [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--changesid\fR]" 4
-Create the virtual machine with the name of \fB<vm_name>\fR on the basis of the specified template. You can get the list of available templates using the \fBprlctl list -t\fR command.
+.SS Managing virtual environments
+.IP "\fBcreate\fR <\fIve_name\fR> \fB--ostemplate\fR <\fIname\fR> [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--changesid\fR]" 4
+Create the virtual environment with the name of \fB<ve_name>\fR on the basis of the specified template. You can get the list of available templates using the \fBprlctl list -t\fR command.
 
-Use the \fB--changesid\fR option to assign the new Windows-based virtual machine a new Windows security identifier (SID). Note: Parallels Tools must be installed in the virtual machine.
+Use the \fB--changesid\fR option to assign the new Windows-based virtual machine a new Windows security identifier (SID). Note: Virtuozzo Guest Tools must be installed in the virtual machine.
 
 Use the \fB--uuid\fR option to manually specify the UUID to use.
-.IP "\fBcreate\fR <\fIvm_name\fR> [\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
-Create the virtual machine with the name of \fB<vm_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--ostype\fR option, respectively. You can get the list of available os types using the \fBprlctl create  vm_name -o list\fR command.
-.IP "\fBcreate\fR <\fIvm_name\fR> [\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
-Create the virtual machine with the name of \fB<vm_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--distribution\fR option, respectively. You can get the list of available distributions using the \fBprlctl create  vm_name -d list\fR command.
+.IP "\fBcreate\fR <\fIve_name\fR> [\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
+Create the virtual environment with the name of \fB<ve_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--ostype\fR option, respectively. You can get the list of available os types using the \fBprlctl create  ve_name -o list\fR command.
+.IP "\fBcreate\fR <\fIve_name\fR> [\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
+Create the virtual environment with the name of \fB<ve_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--distribution\fR option, respectively. You can get the list of available distributions using the \fBprlctl create  ve_name -d list\fR command.
 
-Use the \fB--dst\fR option to set the path to the directory on the Parallels server where all configuration files of the newly created virtual machine will be stored.
+Use the \fB--dst\fR option to set the path to the directory on the Virtuozzo server where all configuration files of the newly created virtual environment will be stored.
 
-Use the \fB--no-hdd\fR option to create virtual machine without hard disk drives.
+Use the \fB--no-hdd\fR option to create virtual environment without hard disk drives.
 
-After the virtual machine has been successfully created, you should install the corresponding operating system inside it.
+After the virtual environment has been successfully created, you should install the corresponding operating system inside it.
 .IP "\fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]"
 Convert the specified third party virtual machine.
 
-You can use the \fB--dst\fR option to set the path on the Parallels server where to store the virtual machine configuration files and the \fB--force\fR option to continue with the conversion even if the guest OS of the virtual machine could not be identified.
-.IP "\fBclone\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>]" 4
-Make a copy of a virtual machine or Container and name it <\fInew_name\fR>. The difference between the original and the clone is that the clone is assigned a new MAC address.
+You can use the \fB--dst\fR option to set the path on the Virtuozzo server where to store the virtual machine configuration files and the \fB--force\fR option to continue with the conversion even if the guest OS of the virtual machine could not be identified.
+.IP "\fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>]" 4
+Make a copy of a virtual environment and name it <\fInew_name\fR>. The difference between the original and the clone is that the clone is assigned a new MAC address.
 
-Use the \fB--template\fR option to create a template of a virtual machine or Container.
+Use the \fB--template\fR option to create a template of a virtual environment.
 
 Use the \fB--dst\fR option to specify the full path to the directory where the clone will be stored. If this option is omitted, the clone will be created in the default directory.
 
-Use the \fB--changesid\fR option to assign the clone a new Windows security identifier (SID). Note: Parallels Tools must be installed in the original Windows-based virtual machine.
+Use the \fB--changesid\fR option to assign the clone a new Windows security identifier (SID). Note: Virtuozzo Guest Tools must be installed in the original Windows-based virtual machine.
 
-Use the \fB--linked\fR option is used to create a linked clone of the virtual machine.
+Use the \fB--linked\fR option is used to create a linked clone of the virtual environment.
 
-Use the \fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR> option to specify whether to keep or remove hard disks located outside of the original virtual machine. If you specify \fIyes\fR, outside hard disks will be removed from the resulting configuration. If you specify \fIno\fR, outside hard disks will remain in the resulting configuration. Note: In either case, outside hard disks will not be copied to the destination.
+Use the \fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR> option to specify whether to keep or remove hard disks located outside of the original virtual environment. If you specify \fIyes\fR, outside hard disks will be removed from the resulting configuration. If you specify \fIno\fR, outside hard disks will remain in the resulting configuration. Note: In either case, outside hard disks will not be copied to the destination.
  
-.IP "\fBdelete\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Remove the specified virtual machine from the Parallels server by deleting all VM-related files and directories.
-.IP "\fBexec\fR <\fIvm_id\fR|\fIvm_name\fR> <\fBcommand\fR>" 4
-Execute the \fBcommand\fR command in the virtual machine. It requires Parallels
-Tools to be installed in the virtual machine. Commands in Linux guests are run
-via bash -c "command".
-.IP "\fBenter\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Log in to the virtual machine. It requires Parallels Tools to be installed in the virtual machine.
-.IP "\fBconsole\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
+.IP "\fBdelete\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Remove the specified virtual environment from the Virtuozzo server by deleting all VE-related files and directories.
+.IP "\fBexec\fR <\fIve_id\fR|\fIve_name\fR> <\fBcommand\fR>" 4
+Execute the \fBcommand\fR command in the virtual environment. For virtual machines, it requires Virtuozzo Guest Tools to be installed. Commands in Linux guests are run via bash -c "command".
+.IP "\fBenter\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Log in to the virtual environment. For virtual machines, it requires Virtuozzo Guest Tools to be installed.
+.IP "\fBconsole\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Attach to the Container's console. To exit from the console, press "Esc" then "."
 (Note: This sequence is only recognized after Enter).
 Note that you can even attach to a console if a Container is not yet running.
-.IP "\fBpause\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Pause the specified virtual machine.
-.IP "\fBproblem-report\fR <\fIvm_id\fR|\fIvm_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]" 4
-Generate a problem report. If the \fB-s,--send\fR option is specified, the report is sent to Parallels; otherwise, it is dumped to stdout.
+.IP "\fBpause\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Pause the specified virtual environment.
+.IP "\fBproblem-report\fR <\fIve_id\fR|\fIve_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]" 4
+Generate a problem report. If the \fB-s,--send\fR option is specified, the report is sent to Virtuozzo development team; otherwise, it is dumped to stdout.
 .IP "\fBregister\fR <\fIpath\fR> [\fB--preserve-uuid\fR | \fB--uuid\fR <\fIUUID\fR>] [\fB--regenerate-src-uuid\fR] [\fB--force\fR]" 4
-Register the virtual machine whose configuration file has the path of \fIpath\fR.
-If the \fB--preserve-uuid\fR option is specified, the virtual machine ID will not changed.
-If the \fB--uuid\fR option is specified, the provided \fIUUID\fR will be used for virtual machine ID,
+Register the virtual environment whose configuration file has the path of \fIpath\fR.
+If the \fB--preserve-uuid\fR option is specified, the virtual environment ID will not changed.
+If the \fB--uuid\fR option is specified, the provided \fIUUID\fR will be used for virtual environment ID,
 otherwise, it will be regenerated.
-If the \fB--regenerate-src-uuid\fR option is specified, the virtual machine source ID will be regenerated (SMBIOS product id will be changed as well).
+If the \fB--regenerate-src-uuid\fR option is specified, the virtual environment source ID will be regenerated (SMBIOS product id will be changed as well).
 If the \fB--force\fR option is specified, all validation checks will be skipped.
-.IP "\fBreset\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Reset the specified virtual machine.
-.IP "\fBstart\fR <\fIvm_id\fR|\fIvm_name\fR>" 4 
-Start the specified virtual machine.
-.IP "\fBrestart\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Restart the specified virtual machine.
-.IP "\fBstop\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB--kill\fR]" 4
-Stop the specified virtual machine. You can use the \fB--kill\fR option to forcibly stop the VM.
-.IP "\fBstatus\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Display the status of the specified virtual machine.
-.IP "\fBunregister\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Unregister the specified virtual machine.
-.IP "\fBsuspend\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Suspend the specified virtual machine.
-.IP "\fBresume\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Resume the specified virtual machine.
-.IP "\fBcapture\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--file\fR <\fIname\fR>" 4
-Captures a screen area of a virtual machine directly to a file \fIname\fR
+.IP "\fBreset\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Reset the specified virtual environment.
+.IP "\fBstart\fR <\fIve_id\fR|\fIve_name\fR>" 4 
+Start the specified virtual environment.
+.IP "\fBrestart\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Restart the specified virtual environment.
+.IP "\fBstop\fR <\fIve_id\fR|\fIve_name\fR> [\fB--kill\fR]" 4
+Stop the specified virtual environment. You can use the \fB--kill\fR option to forcibly stop the VE.
+.IP "\fBstatus\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Display the status of the specified virtual environment.
+.IP "\fBunregister\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Unregister the specified virtual environment.
+.IP "\fBsuspend\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Suspend the specified virtual environment.
+.IP "\fBresume\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Resume the specified virtual environment.
+.IP "\fBcapture\fR <\fIve_id\fR|\fIve_name\fR> \fB--file\fR <\fIname\fR>" 4
+Captures a screen area of a virtual environment directly to a file \fIname\fR
 in png format. 
-.IP "\fBreset-uptime\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Resets the specified virtual machine uptime counter (counter start date/time also will be reset with this action).
-.IP "\fBmount\fR <\fIvm_id\fR|\fIvm_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]" 4
-Mounts the specified virtual machine.
-.IP "\fBumount\fR <\fIvm_id\fR|\fIvm_name\fR>" 4
-Unmounts the specified virtual machine.
-.IP "\fBmove\fR <\fIvm_id\fR|\fIvm_name\fR> \fB--dst\fR <\fIpath\fR>" 4
-Moves the files of the specified virtual machine or Container to a new location on the same server.
+.IP "\fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Resets the specified virtual environment uptime counter (counter start date/time also will be reset with this action).
+.IP "\fBmount\fR <\fIve_id\fR|\fIve_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]" 4
+Mounts the specified virtual environment.
+.IP "\fBumount\fR <\fIve_id\fR|\fIve_name\fR>" 4
+Unmounts the specified virtual environment.
+.IP "\fBmove\fR <\fIve_id\fR|\fIve_name\fR> \fB--dst\fR <\fIpath\fR>" 4
+Moves the files of the specified virtual environment to a new location on the same server.
 The command supports moving stopped, suspended, and running Containers and stopped and suspended virtual machines.
-.SS Listing virtual machines
+.SS Listing virtual environments
 .IP "\fBlist\fR [\fB-a,--all\fR] [\fB-L\fR] [\fB-o,--output \fIfield\fR[,\fIfield\fR...]] [\fB-s,--sort \fR<\fIfield\fR|-\fIfield\fR>] [\fB-t,--template\fR] [\fB--vmtype \fR<\fIct\fR|\fIvm\fR|\fIall\fR>] [\fB-j,--json\fR]" 4
-List the virtual machines currently existing on the Parallels server. By default, only running VMs are displayed.
+List the virtual environments currently existing on the Virtuozzo server. By default, only running VEs are displayed.
 .IP "\fB-o, --output\fR \fIfield\fR[,\fIfield\fR...]" 5
 Display only the specified \fIfield\fR(s).
 .IP "\fB-s,--sort \fR<\fIfield\fR|-\fIfield\fR>" 5
@@ -260,75 +258,75 @@ Display only virtual environments of the specified type.
 Include templates in the output.
 .IP "\fB-j,--json\fR" 5
 Produce output in the JSON format.
-.IP "\fBlist\fR -i,--info [\fB-f,--full\fR] [\fIvm_id\fR|\fIvm_name\fR] [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR]" 4
-Display the information on the VM configuration. By default, the information on all VMs currently existing on the Parallels server is shown.
-Use the \fB--full\fR option to display additional information about virtual machines. You can also use the \fB--json\fR option to produce
+.IP "\fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR] [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR]" 4
+Display the information on the VE configuration. By default, the information on all VEs currently existing on the Virtuozzo server is shown.
+Use the \fB--full\fR option to display additional information about virtual environments. You can also use the \fB--json\fR option to produce
 machine-readable output in JSON format.
-.SS Configuring VM resource parameters
-.IP "\fBset\fR <\fIvmid\fR|\fIname\fR> [\fBSET_OPTIONS\fR]" 4
-This command is used to set and configure various VM parameters.
+.SS Configuring VE resource parameters
+.IP "\fBset\fR <\fIve_id\fR|\fIname\fR> [\fBSET_OPTIONS\fR]" 4
+This command is used to set and configure various VE parameters.
 .br
 The following options can be used with the \fBset\fR command:
 .TP
 \fBCPU parameters\fR
 .TP
 \fB--cpus\fR <\fInum\fR>
-Set the number of CPUs to be available to the VM.
+Set the number of CPUs to be available to the VE.
 .TP
 \fB--cpu-hotplug\fR <\fIon\fR|\fIoff\fR>
-Enable or disable CPU hot-plugging support in the virtual machine.
+Enable or disable CPU hot-plugging support in the virtual environment.
 .TP
 \fB--cpuunits\fR <\fIn\fR>
-Sets the CPU weight for the virtual machine. This is a positive integer number
-that defines how much CPU time the virtual machine can get as compared to the
-other virtual machines running on the server. The larger the number, the more
-CPU time the virtual machine can receive. Possible values range from 8 to
+Sets the CPU weight for the virtual environment. This is a positive integer number
+that defines how much CPU time the virtual environment can get as compared to the
+other virtual environments running on the server. The larger the number, the more
+CPU time the virtual environment can receive. Possible values range from 8 to
 500000. If this parameter is not set, the default value of 1000 is used.
 .TP
 \fB--cpulimit\fR <\fIn\fR>
-Sets the CPU limit, in percent or megahertz (MHz), the virtual machine is not allowed to exceed.
+Sets the CPU limit, in percent or megahertz (MHz), the virtual environment is not allowed to exceed.
 By default, the limit is set in percent. To specify the limit in MHz, specify "m" after the value.
 Note: If the computer has 2 CPUs, the total CPU time equals 200%.
 .TP
 \fB--cpumask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>
-Defines the CPUs on the physical server to use for executing the virtual machine process.
+Defines the CPUs on the physical server to use for executing the virtual environment process.
 A CPU affinity mask can be a single CPU number or a CPU range separated by commas (0,2,3-10).
 .TP
 \fBMemory parameters\fR
 .TP
 \fB--memsize\fR <\fInum\fR>
-Set the amount of memory that the virtual machine can consume.
+Set the amount of memory that the virtual environment can consume.
 .TP
 \fB--mem-hotplug\fR <\fIon\fR|\fIoff\fR>
-Enable or disable memory (RAM) hot-plugging support in the virtual machine.
+Enable or disable memory (RAM) hot-plugging support in the virtual environment.
 .TP
 \fB--memquota\fR <\fIauto\fR|\fImin\fR:\fImax\fR[:\fIpriority\fR[:\fImaxballoon\fR]]\fR>
-Set the parameters of the host memory (RAM) consumption by the virtual machine.
-The \fImaxballon\fR is maximum memory limit which can be locked by balloon in the virtual machine, in percent of guest RAM.
+Set the parameters of the host memory (RAM) consumption by the virtual environment.
+The \fImaxballon\fR is maximum memory limit which can be locked by balloon in the virtual environment, in percent of guest RAM.
 .TP
 \fBBoot order parameters\fR
 .TP
 \fB--device-bootorder\fR <\fI"name1 name2 ..."\fR>
-Used to specify the order of boot devices for a virtual machine.
+Used to specify the order of boot devices for a virtual environment.
 Supported devices are HDD, CD/DVD, FDD, Network. A device name can obtained using the 'prlctl list -i' command.
 .TP
 \fB--efi-boot\fR <\fIon\fR|\fIoff\fR>
 Set EFI boot options:
 .br
-\fIon\fR: The virtual machine is booting using the EFI firmware.
+\fIon\fR: The virtual environment is booting using the EFI firmware.
 .br
-\fIoff\fR: The virtual machine is booting using the BIOS firmware. This option is used by default.
+\fIoff\fR: The virtual environment is booting using the BIOS firmware. This option is used by default.
 .TP
 \fB--select-boot-device\fR <\fIon\fR|\fIoff\fR>
-Enable or disable the selection of a boot device at the virtual machine startup.
+Enable or disable the selection of a boot device at the virtual environment startup.
 .TP
 \fB--external-boot-device\fR <\fIname\fR>
-Set an external device from which to boot the virtual machine.
+Set an external device from which to boot the virtual environment.
 .TP
 \fBVideo parameters\fR
 .TP
 \fB--videosize\fR <\fInum\fR>
-Set the amount of memory for the virtual machine graphic card.
+Set the amount of memory for the virtual environment graphic card.
 .TP
 \fB--3d-accelerate\fR <\fIoff\fR|\fIhighest\fR|\fIdx9\fR>
 Set 3d acceleration video mode.
@@ -339,12 +337,12 @@ Set vertical synchronization video mode.
 \fBI/O priority management\fR
 .TP
 \fB--ioprio\fR <\fIpriority\fR>
-Assigns I/O priority to Vm. \fIpriority\fR range is \fB0-7\fR.
-The greater \fIpriority\fR is, the more time for I/O activity Vm has.
-By default each Vm has \fIpriority\fR of \fB4\fR.
+Assigns I/O priority to VE. \fIpriority\fR range is \fB0-7\fR.
+The greater \fIpriority\fR is, the more time for I/O activity VE has.
+By default each VE has \fIpriority\fR of \fB4\fR.
 .TP
 \fB--iolimit\fR \fIlimit\fR[\fBB\fR|\fBK\fR|\fBM\fR|\fBG\fR]
-Sets the I/O limit for the virtual machine. If no suffix is specified, the parameter is set
+Sets the I/O limit for the virtual environment. If no suffix is specified, the parameter is set
 in bytes per second. The possible suffixes are listed below:
 .br
 \fBb\fR, \fBB\fR -- bytes
@@ -355,7 +353,7 @@ in bytes per second. The possible suffixes are listed below:
 .br
 \fBg\fR, \fBG\fR -- gigabytes
 
-By default, the I/O limit of each virtual machine is set to 0 (that is, not limited).
+By default, the I/O limit of each virtual environment is set to 0 (that is, not limited).
 .TP
 \fB--iopslimit\fR <\fIlimit\fR>
 Assigns Input/Output Operations Per Second limit.
@@ -363,7 +361,7 @@ Assigns Input/Output Operations Per Second limit.
 \fBNetwork parameters\fR
 .TP
 \fB--apply-iponly\fR <\fIyes|no\fB>
-If set to "yes", the hostname, nameserver, and search domain settings from the virtual machine/Container configuration file are ignored.
+If set to "yes", the hostname, nameserver, and search domain settings from the virtual environment/Container configuration file are ignored.
 .TP
 \fBContainer specific parameters\fR
 .TP
@@ -413,7 +411,7 @@ Note: Changing this parameter for a running Container, requires the Container be
 \fBVNC parameters\fR
 .TP
 \fB--vnc-mode\fR <\fIauto\fR|\fImanual\fR|\fIoff\fR>
-Enables/disables access to the virtual machine via the VNC protocol.
+Enables/disables access to the virtual environment via the VNC protocol.
 A password is required to enable VNC support, or the \fB--vnc-nopasswd\fR option must be used.
 .TP
 \fB--vnc-port\fR <\fIport\fR>
@@ -432,15 +430,15 @@ Sets the VNC address.
 \fBHigh Availability Cluster\fR
 .TP
 \fB--ha-enable\fR <\fIyes\fR|\fIno\fR>
-Adds the virtual machine to (\fByes\fR) or removes it (\fBno\fR) from the High Availability Cluster. By default, the parameter is set to \fByes\fR.
+Adds the virtual environment to (\fByes\fR) or removes it (\fBno\fR) from the High Availability Cluster. By default, the parameter is set to \fByes\fR.
 .TP
 \fB--ha-prio\fR <\fInumber\fR>
-Sets the virtual machine priority in the High Availability Cluster. Virtual machines with a higher priority are restarted first in the case of a system failure. If the parameter is not set for a virtual machine (default), it has the lowest priority and is restarted after all virtual machines with any priorities set.
+Sets the virtual environment priority in the High Availability Cluster. Virtual environments with a higher priority are restarted first in the case of a system failure. If the parameter is not set for a virtual environment (default), it has the lowest priority and is restarted after all virtual environments with any priorities set.
 .TP
 \fBOptimization parameters\fR
 .TP
 \fB--faster-vm\fR <\fIon\fR|\fIoff\fR>
-Set the performance mode: faster virtual machine or faster host.
+Set the performance mode: faster virtual environment or faster host.
 .TP
 \fB--adaptive-hypervisor\fR <\fIon\fR|\fIoff\fR>
 Disable or enable adaptive hypervisor.
@@ -460,86 +458,86 @@ Disable or enable PMU virtualization.
 \fBMiscellaneous parameters\fR
 .TP
 \fB--applyconfig\fR <\fIpath\fR>
-Apply the resource parameter values from the specified VM configuration file to the virtual machine. The parameters defining the OS family and OS version are left intact.
+Apply the resource parameter values from the specified VE configuration file to the virtual environment. The parameters defining the OS family and OS version are left intact.
 .TP
 \fB--distribution\fR <\fIname\fR>
-Optimize the virtual machine for use with the operating system (OS) family specified after the \fB--distribution\fR option. You can get the list of available distributions using the \fBprlctl set  vm_name -d list\fR command.
+Optimize the virtual environment for use with the operating system (OS) family specified after the \fB--distribution\fR option. You can get the list of available distributions using the \fBprlctl set  ve_name -d list\fR command.
 .TP
 \fB--description\fR <\fIdesc\fR>
-Set the VM description.
+Set the VE description.
 .TP
 \fB--name\fR <\fIname\fR>
-Change the Vm name.
+Change the VE name.
 .TP
 \fB--template\fR <\fIon\fR|\fIoff\fR>
-Convert the virtual machine to template and back.
+Convert the virtual environment to template and back.
 .TP
 \fB--rename-ext-disks\fR
 Rename bundles of the external disks on vm rename. That is move external disk from path \fI/somewhere/old-vm-name.pvm/diskname\fR to \fI/somewhere/new-vm-name.pvm/diskname\fR.
 .TP
 \fB--autostart\fR <\fIon\fR|\fIoff\fR|\fIauto\fR>
-Set the virtual machine start-up options:
+Set the virtual environment start-up options:
 .br
-\fIon\fR: The virtual machine is started automatically on the Parallels server boot.
+\fIon\fR: The virtual environment is started automatically on the Virtuozzo server boot.
 .br
-\fIoff\fR: The virtual machine is left in the stopped state on the Parallels server boot.
+\fIoff\fR: The virtual environment is left in the stopped state on the Virtuozzo server boot.
 .br
-\fIauto\fR: The virtual machine is returned to the state it was in when the Parallels server was turned off.
+\fIauto\fR: The virtual environment is returned to the state it was in when the Virtuozzo server was turned off.
 .TP
 \fB--autostart-delay\fR <\fIn\fR>
-Delay some seconds at virtual machine autostart.
+Delay some seconds at virtual environment autostart.
 .TP
 \fB--autostop\fR <\fIstop\fR|\fIsuspend\fR|\fIshutdown\fR>
-Specifies the mode to set the virtual machine on the Parallels Service shutdown.
+Specifies the mode to set the virtual environment on the Parallels Service shutdown.
 .TP
 \fB--start-as-user\fR <\fIadministrator|owner|user:passwd\fR>
-Autostart virtual machine from specified user.
+Autostart virtual environment from specified user.
 .TP
 \fB--undo-disks\fR <\fIoff\fR|\fIdiscard\fR|\fIask\fR>
-Set the virtual machine undo disks options:
+Set the virtual environment undo disks options:
 .br
 \fIoff\fR: Undo disks mech is off.
 .br
-\fIdiscard\fR: Discard all changes made in the virtual machine after it is stopped.
+\fIdiscard\fR: Discard all changes made in the virtual environment after it is stopped.
 .br
-\fIask\fR: Ask the user what to do: apply changes or discard them after the virtual machine is stopped.
+\fIask\fR: Ask the user what to do: apply changes or discard them after the virtual environment is stopped.
 .TP
 \fB--autocompact\fR <\fIon\fR|\fIoff\fR>
 Turns on/off automatic virtual disk image compact. 
 .TP
 \fB--tools-autoupdate\fR <\fIon\fR|\fIoff\fR>
-Turns on/off automatic updating of Parallels Tools in the guest operating
-system. If this option is set to on, Parallels Tools updates will be performed
+Turns on/off automatic updating of Virtuozzo Guest Tools in the guest operating
+system. If this option is set to on, Virtuozzo Guest Tools updates will be performed
 automatically every time an update is available for Parallels Cloud Server. If
-this option is set to off, no automatic Parallels Tools updates will be
+this option is set to off, no automatic Virtuozzo Guest Tools updates will be
 performed, so that you can do it manually at a convenient time.
 .TP
 \fB--userpasswd\fR <\fIuser:passwd\fR>
-Sets the password for the specified user in the virtual machine. If the user account does not exist, it is created.
-Parallels Tools must be installed in the virtual machine for the command to succeed.
+Sets the password for the specified user in the virtual environment. If the user account does not exist, it is created.
+Virtuozzo Guest Tools must be installed in the virtual environment for the command to succeed.
 If the \fB--crypted\fR parameter is specified, the system assumes that the
 passwords are encrypted (for Containers only).
 .TP
 \fB--host-admin\fR <\fIname\fR>
-Specifies a host OS administrator's name if an administrator's password is required to change the password for the specified user in the virtual machine.
+Specifies a host OS administrator's name if an administrator's password is required to change the password for the specified user in the virtual environment.
 .TP
 \fB--template\fR <\fIyes\fR|\fIno\fR>
-Convert the virtual machine to template and vice versa.
+Convert the virtual environment to template and vice versa.
 .TP
-\fBManaging VM devices\fR
-The following options can be used to manage VM devices: \fB--device-add\fR, \fB--device-set\fR,
+\fBManaging VE devices\fR
+The following options can be used to manage VE devices: \fB--device-add\fR, \fB--device-set\fR,
 and \fB--device-del\fR, \fB--device-connect\fR, \fB--device-disconnect\fR.
 Only one option can be specified at a time.
 .TP
 \fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIparallel\fR|\fIsound\fR|\fIusb\fR|\fIpci\fR> [\fBdevice_options\fR]
 .br
-\fBAdding virtual hard disk drives to VM\fR
+\fBAdding virtual hard disk drives to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--type\fR <\fIexpand\fR|\fIplain\fR>] [\fB--size\fR <\fIn\fR>]
 [\fB--split\fR] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>] [\fB--mnt\fR <\fIpath\fR>]
 
-\fBimage_name\fR: the image file to be used to emulate the VM virtual hard disk. To use an existing image file, specify its name and path. To create a new image file, omit the \fB--image\fR option; a new file named \fBharddiskN.hdd\fR will be created in the VM directory.
+\fBimage_name\fR: the image file to be used to emulate the VE virtual hard disk. To use an existing image file, specify its name and path. To create a new image file, omit the \fB--image\fR option; a new file named \fBharddiskN.hdd\fR will be created in the VE directory.
 .br
 \fBtype\fR: the type of the virtual disk drive:
 .br
@@ -564,12 +562,12 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fBmnt\fR: the mount point to automount virtual hard disk inside the guest OS
 
-\fBConnecting physical hard disks to VM\fR
+\fBConnecting physical hard disks to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
 
-\fBdevice\fR: the name of the physical hard disk on the Parallels server to be connected to the VM. You can use the \fBserver info\fR command to view the name of all physical disks currently existing on the Parallels server.
+\fBdevice\fR: the name of the physical hard disk on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all physical disks currently existing on the Virtuozzo server.
 .br
 \fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR.
 .br
@@ -581,12 +579,12 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 0-6 for SCSI disk drives
 
-\fBAdding virtual CD/DVD-ROM drives to VM\fR
+\fBAdding virtual CD/DVD-ROM drives to VE\fR
 .br
 \fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
 
-\fBimage\fR: connect the specified image file (either on the Parallels server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual machine. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
+\fBimage\fR: connect the specified image file (either on the Virtuozzo server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
 .br
@@ -598,12 +596,12 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 0-6 for SCSI disk drives
 
-\fBConnecting physical DVD/CD-ROM drive to VM\fR
+\fBConnecting physical DVD/CD-ROM drive to VE\fR
 .br
 \fB--device-add\fR \fIcdrom\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
 
-\fBdevice\fR: the name of the physical DVD/CD-ROM on the Parallels server to be connected to the VM. You can use the \fBserver info\fR command to view the name of all DVD/CD-ROM drives currently existing on the Parallels server.
+\fBdevice\fR: the name of the physical DVD/CD-ROM on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all DVD/CD-ROM drives currently existing on the Virtuozzo server.
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
 .br
@@ -615,11 +613,11 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 0-6 for SCSI disk drives
 
-\fBAdding virtual floppy disk drive to VM\fR
+\fBAdding virtual floppy disk drive to VE\fR
 .br
 \fB--device-add\fR \fIfdd\fR
 
-\fBConnecting physical floppy disk drive to VM\fR
+\fBConnecting physical floppy disk drive to VE\fR
 .br
 \fB--device-add\fR \fIfdd\fR \fB--device\fR <\fIname\fR>
 
@@ -633,15 +631,15 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 [\fB--preventpromisc\fR <\fIyes|no\fR>] [\fB--adapter-type\fR <\fIvirtio\fR|\fIe1000\fR|\fIrtl\fR>]
 
 
-\fBtype\fR: the type of the network adapter to create in the virtual machine.
+\fBtype\fR: the type of the network adapter to create in the virtual environment.
 .br
-\fBnetwork_id\fR: the name of the virtual network on the Parallels server where the VM virtual adapter will be connected.
+\fBnetwork_id\fR: the name of the virtual network on the Virtuozzo server where the VE virtual adapter will be connected.
 .br
 \fBmac\fR: the MAC address to be assigned to the virtual network adapter. If you omit this option, the MAC address will be automatically generated by the Parallels software.
 .br
-\fBipadd\fR: the IP address to be assigned to the network adapter in the virtual machine.
+\fBipadd\fR: the IP address to be assigned to the network adapter in the virtual environment.
 .br
-\fBipdel\fR: the IP address to be removed from the network adapter in the virtual machine.
+\fBipdel\fR: the IP address to be removed from the network adapter in the virtual environment.
 .br
 \fBdhcp\fR: specifies whether the virtual network adapter should get its IP
 settings through a DHCP server.
@@ -649,13 +647,13 @@ settings through a DHCP server.
 \fBdhcp6\fR: specifies whether the virtual network adapter should get its IPv6
 settings through a DHCP server.
 .br
-\fBgw\fR: the default gateway to be used by the virtual machine.
+\fBgw\fR: the default gateway to be used by the virtual environment.
 .br
-\fBgw6\fR: the default IPv6 gateway to be used by the virtual machine.
+\fBgw6\fR: the default IPv6 gateway to be used by the virtual environment.
 .br
-\fBnameserver\fR: the default DNS server to be used by the virtual machine.
+\fBnameserver\fR: the default DNS server to be used by the virtual environment.
 .br
-\fBsearchdomain\fR: the default search domain to be used by the virtual machine.
+\fBsearchdomain\fR: the default search domain to be used by the virtual environment.
 .br
 \fBconfigure\fR: if set to "yes", the settings above are applied to the virtual
 network adapter instead of its original settings. Configuring any of the
@@ -670,31 +668,31 @@ to filter network packages by MAC address. If set to "yes", the adapter
 is allowed to send packages only from its own MAC address.
 .br
 \fBpreventpromisc\fR: determines if the specified network adapter should reject
-packages not addressed to its virtual machine. If set to "yes", the adapter will
-drop packages not addressed to its virtual machine.
+packages not addressed to its virtual environment. If set to "yes", the adapter will
+drop packages not addressed to its virtual environment.
 .br
 \fBadapter-type\fR: specifies network adapter emulation type.
 
-\fBAdding virtual serial port to VM\fR
+\fBAdding virtual serial port to VE\fR
 .br
 \fB--device-add\fR \fIserial\fR {\fB--device\fR <\fIname\fR> | \fB--output\fR <\fIfile\fR> | \fB--socket\fR <\fIfile\fR>
 	[\fB--socket-mode\fr <\fIserver\fR|\fIclient\fR>]}
 
-\fBdevice\fR: the number of the serial port on the Parallels server to be used by the VM.
+\fBdevice\fR: the number of the serial port on the Virtuozzo server to be used by the VE.
 .br
 \fBoutput\fR: the path to the file where the output of the virtual serial port will be sent.
 .br
-\fBsocket\fR: the name of the physical socket on the Parallels server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
+\fBsocket\fR: the name of the physical socket on the Virtuozzo server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
 
-\fBAdding virtual parallel port to VM\fR
+\fBAdding virtual parallel port to VE\fR
 .br
 \fB--device-add\fR \fIparallel\fR{\fB--device\fR <\fIname\fR> | \fB--output\fB <\fIfile\fR>}
 
-\fBdevice\fR: the number of the parallel port on the Parallels server to be used by the VM. 
+\fBdevice\fR: the number of the parallel port on the Virtuozzo server to be used by the VE. 
 .br
 \fBoutput\fR: the path to the file where the output of the virtual parallel port will be sent.
 
-\fBAdding virtual sound card to VM\fR
+\fBAdding virtual sound card to VE\fR
 .br
 \fB--device-add\fR <\fIsound\fR> \fB--output\fR <\fIname\fR> \fB--input\fR <\fIname\fB>
 
@@ -706,19 +704,19 @@ drop packages not addressed to its virtual machine.
 .br
 \fB--device-add\fR <\fIpci\fR> \fB--device\fR <\fIname\fR>
 
-Connects the specified VT-d PCI device to the virtual machine. To list the available devices, use
+Connects the specified VT-d PCI device to the virtual environment. To list the available devices, use
 the \fBprlsrvctl info\fR command.
 .TP
 
 \fB--device-set\fR <\fIdevice_name\fR>  [\fB--enable\fR|\fB--disable\fR] [\fB--connect\fR|\fB--disconnect\fR]
-Used to configure various parameters of the specified virtual device. After its adding to the virtual machine, any device gets its own name (\fI<name>\fR) and can be managed using this name. You can use any of the parameters available to \fB--device-add\fR with \fB--device-set\fR.
+Used to configure various parameters of the specified virtual device. After its adding to the virtual environment, any device gets its own name (\fI<name>\fR) and can be managed using this name. You can use any of the parameters available to \fB--device-add\fR with \fB--device-set\fR.
 .TP
 \fB--device-del\fR <\fIdevice_name\fR>  [\fB--detach-only\fR|\fB--destroy-image\fR]
-Removes the specified device from the virtual machine. If \fB--detach-only\fR is specified and the device is a virtual hard disk drive, the disk image is preserved. If \fB--destroy-image\fR is specified, the virtual HDD image is removed from the server. If \fB--destroy-image-force\fR is specified,
+Removes the specified device from the virtual environment. If \fB--detach-only\fR is specified and the device is a virtual hard disk drive, the disk image is preserved. If \fB--destroy-image\fR is specified, the virtual HDD image is removed from the server. If \fB--destroy-image-force\fR is specified,
  the virtual HDD image is removed from all snapshots and from the server. The default action on deleting a virtual HDD is to destroy the HDD image as if \fB--destroy-image\fR was specified.
 .TP
 \fB--device-connect\fR <\fIdevice_name\fR>
-Used to connect the specified device to a running Vm. 
+Used to connect the specified device to a running VE. 
 Supported device types: fdd, cdrom, sound, net. The device name could be
 obtained using the 'prlctl list -i' command.
 .TP
@@ -728,7 +726,7 @@ Disconnect the specified device.
 .TP
 \fB--backup-add\fR <\fIbackup_id\fR> [[\fB--disk\fR <\fIdisk_name\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>] [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]]
 .br
-Attach a backup to a virtual machine.
+Attach a backup to a virtual environment.
 .br
 \fBbackup_id\fR: The identifier of the backup to attach. To list available backups, use the \fBbackup-list\fR command. Please note that only backups on localhost can be attached.
 .br
@@ -746,62 +744,62 @@ Attach a backup to a virtual machine.
 
 .TP
 \fB--backup-del\fR <\fIbackup_id\fR|\fIall\fR>
-Detach either the backup with the identifier \fBbackup_id\fR or detach all backups from the virtual machine.
+Detach either the backup with the identifier \fBbackup_id\fR or detach all backups from the virtual environment.
 .br
 NOTE: To detach a single backup disk, use the \fB--device-del\fR command.
 
 .SS Backup and restore management
-The following command and options can be used to back up and restore a virtual machine.
+The following command and options can be used to back up and restore a virtual environment.
 The \fB--storage\fR option allows you to specify the backup server.
 If this option is omitted, the local server is used.
-.IP "\fBbackup\fR <\fIvm_id\fR|\fIvm_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]" 4
-Backs up the specified virtual machine.
+.IP "\fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]" 4
+Backs up the specified virtual environment.
 .TP
 \fB-f,--full\fB
-Create a full backup of the virtual machine. A full backup contains all virtual machine data.
+Create a full backup of the virtual environment. A full backup contains all virtual environment data.
 .TP
 \fB-i,--incremental\fR
-Create an incremental backup of the virtual machine.
+Create an incremental backup of the virtual environment.
 An incremental backup contains only the files changed since the previous full or incremental backup. This is the default backup type.
 .TP
 \fB-u,--uncompressed\fB
 Do not compress backup image.
-.IP "\fBbackup-list\fR [\fIvm_id\fR|\fIvm_name\fR] [\fB-f,--full\fR] [\fB--vmtype ct|vm|all\fR] [\fR--localvms\fB] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]" 4
+.IP "\fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--vmtype ct|vm|all\fR] [\fR--localvms\fB] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]" 4
 Lists the existing backups.
 If the \fB--localvms\fR option is specified, list only backups that were created on the local server.
-.IP "\fBrestore\fR {<\fBvm_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} \
+.IP "\fBrestore\fR {<\fBve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} \
 [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] \
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]" 4
-Restore the specified virtual machine. Only stopped virtual machines can be restored.
+Restore the specified virtual environment. Only stopped virtual environments can be restored.
 If \fBbackup_ID\fR is not specified, the latest backup version is restored.
 .TP
 \fB-n,--name\fR <\fBnew_name\fR>
-Restore the virtual machine and assign the name \fBnew_name\fR to it.
+Restore the virtual environment and assign the name \fBnew_name\fR to it.
 .TP
 \fB--dst\fR <\fBpath\fR>
-Restore the virtual machine data to the specified directory on the Parallels server.
-.IP "\fBbackup-delete\fR {<\fIvm_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>}" 4
-Delete the backup for specified virtual machine.
+Restore the virtual environment data to the specified directory on the Virtuozzo server.
+.IP "\fBbackup-delete\fR {<\fIve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>}" 4
+Delete the backup for specified virtual environment.
 .SS Migration management
-The following options can be used to migrate a virtual machine from the source server \fBsrc\fR to the destination server \fBdst\fR.
-If the virtual machine is running, the migration is performed as follows.
-First, virtual machine data is copied to the destination server, then the virtual machine is suspended, and, finally, the remaining data is migrated.
-After the virtual machine has been successfully migrated, it is removed from the source server.
+The following options can be used to migrate a virtual environment from the source server \fBsrc\fR to the destination server \fBdst\fR.
+If the virtual environment is running, the migration is performed as follows.
+First, virtual environment data is copied to the destination server, then the virtual environment is suspended, and, finally, the remaining data is migrated.
+After the virtual environment has been successfully migrated, it is removed from the source server.
 .IP "\fBmigrate\fR <[\fBsrc/\fR]\fBID\fR> <\fBdst\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--keep-src\fR] [\fB--ssh\fR <\fIoptions\fR>]" 4
-Migrates the specified virtual machine from the source server \fBsrc\fR to the destination server \fBdst\fR. The source and
+Migrates the specified virtual environment from the source server \fBsrc\fR to the destination server \fBdst\fR. The source and
 destination servers must be specified in this format: [user[:password]@]server_IP_address_or_hostname[:port].
 If the source server is omitted, the local server is assumed.
 .TP
 \fB--changesid\fR
 This option is used to change the current Windows security identifier (SID) of a Windows-based virtual machine template.
-It requires Parallels Tools to be installed in the virtual machine template.
+It requires Virtuozzo Guest Tools to be installed in the virtual machine template.
 .TP
 \fB--keep-src\fR
-If this option is provided, the original virtual machine or Container will be
+If this option is provided, the original virtual environment will be
 cloned to destination and left intact on the source server. The clone will have
 a different UUID, MAC address, and SID (Windows-based virtual machines only; if
 \fB--changesid\fR is used) and will have offline management disabled. If this option
-is omitted, the original virtual machine will be removed from the source server
+is omitted, the original virtual environment will be removed from the source server
 after migration.
 .TP
 \fB--ssh\fR <\fIoptions\fR>
@@ -810,35 +808,34 @@ Options to pass to ssh when it is used to establish a connection to the destinat
 .br
 Note: Do not specify the hostname/IP address of the destination server as an option.
 .SS Snapshot management
-.IP "\fBsnapshot\fR <\fIvmid\fR|\fIname\fR> [\fB-n\fR,\fB--name\fR <\fIname\fR>] [\fB-d\fR,\fB--description\fR <\fIdesc\fR>]" 4
-This command is used to create Vm snapshot.
-.IP "\fBsnapshot-list\fR <\fIvmid\fR|\fIname\fR> [{\fB-t\fR,\fB--tree\fR] | [\fB-i\fR,\fB--id\fR <\fIsnapid\fR>}]" 4
-This command is used to list Vm tree. There are three modes of snapshot listing,
-if no option specified the snapshot tree represented in two colums
+.IP "\fBsnapshot\fR <\fIve_id\fR|\fIname\fR> [\fB-n\fR,\fB--name\fR <\fIname\fR>] [\fB-d\fR,\fB--description\fR <\fIdesc\fR>]" 4
+This command is used to create VE snapshot.
+.IP "\fBsnapshot-list\fR <\fIve_id\fR|\fIname\fR> [{\fB-t\fR,\fB--tree\fR] | [\fB-i\fR,\fB--id\fR <\fIsnapid\fR>}]" 4
+This command is used to list the virtual environment's snapshots tree. There are three modes of snapshot listing,
+if no option specified the snapshot tree represented in two columns
 "PARENT_SNAPSHOT_ID SNAPSHOT_ID". If \fB-t\fR,\fB--tree\fR option is specified draw the tree.
 If \fB-i\fR,\fB--id\fR <\fIsnapid\fR> option is specified, display the snapshot information 
-.IP "\fBsnapshot-delete\fR <\fIvmid\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]" 4
+.IP "\fBsnapshot-delete\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]" 4
 Used to delete snapshot by \fIsnapid\fR and all children.
-.IP "\fBsnapshot-switch\fR <\fIvmid\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR>" 4
+.IP "\fBsnapshot-switch\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR>" 4
 Used to revert to selected snapshot.
 .SS Hostname management
 .IP "\fB--hostname\fR <\fIhostname\fR>" 4
-Sets the hostname for the virtual machine. For this option to work, Parallels
-Tools must be installed in the virtual machine.
+Sets the hostname for the virtual environment. For virtual machines, Virtuozzo Guest Tools must be installed in the virtual machine.
 .SS Offline management
 .IP "\fB--offline-management\fR <\fIon\fR|\fIoff\fR>" 4
-Enable/disable the offline management feature. This feature defines whether the virtual machine can be managed using the services set by the --offline-management option.
+Enable/disable the offline management feature. This feature defines whether the virtual environment can be managed using the services set by the --offline-management option.
 .IP
 \fB--offline-service\fR <\fIservice_name\fR>
-Defines whether the Container can be managed by means of Parallels Power Panel or Plesk or both.
+Defines whether the virtual environment can be managed by means of Parallels Power Panel or Plesk or both.
 Valid only if the OFFLINE_MANAGEMENT parameter is set to "yes". The names of the available services
 can be taken from the file names (excluding the .conf extension) in the /etc/vzredirect.d directory
 on the server.
 .SS Network bandwidth management
 .IP "\fB--rate\fR <\fIclass\fR:\fIKBits\fR>" 4
-Specifies the bandwidth guarantee of the virtual machine for the specified network class.
+Specifies the bandwidth guarantee of the virtual environment for the specified network class.
 .IP "\fB--ratebound\fR <\fIyes\fR|\fIno\fR>" 4
-If set to "\fIyes\fR", the bandwidth guarantee is also the limit for the virtual machine.
+If set to "\fIyes\fR", the bandwidth guarantee is also the limit for the virtual environment.
 If set to "\fIno\fR", the bandwidth limit is defined by the TOTALRATE parameter in the /etc/vz/vz.conf file. 
 .SS Shared Folders management
 A shared folder is a folder in the host OS which is shared with a given virtual machine. 
@@ -860,12 +857,12 @@ To create and start a VM having the name of \fIwin2003\fR and based on the 'Wind
 \f(CR	prlctl start win2003
 \fR
 .P
-To stop the \fBwin2003\fR VM:
+To stop the \fBwin2003\fR VE:
 .br
 \f(CR	prlctl stop win2003
 \fR
 .P
-To remove the \fBwin2003\fR virtual machine from the Parallels server:
+To remove the \fBwin2003\fR virtual environment from the Virtuozzo server:
 .br
 \f(CR	prlctl delete win2003
 \fR
