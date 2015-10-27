@@ -222,6 +222,7 @@ public:
 	int create_dev(DevType type, const DevInfo &param);
 	int create_shared_folder(const SharedFolderParam &param);
 	std::string get_dist() const;
+	std::string get_ostemplate() const;
 	int get_home_dir(std::string &dir) const;
 	int get_dev_info();
 	int get_vm_info();

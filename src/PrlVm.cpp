@@ -1896,6 +1896,20 @@ std::string PrlVm::get_dist() const
 	return std::string(get_dist_by_id(id));
 }
 
+std::string PrlVm::get_ostemplate() const
+{
+	PRL_RESULT ret;
+	char buf[4096];
+	unsigned int len = sizeof(buf);
+
+	if ((ret  = PrlVmCfg_GetOsTemplate(m_hVm, buf, &len))) {
+		prl_log(L_INFO, "PrlVmCfg_GetOsTemplate: %s",
+			get_error_str(ret).c_str());
+		return std::string("");
+	}
+	return std::string(buf);
+}
+
 int PrlVm::get_home_dir(std::string &dir) const
 {
 	PRL_RESULT ret;

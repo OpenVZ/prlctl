@@ -250,7 +250,10 @@ static std::string get_netif(PrlVm *vm)
 
 static std::string get_ostemplate(PrlVm *vm)
 {
-	return vm->get_dist();
+	if (vm->get_vm_type() == PVT_VM)
+		return vm->get_dist();
+	else
+		return vm->get_ostemplate();
 }
 
 static std::string get_features(PrlVm *vm)
