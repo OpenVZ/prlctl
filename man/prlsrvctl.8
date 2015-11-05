@@ -36,7 +36,7 @@ prlsrvctl \fBnet add\fR <\fIvnetwork_id\fR> [\fB-i,--ifname\fR <\fIif\fR>]
 .PP
 prlsrvctl \fBnet set\fR <\fIvnetwork_id\fR> [\fB-i,--ifname\fR <\fIif\fR>]
 [\fB-m,--mac\fR <\fImac_address\fR>] [\fB-t,--type\fR <\fIbridged|host-only\fR>]
-[\fB-d,--description\fR <\fIdescription\fR>] [\fB-n,--name\fR <\fInew_name\fR>]
+[\fB-d,--description\fR <\fIdescription\fR>]
 [\fB--ip\fR <\fIip[/mask]\fR>] [\fB--dhcp-server\fR <\fIon\fR|\fIoff\fR>] [\fB--dhcp-ip\fR <\fIip\fR>]
 [\fB--ip-scope-start\fR <\fIip\fR>] [\fB--ip-scope-end\fR <\fIip\fR>]
 [\fB--ip6\fR <\fIip[/mask]\fR>] [\fB--dhcp6-server\fR <\fIon\fR|\fIoff\fR>] [\fB--dhcp-ip6\fR <\fIip\fR>]
@@ -194,9 +194,6 @@ Virtual Network.
 .TP
 \fB-d,--description\fR <\fIdescription\fR>
 Set the Virtual Network description.
-.TP
-\fB-n,--name\fR <\fInew_name\fR>
-Set a new name for the Virtual Network.
 .TP
 \fB--ip\fR <\fIip[/mask]\fR>
 Set an IPv4 address and subnet mask for the Parallels virtual adapter.

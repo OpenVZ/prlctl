@@ -1861,32 +1861,12 @@ int PrlSrv::fill_vnetworks_list(PrlVNetList &list) const
 int PrlSrv::fill_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet)
 {
 	PRL_RESULT ret;
-	char buf[1024];
-	PRL_UINT32 len;
-	const char *name = NULL;
 
 	if (!hVirtNet.valid()) {
 		ret = PrlVirtNet_Create(hVirtNet.get_ptr());
 		if (PRL_FAILED(ret))
 			return prl_err(ret, "Error: PrlVirtNet_Create failed:"
 				" %s", get_error_str(ret).c_str());
-	}
-	if (!vnet.new_name.empty())
-		name = vnet.new_name.c_str();
-	else if (!vnet.vnet.empty())
-		name = vnet.vnet.c_str();
-	else
-	{
-		len = sizeof(buf);
-		ret = PrlVirtNet_GetNetworkId(hVirtNet.get_handle(), buf, &len);
-		if (ret == 0)
-			name = buf;
-	}
-	if (name) {
-		ret = PrlVirtNet_SetNetworkId(hVirtNet.get_handle(), name);
-		if (PRL_FAILED(ret))
-			return prl_err(ret, "Error: PrlVirtNet_SetNetworkId"
-				" failed: %s", get_error_str(ret).c_str());
 	}
 	if (!vnet.description.empty()) {
 		ret = PrlVirtNet_SetDescription(hVirtNet.get_handle(),
