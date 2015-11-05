@@ -649,7 +649,6 @@ struct VNetParam {
 
 	unsigned cmd;
 	std::string vnet;
-	std::string new_name;
 	std::string description;
 	std::string ip_scope_start;
 	std::string ip_scope_end;

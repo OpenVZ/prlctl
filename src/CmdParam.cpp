@@ -911,7 +911,7 @@ static void usage_disp(const char * argv0)
 #else
 "                   [-t,--type <bridged|host-only|shared>]\n"
 #endif
-"                   [-d,--description <description>] [-n,--name <new_name>]\n"
+"                   [-d,--description <description>]\n"
 "                   [--ip <addr[/mask]>] [--dhcp-server <on|off>] [--dhcp-ip <ip>]\n"
 "                   [--ip-scope-start <ip>] [--ip-scope-end <ip>]\n"
 "                   [--ip6 <addr[/mask]>] [--dhcp6-server <on|off>] [--dhcp-ip6 <ip>]\n"
@@ -4051,8 +4051,10 @@ CmdParamData cmdParam::get_vnet_param(int argc, char **argv,
 		switch (id) {
 		CASE_PARSE_OPTION_GLOBAL(val, param)
 		case CMD_VNET_NEW_NAME:
-			param.vnet.new_name = val;
-			break;
+			fprintf(stderr, "Virtual network's renaming is now deprecated."
+					" You may create new virtual network with specified name"
+					" and reattach all virtual machines to it.\n");
+			return invalid_action;
 		case CMD_VNET_DESCRIPTION:
 			param.vnet.description = val;
 			break;
@@ -4360,7 +4362,6 @@ CmdParamData cmdParam::parse_vnet_args(int argc, char **argv, int i)
 		CmdParamData param;
 		param.action = SrvVNetAction;
 		param.vnet.cmd = VNetParam::Set;
-		param.vnet.new_name = argv[++i];
 		param.vnet.vnet = argv[++i];
 		return param;
 	} else
