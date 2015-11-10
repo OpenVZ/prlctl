@@ -3904,9 +3904,11 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 		exit(0);
 	}
 
-	if (!strcmp(argv[1], "--help")) {
-		usage_vm(argv[0]);
-		exit(0);
+	for (int i = 0; i < argc; i++) { 
+		if (!strcmp(argv[i], "--help")) {
+			usage_vm(argv[0]);
+			exit(0);
+		}
 	}
 
 	if (!strcmp(argv[1], "list"))
