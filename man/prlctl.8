@@ -534,8 +534,7 @@ Only one option can be specified at a time.
 \fBAdding virtual hard disk drives to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--type\fR <\fIexpand\fR|\fIplain\fR>] [\fB--size\fR <\fIn\fR>]
-[\fB--split\fR] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
-[\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>] [\fB--mnt\fR <\fIpath\fR>]
+[\fB--split\fR] [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
 
 \fBimage_name\fR: the image file to be used to emulate the VE virtual hard disk. To use an existing image file, specify its name and path. To create a new image file, omit the \fB--image\fR option; a new file named \fBharddiskN.hdd\fR will be created in the VE directory.
 .br
@@ -550,9 +549,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fBsplit\fR: splits the hard disk drive into 2 Gb pieces.
 .br
-\fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR.
-.br
-\fBsubtype\fR: virtual hard disk subtype: either \fIbuslogic\fR or \fIlsi-spi\fR or \fIlsi-sas\fR.
+\fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR or \fIvirtio\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the disk drive. Allowed ranges:
 .br
@@ -564,14 +561,11 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 
 \fBConnecting physical hard disks to VE\fR
 .br
-\fB--device-add\fR \fIhdd\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
-[\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
+\fB--device-add\fR \fIhdd\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>]
 
 \fBdevice\fR: the name of the physical hard disk on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all physical disks currently existing on the Virtuozzo server.
 .br
-\fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR.
-.br
-\fBsubtype\fR: virtual hard disk subtype: either \fIbuslogic\fR or \fIlsi-spi\fR or \fIlsi-sas\fR.
+\fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR or \fIvirtio\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the disk drive. Allowed ranges:
 .br
@@ -582,13 +576,10 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 \fBAdding virtual CD/DVD-ROM drives to VE\fR
 .br
 \fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
-[\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
 
 \fBimage\fR: connect the specified image file (either on the Virtuozzo server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
-.br
-\fBsubtype\fR: virtual CD/DVD-ROM subtype: either \fIbuslogic\fR or \fIlsi-spi\fR or \fIlsi-sas\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the DVD/CD-ROM drive. Allowed ranges:
 .br
@@ -599,13 +590,10 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 \fBConnecting physical DVD/CD-ROM drive to VE\fR
 .br
 \fB--device-add\fR \fIcdrom\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
-[\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]
 
 \fBdevice\fR: the name of the physical DVD/CD-ROM on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all DVD/CD-ROM drives currently existing on the Virtuozzo server.
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
-.br
-\fBsubtype\fR: virtual CD/DVD-ROM subtype: either \fIbuslogic\fR or \fIlsi-spi\fR or \fIlsi-sas\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the DVD/CD-ROM drive. Allowed ranges:
 .br
@@ -720,7 +708,7 @@ obtained using the 'prlctl list -i' command.
 Disconnect the specified device.
 
 .TP
-\fB--backup-add\fR <\fIbackup_id\fR> [[\fB--disk\fR <\fIdisk_name\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>] [\fB--subtype\fR <\fIbuslogic\fR|\fIlsi-spi\fR|\fIlsi-sas\fR>]]
+\fB--backup-add\fR <\fIbackup_id\fR> [[\fB--disk\fR <\fIdisk_name\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 .br
 Attach a backup to a virtual environment.
 .br
@@ -729,8 +717,6 @@ Attach a backup to a virtual environment.
 \fBdisk_name\fR: The name of the disk in the backup to attach. If a disk is not specified, all disks contained in the backup will be attached. To list disks contained in a backup, use the \fBbackup-list -f\fR command.
 .br
 \fBiface\fR: Virtual hard disk interface: \fIide\fR, \fIscsi\fR.
-.br
-\fBsubtype\fR: Virtual hard disk subtype: \fIbuslogic\fR, \fIlsi-spi\fR or \fIlsi-sas\fR.
 .br
 \fBposition\fR: The SCSI, IDE device identifier to be used for the disk drive. Allowed ranges:
 .br
