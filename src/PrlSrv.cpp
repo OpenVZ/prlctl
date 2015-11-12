@@ -587,6 +587,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return vm->unreg();
 	case VmCloneAction:
 		return vm->clone(param.new_name, param.vm_location, param.clone_flags);
+	case VmInstallToolsAction:
+		return vm->install_tools();
 	case VmSetAction: {
 		if ((ret = vm->set(param)))
 			return prl_err(ret, "Failed to configure the virtual machine.");

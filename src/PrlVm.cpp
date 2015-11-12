@@ -4163,6 +4163,23 @@ PRL_VM_TOOLS_STATE PrlVm::get_tools_state(std::string &version) const
 
 }
 
+int PrlVm::install_tools()
+{
+	PRL_RESULT ret;
+
+	prl_log(0, "Installing...");
+
+	std::string err;
+
+	PrlHandle hJob(PrlVm_InstallTools(m_hVm));
+	if ((ret = get_job_retcode(hJob.get_handle(), err)))
+		prl_err(ret, "Failed to install the Parallels tools: %s", err.c_str());
+	else
+		prl_log(0, "The Parallels tools have been successfully installed.");
+
+	return ret;
+}
+
 void PrlVm::get_tools_info(PrlOutFormatter &f)
 {
 	std::string version;
