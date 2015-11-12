@@ -209,6 +209,7 @@ public:
 	void get_expiration_info(PrlOutFormatter &f);
 	int set_confirmations_list(const std::map<std::string , bool >& cmd_list);
 	int switch_lock_edit_settings(int on_off, const std::string& host_admin);
+	int install_tools();
 	int migrate(const MigrateParam &param);
 	int move(const std::string &location);
 	int load_def_configuration(const OsDistribution *dist);
