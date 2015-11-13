@@ -393,6 +393,9 @@ PRL_RESULT get_job_retcode(PRL_HANDLE hJob, std::string &err,
 
 		if (get_result_error_string(hErr.get_handle(), err))
 			err = get_error_str(retcode);
+		std::string d(get_details(hJob));
+		if (!d.empty())
+			err += " (Details: " + d + ")";
 
 		/* #PSBM-27689 report vzctl specific error code */
 		if (retcode == PRL_ERR_VZCTL_OPERATION_FAILED)
@@ -564,6 +567,24 @@ PRL_RESULT get_result_error_string(PRL_HANDLE hResult, std::string &err)
 	return ret;
 }
 
+std::string get_details(PRL_HANDLE hJob)
+{
+	PRL_RESULT ret;
+
+	PrlHandle hErr;
+	if (PRL_FAILED((ret = PrlJob_GetError(hJob, hErr.get_ptr()))))
+		return std::string("");
+
+	PrlHandle hParam;
+	ret = PrlEvent_GetParamByName(hErr.get_handle(), "Details", hParam.get_ptr());
+	if (PRL_FAILED(ret))
+		return std::string("");
+
+	char buf[2048] = "";
+	PRL_UINT32 len(sizeof(buf) / sizeof(buf[0]));
+	ret = PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
+	return std::string(PRL_FAILED(ret)? "": buf);
+}
 
 using namespace std;
 
