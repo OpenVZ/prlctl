@@ -1870,6 +1870,13 @@ int PrlSrv::fill_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet)
 			return prl_err(ret, "Error: PrlVirtNet_Create failed:"
 				" %s", get_error_str(ret).c_str());
 	}
+	if (!vnet.vnet.empty()) {
+		ret = PrlVirtNet_SetNetworkId(hVirtNet.get_handle(),
+				vnet.vnet.c_str());
+		if (PRL_FAILED(ret))
+			return prl_err(ret, "Error: PrlVirtNet_SetNetworkId"
+				" failed: %s", get_error_str(ret).c_str());
+	}
 	if (!vnet.description.empty()) {
 		ret = PrlVirtNet_SetDescription(hVirtNet.get_handle(),
 				vnet.description.c_str());
