@@ -950,58 +950,18 @@ int PrlVm::set_userpasswd(const std::string &userpasswd, bool crypted)
 	if ((ret = PrlResult_GetParam(hResult.get_handle(), hVmGuest.get_ptr())))
 		return prl_err(ret, "PrlResult_GetParam: %s",  get_error_str(ret).c_str());
 
-	bool bWasUserAuth = false;
-	do {
-		PRL_RESULT retcode;
-
-		std::string::size_type pos = userpasswd.find_first_of(":");
-		std::string user;
-		std::string passwd;
-		if (pos != std::string::npos) {
-			user = userpasswd.substr(0, pos);
-			passwd = userpasswd.substr(pos + 1);
-		}
-		PrlHandle hJob(PrlVmGuest_SetUserPasswd(hVmGuest.get_handle(),
+	std::string::size_type pos = userpasswd.find_first_of(":");
+	std::string user;
+	std::string passwd;
+	if (pos != std::string::npos) {
+		user = userpasswd.substr(0, pos);
+		passwd = userpasswd.substr(pos + 1);
+	}
+	PrlHandle h(PrlVmGuest_SetUserPasswd(hVmGuest.get_handle(),
 				user.c_str(), passwd.c_str(),
 				crypted ? PSPF_PASSWD_CRYPTED : 0));
-
-		if ((ret = PrlJob_Wait(hJob.get_handle(), g_nJobTimeout))) {
-			prl_err(ret, "Unable to commit %s configuration: %s",
-					get_vm_type_str(), get_error_str(ret).c_str());
-			break;
-		}
-		if ((ret = PrlJob_GetRetCode(hJob.get_handle(), &retcode))) {
-			prl_err(ret, "PrlJob_GetRetCode: %s",
-					get_error_str(ret).c_str());
-			break;
-		}
-
-		if (retcode) {
-			PrlHandle hErr;
-			ret = PrlJob_GetError(hJob.get_handle(), hErr.get_ptr());
-			if (ret == PRL_ERR_NO_DATA) {
-				prl_err(ret, "Failed to change user password: %s",
-						get_error_str(retcode).c_str());
-				break;
-			}
-			else if (ret) {
-				prl_err(ret, "PrlJob_GetError: %s",
-					get_error_str(ret).c_str());
-				break;
-			}
-
-			PrlEvent_GetErrCode(hErr.get_handle(), &retcode);
-
-			char buf[4096];
-			unsigned int len = sizeof(buf);
-
-			PrlEvent_GetErrString(hErr.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len);
-			prl_err(retcode, "Failed to change user password: %s", buf);
-		}
-		ret = retcode;
-		break;
-
-	} while (bWasUserAuth);
+	if ((ret = get_job_retcode(h.get_handle(), err)))
+		return prl_err(ret, "%s", err.c_str());
 
 	if (ret == 0)
 		prl_log(0, "Authentication tokens updated successfully.");
