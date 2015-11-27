@@ -577,13 +577,24 @@ std::string get_details(PRL_HANDLE hJob)
 
 	PrlHandle hParam;
 	ret = PrlEvent_GetParamByName(hErr.get_handle(), "Details", hParam.get_ptr());
-	if (PRL_FAILED(ret))
-		return std::string("");
+	if (PRL_SUCCEEDED(ret)) {
+		char buf[2048] = "";
+		PRL_UINT32 len(sizeof(buf));
+		ret = PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
+		return std::string(PRL_FAILED(ret)? "": buf);
+	}
 
-	char buf[2048] = "";
-	PRL_UINT32 len(sizeof(buf) / sizeof(buf[0]));
-	ret = PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
-	return std::string(PRL_FAILED(ret)? "": buf);
+	ret = PrlEvent_GetParamByName(hErr.get_handle(), "internal_event", hParam.get_ptr());
+	if (PRL_SUCCEEDED(ret)) {
+		PrlHandle e;
+		std::string err;
+		if (PRL_FAILED((ret = PrlEvtPrm_ToHandle(hParam.get_handle(), e.get_ptr()))))
+			return err;
+		get_result_error_string(e.get_handle(), err);
+		return err;
+	}
+
+	return std::string("");
 }
 
 using namespace std;
