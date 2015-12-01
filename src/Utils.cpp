@@ -387,7 +387,7 @@ PRL_RESULT get_job_retcode(PRL_HANDLE hJob, std::string &err,
 		*/
 		PrlHandle hErr;
 		if ((ret = PrlJob_GetError(hJob, hErr.get_ptr()))) {
-			err = "PrlJob_GetError: " + get_error_str(ret);
+			err = "PrlJob_GetError: " + get_error_str(retcode);
 			return ret;
 		}
 
