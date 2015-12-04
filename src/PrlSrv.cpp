@@ -1713,6 +1713,8 @@ int PrlSrv::print_info(bool is_license_info
 		append_deactivation_id(f);
 	else {
 		append_info(f);
+		append_lic_info(f);
+		append_hw_info(f);
 	}
 
 	f.close_object();
