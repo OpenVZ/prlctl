@@ -136,7 +136,7 @@ public:
 			f.add("restricted", m_has_restrictions ? "true" : "false",
 														true, true);
 		} else {
-			f.add("state", "not valid", true, true);
+			f.add("state", "not installed", true, true);
 		}
 		f.close(true);
 
