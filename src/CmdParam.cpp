@@ -813,7 +813,7 @@ static void usage_vm(const char * argv0)
 #ifdef _DEBUG
 "	--device-set hddN --size <n> [--offline]\n"
 #endif
-"	--device-add <hdd | cdrom | net | fdd | serial | parallel | usb | pci>\n"
+"	--device-add <hdd | cdrom | net | fdd | serial | usb | pci>\n"
 "		[Device options] [--enable|--disable] [--connect|--disconnect]\n"
 "	--device-add hdd [--image <image>]\n"
 "		[--type <expand | plain>] [--size <n>] [--split]\n"
@@ -841,7 +841,6 @@ static void usage_vm(const char * argv0)
 "	--device-add fdd --image <image> [--recreate]\n"
 "	--device-add serial {--device <name> | --output <file>\n"
 "		|--socket <name> [--socket-mode <server | client>]}\n"
-"	--device-add parallel {--device <name> | --output <file}\n"
 "	--device-add pci --device <name>\n"
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"

@@ -88,7 +88,7 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR] [\fB--quotaugidlimit\fR \fInum\fR]
 .br
-	[\fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIparallel\fR|\fIusb\fR> | \fB--device-del\fR <\fIname\fR> [\fB--destroy-image\fR|\fB--destroy-image-force\fR|\fB--detach-only\fR] | \fB--device-set\fR <\fIname\fR>]
+	[\fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIusb\fR> | \fB--device-del\fR <\fIname\fR> [\fB--destroy-image\fR|\fB--destroy-image-force\fR|\fB--detach-only\fR] | \fB--device-set\fR <\fIname\fR>]
 .br
 	[\fB--device-connect\fR <\fIname\fR> | \fB--device-disconnect\fR <\fIname\fR>]
 .br
@@ -529,7 +529,7 @@ The following options can be used to manage VE devices: \fB--device-add\fR, \fB-
 and \fB--device-del\fR, \fB--device-connect\fR, \fB--device-disconnect\fR.
 Only one option can be specified at a time.
 .TP
-\fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIparallel\fR|\fIusb\fR|\fIpci\fR> [\fBdevice_options\fR]
+\fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIusb\fR|\fIpci\fR> [\fBdevice_options\fR]
 .br
 \fBAdding virtual hard disk drives to VE\fR
 .br
@@ -671,14 +671,6 @@ drop packages not addressed to its virtual environment.
 \fBoutput\fR: the path to the file where the output of the virtual serial port will be sent.
 .br
 \fBsocket\fR: the name of the physical socket on the Virtuozzo server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
-
-\fBAdding virtual parallel port to VE\fR
-.br
-\fB--device-add\fR \fIparallel\fR{\fB--device\fR <\fIname\fR> | \fB--output\fB <\fIfile\fR>}
-
-\fBdevice\fR: the number of the parallel port on the Virtuozzo server to be used by the VE. 
-.br
-\fBoutput\fR: the path to the file where the output of the virtual parallel port will be sent.
 
 \fBEnable USB support\fR
 .br
