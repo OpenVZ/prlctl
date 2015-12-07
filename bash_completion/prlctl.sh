@@ -93,8 +93,6 @@ _prlctl()
 	local set_device_net_flags='--type --mac --iface'
 	local set_device_fdd_flags='--device --image --recreate'
 	local set_device_serial_flags='--device --output --socket'
-	local set_device_parallel_flags='--device --output'
-	local set_device_sound_flags='--output --input'
 	local move_flags='--location'
 
 	local global_flags='-l -p -v --verbose'
@@ -154,7 +152,7 @@ _prlctl()
 			opts='yes no auto'
 			;;
 		--device-add)
-			opts='hdd cdrom net fdd serial parallel sound usb'
+			opts='hdd cdrom net fdd serial usb'
 			;;
 		--device-del)
 			opts=$(get_devs "${COMP_WORDS[2]}")
