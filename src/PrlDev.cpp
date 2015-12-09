@@ -848,6 +848,12 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 	if (PrlVmDevHd_IsAutoCompressEnabled(m_hDev, &enabled) == 0 && !enabled)
 		f.add("autocompact", "off", true);
 
+	if (is_full_info_mode()) {
+		len = sizeof(buf);
+		if (PrlVmDevHd_GetSerialNumber(m_hDev, buf, &len) == 0 && len > 1)
+			f.add("serial", buf, true);
+	}
+
 	f.close(true);
 };
 
