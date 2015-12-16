@@ -3482,13 +3482,10 @@ int PrlVm::commit_configuration(const CmdParamData &param)
 		PrlHandle hErr;
 		if ( !resultCount && !PrlJob_GetError(hJob.get_handle(), hErr.get_ptr()) )
 		{
-			len = sizeof(buf);
-			if ( !PrlEvent_GetErrString(hErr.get_handle(), PRL_TRUE, PRL_FALSE, buf, &len) )
-				err += buf;
-			len = sizeof(buf);
-			if ( !PrlEvent_GetErrString(hErr.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len) )
-				err += buf;
-
+			get_result_error_string(hErr.get_handle(), err);
+			std::string d(get_details(hJob));
+			if (!d.empty())
+				err += " (Details: " + d + ")";
 			++resultCount;
 		}
 
