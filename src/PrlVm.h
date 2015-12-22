@@ -129,7 +129,8 @@ public:
 	int update_state();
 	void set_state(VIRTUAL_MACHINE_STATE state) {m_VmState = state;}
 	int reg(const std::string &location, PRL_UINT32 nFlags = 0);
-	int clone(const std::string &name, const std::string &location, unsigned int flags);
+	int clone(const std::string &name, const std::string &uuid,
+			const std::string &location, unsigned int flags);
 	int unreg();
 	int destroy();
 	int set_boot_dev(const PrlDev *dev, int bootindex, bool inuse = true) const;

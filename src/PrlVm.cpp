@@ -1200,7 +1200,8 @@ int PrlVm::reg(const std::string &location, PRL_UINT32 nFlags)
 }
 
 
-int PrlVm::clone(const std::string &name, const std::string &location, unsigned int flags)
+int PrlVm::clone(const std::string &name, const std::string &uuid,
+		const std::string &location, unsigned int flags)
 {
 	PRL_RESULT ret;
 
@@ -1217,7 +1218,7 @@ int PrlVm::clone(const std::string &name, const std::string &location, unsigned 
 	std::string err;
 
 	m_srv.reg_event_callback(progress_event_handler);
-	PrlHandle hJob(PrlVm_CloneEx(m_hVm, name.c_str(), location.c_str(), flags));
+	PrlHandle hJob(PrlVm_CloneWithUuid(m_hVm, name.c_str(), uuid.c_str(), location.c_str(), flags));
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hJob.get_handle());
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		prl_err(ret, "\nFailed to clone the %s: %s",

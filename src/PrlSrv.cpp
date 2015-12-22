@@ -586,7 +586,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 	case VmUnregisterAction:
 		return vm->unreg();
 	case VmCloneAction:
-		return vm->clone(param.new_name, param.vm_location, param.clone_flags);
+		return vm->clone(param.new_name, param.uuid, param.vm_location,
+				param.clone_flags);
 	case VmInstallToolsAction:
 		return vm->install_tools();
 	case VmSetAction: {
@@ -776,7 +777,7 @@ int PrlSrv::create_vm(const CmdParamData &param)
 		    !vm->is_template())
 			return prl_err(1, "Failed to find the %s template.",
 				param.ostemplate.c_str());
-		return vm->clone(param.id, param.vm_location, param.clone_flags);
+		return vm->clone(param.id, param.uuid, param.vm_location, param.clone_flags);
 	}
 	prl_log(0, "Creating the virtual machine...");
 
