@@ -815,7 +815,7 @@ static void usage_vm(const char * argv0)
 #endif
 "	--device-add <hdd | cdrom | net | fdd | serial | usb | pci>\n"
 "		[Device options] [--enable|--disable] [--connect|--disconnect]\n"
-"	--device-add hdd [--image <image>]\n"
+"	--device-add hdd [--image <image>] [--recreate]\n"
 "		[--type <expand | plain>] [--size <n>] [--split]\n"
 "		[--iface <ide|scsi|virtio>] [--position <n>]\n"
 "		[--mnt <path>]\n"
@@ -1849,9 +1849,9 @@ bool CmdParamData::is_valid()
 			" specified to setup shared folder.\n");
 		return false;
 	}
-	if (dev.recreate && dev.type != DEV_FDD) {
+	if (dev.recreate && dev.type != DEV_FDD && dev.type != DEV_HDD) {
 		fprintf(stderr, "The --recreate option have to be"
-			" specified to setup fdd device.\n");
+			" specified to setup fdd/hdd device.\n");
 		return false;
 	}
 	if (dev.cmd == None && dev.net.is_updated()) {

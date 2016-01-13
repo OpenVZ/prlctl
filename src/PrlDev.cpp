@@ -574,7 +574,7 @@ int PrlDevHdd::set_device(const DevInfo &param)
 	PRL_VM_DEV_EMULATION_TYPE type;
 	std::string path;
 	std::string id;
-	bool exists = false;
+	bool create = param.recreate;
 	int err;
 
 	if (!param.device.empty()) {
@@ -605,12 +605,6 @@ int PrlDevHdd::set_device(const DevInfo &param)
 		}
 	} else if (!param.image.empty()) {
 		type = PDT_USE_IMAGE_FILE;
-		/* Check either --image already exists, if no create one */
-		if ((ret = m_vm.get_new_dir("", path, param.image.c_str())))
-			return ret;
-
-		if (!path.empty())
-			exists = true;
 		id = path = param.image;
 	} else if (!param.storage_url.empty()) {
 		if ((ret = PrlVmDevHd_SetStorageURL(m_hDev, param.storage_url.c_str())))
@@ -632,6 +626,7 @@ int PrlDevHdd::set_device(const DevInfo &param)
 		/* generate hdd image name */
 		if ((ret = m_vm.get_new_dir("harddisk%d.hdd", path)))
 			return ret;
+		create = true;
 		id = path;
 	}
 
@@ -645,7 +640,7 @@ int PrlDevHdd::set_device(const DevInfo &param)
 	if ((ret = set_sname(id)))
 		return ret;
 
-	if (type == PDT_USE_IMAGE_FILE && !exists) {
+	if (type == PDT_USE_IMAGE_FILE && create) {
 		if ((ret = create_image(param)))
 			return ret;
 	} else {
