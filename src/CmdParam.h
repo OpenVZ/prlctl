@@ -841,6 +841,8 @@ public:
 	int memquota_maxballoon;
 	int memquota_prio;
 	int memquota_auto;
+	PRL_MEMGUARANTEE_DATA memguarantee;
+	bool memguarantee_set;
 	std::string desc;
 	std::string uuid;
 	std::string autostart;
@@ -1019,6 +1021,7 @@ public:
 		memquota_maxballoon(-1),
 		memquota_prio(-1),
 		memquota_auto(-1),
+		memguarantee_set(false),
 		autostart_delay(-1),
 		is_template(-1),
 		smart_mouse_optimize(-1),
@@ -1144,6 +1147,7 @@ private:
 	CmdParamData get_xmlrpc_param(int argc, char **argv, Action action,
 		const Option *options, int offset);
 	int parse_memquota(const char *value, CmdParamData &param);
+	int parse_memguarantee(const char *value, CmdParamData &param);
 };
 
 enum cmdOptions {
@@ -1221,6 +1225,7 @@ enum cmdOptions {
 	CMD_HIGH_RESOLUTION,
 	CMD_MEM_HOTPLUG,
 	CMD_MEMQUOTA,
+	CMD_MEMGUARANTEE,
 	CMD_OUTPUT,
 	CMD_SOCKET,
 	CMD_SOCKET_MODE,

@@ -201,6 +201,7 @@ static Option set_options[] = {
 	{"high-resolution", '\0', OptRequireArg, CMD_HIGH_RESOLUTION},
 	{"mem-hotplug", '\0', OptRequireArg, CMD_MEM_HOTPLUG},
 	{"memquota", '\0', OptRequireArg, CMD_MEMQUOTA},
+	{"memguarantee", '\0', OptRequireArg, CMD_MEMGUARANTEE},
 	{"applyconfig", '\0', OptRequireArg, CMD_CONFIG},
 	{"description", '\0', OptRequireArg, CMD_DESC},
 	{"name", '\0', OptRequireArg, CMD_VM_NAME},
@@ -2479,6 +2480,15 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 				return invalid_action;
 			}
 			break;
+		case CMD_MEMGUARANTEE:
+			if (parse_memguarantee(val.c_str(), param))
+			{
+				fprintf(stderr, "An incorrect value for"
+						" --memquarantee is specified: %s\n",
+						val.c_str());
+				return invalid_action;
+			}
+			break;
 		case CMD_MEM_HOTPLUG:
 			if ((param.mem_hotplug = str2on_off(val)) == -1) {
 				fprintf(stderr, "An incorrect value for"
@@ -4634,4 +4644,25 @@ int cmdParam::parse_memquota(const char *value, CmdParamData &param)
 err:
 	free(str);
 	return 1;
+}
+
+int cmdParam::parse_memguarantee(const char *value, CmdParamData &param)
+{
+	if (!value)
+		return 1;
+
+	param.memguarantee_set = true;
+
+	if (!strcmp(value, "auto")) {
+		param.memguarantee.type = PRL_MEMGUARANTEE_AUTO;
+		return 0;
+	}
+
+	if (parse_ui(value, (unsigned int *)&param.memguarantee.value))
+		return 1;
+
+	// only value in percents is possible
+	param.memguarantee.type = PRL_MEMGUARANTEE_PERCENTS;
+
+	return 0;
 }

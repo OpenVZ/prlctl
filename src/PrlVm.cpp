@@ -2556,6 +2556,51 @@ int PrlVm::set_memquota(const CmdParamData &param)
 	return 0;
 }
 
+void PrlVm::get_memguarantee(PrlOutFormatter &f)
+{
+	PRL_RESULT ret;
+	PRL_MEMGUARANTEE_DATA memguarantee;
+
+	if ((ret = PrlVmCfg_GetMemGuaranteeSize(m_hVm, &memguarantee)))
+		prl_err(ret, "PrlVmCfg_GetMemGuaranteeSize %s",
+			get_error_str(ret).c_str());
+
+	f.open("memory_guarantee", true);
+
+	switch(memguarantee.type)
+	{
+	case PRL_MEMGUARANTEE_AUTO:
+		f.add("auto", true);
+		break;
+	case PRL_MEMGUARANTEE_PERCENTS:
+		f.add("value", memguarantee.value, "%", true, true);
+		break;
+	}
+
+	f.close(true);
+}
+
+int PrlVm::set_memguarantee(const CmdParamData &param)
+{
+	PRL_RESULT ret;
+
+	switch (param.memguarantee.type)
+	{
+	case PRL_MEMGUARANTEE_AUTO:
+		prl_log(0, "set memguarantee: auto");
+		break;
+	case PRL_MEMGUARANTEE_PERCENTS:
+		prl_log(0, "set memguarantee: %d%%", param.memguarantee.value);
+		break;
+	}
+	if ((ret = PrlVmCfg_SetMemGuaranteeSize(m_hVm, &param.memguarantee)))
+                return prl_err(ret, "PrlVmCfg_SetMemGuaranteeSize %s",
+                        get_error_str(ret).c_str());
+
+	set_updated();
+	return 0;
+}
+
 int PrlVm::set_desc(const std::string &desc)
 {
 	PRL_RESULT ret;
@@ -3635,6 +3680,10 @@ int PrlVm::set(const CmdParamData &param)
 	if (param.memquota_min != -2 || param.memquota_max != -2 ||
 		param.memquota_prio != -1 || param.memquota_auto != -1) {
 		if ((ret = set_memquota(param)))
+			return ret;
+	}
+	if (param.memguarantee_set) {
+		if ((ret = set_memguarantee(param)))
 			return ret;
 	}
 	if (!param.desc.empty()) {
@@ -4738,6 +4787,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.close(true);
 
 	get_memquota(f);
+	get_memguarantee(f);
 
 	{
 		PrlDevList::const_iterator it = m_DevList.begin(),

@@ -167,6 +167,8 @@ public:
 	int set_vertical_sync(int enabled);
 	void get_memquota(PrlOutFormatter &f);
 	int set_memquota(const CmdParamData &param);
+	void get_memguarantee(PrlOutFormatter &f);
+	int set_memguarantee(const CmdParamData &param);
 	int set_desc(const std::string &desc);
 	std::string get_desc() const;
 	int set_autostart(const std::string &mode);
