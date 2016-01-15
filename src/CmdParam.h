@@ -425,6 +425,7 @@ public:
 	bool set_vnc_encryption;
 	std::string vnc_public_key;
 	std::string vnc_private_key;
+	int vm_cpulimit_type;
 
 public:
 	DispParam() :
@@ -445,7 +446,8 @@ public:
 		adv_security_mode(-1),
 		allow_attach_screenshots(-1),
 		lock_edit_settings(-1),
-		set_vnc_encryption(false)
+		set_vnc_encryption(false),
+		vm_cpulimit_type(-1)
 	{}
 };
 
@@ -1368,6 +1370,7 @@ enum cmdOptions {
 	CMD_BACKUP_UNCOMPRESSED,
 	CMD_BACKUP_TIMEOUT,
 	CMD_VM_ID,
+	CMD_VM_CPULIMIT_TYPE,
 
 	CMD_SEND_PROBLEM_REPORT,
 	CMD_DUMP_PROBLEM_REPORT,

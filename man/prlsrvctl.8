@@ -12,6 +12,7 @@ prlsrvctl \fBset\fR [\fR--mem-limit\fR <\fIauto\fR|\fIsize\fR>] [\fR-s,--min-sec
 [\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
 [\fR--allow-attach-screenshots\fR <\fIon\fR|\fIoff\fR>]
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
+[\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
 [\fBOPTIONS\fR]
 .PP
 prlsrvctl \fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>] [\fBOPTIONS\fR]
@@ -124,6 +125,9 @@ Enables/disables attaching virtual machine and host screenshots to Problem Repor
 \fB--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>
 Changes host's global CPU features mask. NOTE: All virtual machines and Containers on the host must be stopped. On/off (boolean) features can be masked and unmasked using the {\fI+\fR,\fI-\fR}\fIfeature\fR syntax. Omitting the sign is equivalent to unmasking, e.g., the \fI+feature\fR syntax. Features which require specific values can be set using the \fIfeature=value\fR syntax. For a list of host's CPU features which are supported, maskable, and already masked, run the \fBprlsrvctl info --full\fR command.
 .br
+.TP
+\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>
+Specifies whether the CPU limit affects all virtual machine threads including service (\fIfull\fR), or guest threads only (\fIguest\fR).
 .SS Managing Parallels server
 .IP "\fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>]" 4
 Install Parallels license.
