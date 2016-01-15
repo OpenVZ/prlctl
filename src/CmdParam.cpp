@@ -399,6 +399,7 @@ static Option disp_set_options[] = {
 	{"cpu-features-mask", '\0', OptRequireArg, CMD_CPU_FEATURES_MASK},
 	{"vnc-public-key", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
 	{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
+	{"vm-cpulimit-type", '\0', OptRequireArg, CMD_VM_CPULIMIT_TYPE},
 	OPTION_END
 };
 
@@ -879,6 +880,7 @@ static void usage_disp(const char * argv0)
 "	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
+"   [--vm-cpulimit-type <full|guest>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
 "  shutdown [-f,--force] [--suspend-vm-to-pram]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
@@ -1436,6 +1438,18 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 			break;
 		case CMD_BACKUP_TMPDIR:
 			param.disp.backup_tmpdir = val;
+			break;
+		case CMD_VM_CPULIMIT_TYPE:
+			if (val.compare("full") == 0) {
+				param.disp.vm_cpulimit_type = PRL_VM_CPULIMIT_FULL;
+			} else if (val.compare("guest") == 0) {
+				param.disp.vm_cpulimit_type = PRL_VM_CPULIMIT_GUEST;
+			} else {
+				fprintf(stderr, "An incorrect value for"
+						" --vm-cpulimit-type is specified: %s\n",
+						val.c_str());
+				return invalid_action;
+			}
 			break;
 		case CMD_BACKUP_STORAGE:
 			if (parse_auth(val, param.disp.def_backup_storage)) {

@@ -54,6 +54,7 @@ public:
 	PRL_BOOL m_allow_multiple_pmc;
 	PRL_BOOL m_log_rotation;
 	str_list_t m_confirmation_list;
+	PRL_UINT32 m_vm_cpulimit_type;
 
 public:
 	PrlDisp(PrlSrv &srv) :
@@ -64,7 +65,8 @@ public:
 		m_cep_mechanism(PRL_FALSE),
 		m_verbose_log_level(PRL_FALSE),
 		m_allow_multiple_pmc(PRL_FALSE),
-		m_log_rotation(PRL_FALSE)
+		m_log_rotation(PRL_FALSE),
+		m_vm_cpulimit_type(PRL_VM_CPULIMIT_FULL)
 	{}
 	void append_info(PrlOutFormatter &f);
 	int set(const DispParam &param);
@@ -111,6 +113,7 @@ private:
 	int update_network_bandwidth_list(const NetworkBandwidthParam &param,
                 PrlHandle &hShaping, bool *pupdated);
 	int switch_log_rotation(int on_off);
+	std::string get_vm_guest_cpu_limit_type() const;
 	int switch_lock_edit_settings(int on_off, const std::string& host_admin);
 	int set_confirmations_list(const std::map<std::string , bool >& cmd_list);
 
@@ -120,6 +123,7 @@ private:
 	std::string get_cpu_features();
 	std::string get_cpu_model();
 	int set_vnc_encryption(const std::string &public_key, const std::string &private_key);
+	int set_vm_cpulimit_type(int vm_cpulimit_type);
 
 	void clear();
 };

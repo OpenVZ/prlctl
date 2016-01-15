@@ -116,6 +116,10 @@ int PrlDisp::update_info()
 	if (PrlDispCfg_IsLogRotationEnabled(m_hDisp, &m_log_rotation))
 		prl_log(L_DEBUG, "PrlDispCfg_IsLogRotationEnabled: %s",
 			get_error_str(ret).c_str());
+	if (PrlDispCfg_GetVmCpuLimitType(m_hDisp, &m_vm_cpulimit_type)) {
+		prl_log(L_DEBUG, "PrlDispCfg_GetVmCpuLimitType: %s",
+			get_error_str(ret).c_str());
+	}
 
 	get_confirmation_list();
 
@@ -164,6 +168,16 @@ int PrlDisp::get_confirmation_list()
 	}
 
 	return 0;
+}
+
+std::string PrlDisp::get_vm_guest_cpu_limit_type() const
+{
+	switch (m_vm_cpulimit_type)
+	{
+		case PRL_VM_CPULIMIT_FULL:  return "full";
+		case PRL_VM_CPULIMIT_GUEST: return "guest";
+		default:                    return "unknown";
+	}
 }
 
 int PrlDisp::set_min_security_level(const std::string &level)
@@ -357,6 +371,7 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	if (is_full_info_mode()) {
 		f.add("CPU model", get_cpu_model());
 		f.add("CPU features", get_cpu_features());
+		f.add("VM guest CPU limit type", get_vm_guest_cpu_limit_type());
 		f.add("CPU unmaskable features", print_unmaskable_features());
 		f.add("CPU masked features", print_masked_features());
 	}
@@ -1360,6 +1375,10 @@ int PrlDisp::set(const DispParam &param)
 		if ((ret = set_cpu_features_mask(param.cpu_features_mask_changes)))
 			return ret;
 	}
+	if (param.vm_cpulimit_type != -1) {
+		if ((ret = set_vm_cpulimit_type(param.vm_cpulimit_type)))
+			return ret;
+	}
 
 	if (is_updated()) {
 		PrlHandle hJob(PrlSrv_CommonPrefsCommit(m_srv.get_handle(), m_hDisp));
@@ -1488,5 +1507,21 @@ int PrlDisp::set_vnc_encryption(const std::string &public_key, const std::string
 	prl_log(0, "The VNC encryption has been successfully configured.");
 	return 0;
 
+}
+
+int PrlDisp::set_vm_cpulimit_type(int vm_cpulimit_type)
+{
+	int ret;
+
+	if ((ret = get_config_handle()))
+		return ret;
+
+	if ((ret = PrlDispCfg_SetVmCpuLimitType(m_hDisp, vm_cpulimit_type))) {
+		return prl_err(ret, "PrlDispCfg_SetVmCpuLimitType: %s",
+			get_error_str(ret).c_str());
+	}
+	set_updated();
+
+	return 0;
 }
 
