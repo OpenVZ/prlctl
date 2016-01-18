@@ -68,6 +68,8 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 	[\fB--memquota\fR <\fIauto\fR|\fImin\fR:\fImax\fR[:\fIpriority\fR[:\fImaxballoon\fR]]\fR>]
 [\fB--mem-hotplug\fR <\fIon\fR|\fIoff\fR>]
 .br
+	[\fB--memguarantee\fR <\fIauto\fR|\fIvalue\fR>]
+.br
 	[\fB--description\fR <\fIdesc\fR>] [\fB--template\fR <\fIon\fR|\fIoff\fR>] [\fB--autostart\fR <\fIon\fR|\fIoff\fR|\fIauto\fR>] [\fB--autostart-delay\fR <\fIn\fR>]
 .br
 	[\fB--autostop\fR <\fIstop\fR|\fIsuspend\fR|\fIshutdown\fR>] [\fB--start-as-user\fR <\fIadministrator|owner|user:passwd\fR>]
@@ -303,6 +305,9 @@ Enable or disable memory (RAM) hot-plugging support in the virtual environment.
 \fB--memquota\fR <\fIauto\fR|\fImin\fR:\fImax\fR[:\fIpriority\fR[:\fImaxballoon\fR]]\fR>
 Set the parameters of the host memory (RAM) consumption by the virtual environment.
 The \fImaxballon\fR is maximum memory limit which can be locked by balloon in the virtual environment, in percent of guest RAM.
+.TP
+\fB--memguarantee\fR <\fIauto\fR|\fIvalue\fR>
+Set the amount of the host memory (RAM) that is required to start VM/CT, in percent of guest RAM.
 .TP
 \fBBoot order parameters\fR
 .TP
