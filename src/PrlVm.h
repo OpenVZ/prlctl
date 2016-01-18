@@ -165,8 +165,6 @@ public:
 	bool is_vertical_sync_enabled() const;
 	bool is_high_resolution_enabled() const;
 	int set_vertical_sync(int enabled);
-	void get_memquota(PrlOutFormatter &f);
-	int set_memquota(const CmdParamData &param);
 	void get_memguarantee(PrlOutFormatter &f);
 	int set_memguarantee(const CmdParamData &param);
 	int set_desc(const std::string &desc);

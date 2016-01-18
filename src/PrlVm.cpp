@@ -2454,108 +2454,6 @@ int PrlVm::set_mem_hotplug(int value)
 	return 0;
 }
 
-void PrlVm::get_memquota(PrlOutFormatter &f)
-{
-	PRL_RESULT ret;
-	PRL_BOOL auto_enabled;
-	unsigned int size = 0;
-
-	f.open("memory_quota", true);
-
-	if ((ret = PrlVmCfg_IsHostMemAutoQuota(m_hVm, &auto_enabled)))
-		prl_err(ret, "PrlVmCfg_GetHostMemAutoQuota %s",
-			get_error_str(ret).c_str());
-	if (auto_enabled == PRL_TRUE) {
-		f.add("auto", (auto_enabled == PRL_TRUE));
-		f.close(true);
-		return;
-	}
-
-	if ((ret = PrlVmCfg_GetHostMemQuotaMin(m_hVm, &size)))
-		prl_err(ret, "PrlVmCfg_GetHostMemQuotaMin %s",
-			get_error_str(ret).c_str());
-
-	f.add("min", size, "Mb", true);
-
-	if ((ret = PrlVmCfg_GetHostMemQuotaMax(m_hVm, &size)))
-		prl_err(ret, "PrlVmCfg_GetHostMemQuotaMax %s",
-			get_error_str(ret).c_str());
-	f.add("max", size, "Mb", true);
-
-	if ((ret = PrlVmCfg_GetHostMemQuotaPriority(m_hVm, &size)))
-		prl_err(ret, "PrlVmCfg_GetHostMemQuotaPriority %s",
-			get_error_str(ret).c_str());
-	f.add("priority", size, "", true);
-
-	if ((ret = PrlVmCfg_GetMaxBalloonSize(m_hVm, &size)))
-		prl_err(ret, "PrlVmCfg_GetMaxBalloonSize %s",
-			get_error_str(ret).c_str());
-	f.add("maxballoon", size, "%", true);
-	f.close(true);
-}
-
-
-int PrlVm::set_memquota(const CmdParamData &param)
-{
-	PRL_RESULT ret;
-	PRL_BOOL auto_enabled =  PRL_FALSE;
-	std::string log_str;
-	int min, max, prio, maxballoon;
-
-	/* Reset other specified parameters if autocalculation requested */
-	if (param.memquota_auto != -1) {
-		min = -2;
-		max = -2;
-		prio = -1;
-		maxballoon = -1;
-		auto_enabled = PRL_TRUE;
-	} else {
-		min = param.memquota_min;
-		max = param.memquota_max;
-		prio = param.memquota_prio;
-		maxballoon = param.memquota_maxballoon;
-	}
-
-	prl_log(0, "%s the memquota auto calculation.",
-			(auto_enabled == PRL_TRUE) ? "Enable" : "Disable");
-	if ((ret = PrlVmCfg_SetHostMemAutoQuota(m_hVm, auto_enabled)))
-		return prl_err(ret, "PrlVmCfg_SetHostMemAutoQuota %s",
-				get_error_str(ret).c_str());
-	if (min != -2) {
-		if (min == -1)
-			prl_log(0, "Set the memquota_min parameter to unlimited.");
-		else
-			prl_log(0, "Set the memquota_min parameter to %dMb.", min);
-		if ((ret = PrlVmCfg_SetHostMemQuotaMin(m_hVm, min)))
-			return prl_err(ret, "PrlVmCfg_SetHostMemQuotaMin %s",
-					get_error_str(ret).c_str());
-	}
-	if (max != -2) {
-		if (max == -1)
-			prl_log(0, "Set the memquota_max parameter to unlimited.");
-		else
-			prl_log(0, "Set the memquota_max parameter to %dMb.", max);
-		if ((ret = PrlVmCfg_SetHostMemQuotaMax(m_hVm, max)))
-			return prl_err(ret, "PrlVmCfg_SetHostMemQuotaMax %s",
-					get_error_str(ret).c_str());
-	}
-	if (prio != -1) {
-		prl_log(0, "Set the memquota_prio parameter to %d.", prio);
-		if ((ret = PrlVmCfg_SetHostMemQuotaPriority(m_hVm, prio)))
-			return prl_err(ret, "PrlVmCfg_SetHostMemQuotaPriority %s",
-					get_error_str(ret).c_str());
-	}
-	if (maxballoon != -1) {
-		prl_log(0, "Set the memquota_maxballoon parameter to %d.", maxballoon);
-		if ((ret = PrlVmCfg_SetMaxBalloonSize(m_hVm, maxballoon)))
-			return prl_err(ret, "PrlVmCfg_SetMaxBalloonSize %s",
-					get_error_str(ret).c_str());
-	}
-
-	set_updated();
-	return 0;
-}
-
 void PrlVm::get_memguarantee(PrlOutFormatter &f)
 {
 	PRL_RESULT ret;
@@ -3677,11 +3575,6 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_mem_hotplug(param.mem_hotplug)))
 			return ret;
 	}
-	if (param.memquota_min != -2 || param.memquota_max != -2 ||
-		param.memquota_prio != -1 || param.memquota_auto != -1) {
-		if ((ret = set_memquota(param)))
-			return ret;
-	}
 	if (param.memguarantee_set) {
 		if ((ret = set_memguarantee(param)))
 			return ret;
@@ -4786,7 +4679,6 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.add("vertical sync", is_vertical_sync_enabled() ? "yes" : "no", true);
 	f.close(true);
 
-	get_memquota(f);
 	get_memguarantee(f);
 
 	{

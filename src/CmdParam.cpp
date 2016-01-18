@@ -2484,13 +2484,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			}
 			break;
 		case CMD_MEMQUOTA:
-			if (parse_memquota(val.c_str(), param))
-			{
-				fprintf(stderr, "An incorrect value for"
-					" --memquota is specified: %s\n", val.c_str());
-				return invalid_action;
-			}
-			break;
+			fprintf(stderr, "The --memquota is deprecated, "
+					"please use --memguarantee instead\n");
+			return invalid_action;
 		case CMD_MEMGUARANTEE:
 			if (parse_memguarantee(val.c_str(), param))
 			{
@@ -4623,38 +4619,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 
 	fprintf(stderr, "Unknown action: %s\n", argv[i]);
 	return invalid_action;
-}
-
-int cmdParam::parse_memquota(const char *value, CmdParamData &param)
-{
-	char *str, *tmp;
-
-	if (!strcmp(value, "auto")) {
-		param.memquota_auto = 1;
-		return 0;
-	}
-
-	str = strdup(value);
-	if (!str)
-		return 1;
-	tmp = strtok(str, ":");
-	if (parse_ui_unlim(tmp, (unsigned int *)&param.memquota_min))
-		goto err;
-	tmp = strtok(NULL, ":");
-	if (!tmp)
-		goto err;
-	if (parse_ui_unlim(tmp, (unsigned int *)&param.memquota_max))
-		goto err;
-	tmp = strtok(NULL, ":");
-	if (tmp && parse_ui(tmp, (unsigned int *)&param.memquota_prio))
-		goto err;
-	tmp = strtok(NULL, ":");
-	if (tmp && parse_ui(tmp, (unsigned int *)&param.memquota_maxballoon))
-		goto err;
-	return 0;
-err:
-	free(str);
-	return 1;
 }
 
 int cmdParam::parse_memguarantee(const char *value, CmdParamData &param)
