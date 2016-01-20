@@ -538,19 +538,13 @@ Only one option can be specified at a time.
 .br
 \fBAdding virtual hard disk drives to VE\fR
 .br
-\fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--recreate\fR] [\fB--type\fR <\fIexpand\fR|\fIplain\fR>] [\fB--size\fR <\fIn\fR>]
+\fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--recreate\fR] [\fB--size\fR <\fIn\fR>]
 [\fB--split\fR] [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
 
 \fBimage_name\fR: the image file to be used to emulate the VE virtual hard disk.
 To use an existing image file, specify its name and path.
 To create a new image file, omit the \fB--image\fR option
 (a new file named \fBharddiskN.hdd\fR will be created in the VE directory) or use \fB--recreate\fR option.
-.br
-\fBtype\fR: the type of the virtual disk drive:
-.br
-\fIexpand\fR (default): virtual disks of this type are small initially and grow in size as you add data to the disk.
-.br
-\fIplain\fR: virtual disks of this type have the fixed size from the moment of their creation.
 .br
 \fBsize\fR: the size of the hard disk drive, in megabytes.
 If the \fB--no-fs-resize\fR option is specified, the last partition on the hard disk is not resized.

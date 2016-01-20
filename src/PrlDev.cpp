@@ -502,13 +502,9 @@ int PrlDevHdd::set_subtype(const std::string &subtype)
 int PrlDevHdd::create_image(const DevInfo &param)
 {
 	PRL_RESULT ret;
-	PRL_HARD_DISK_INTERNAL_FORMAT type;
+	PRL_HARD_DISK_INTERNAL_FORMAT type = PHD_EXPANDING_HARD_DISK;
 	unsigned int size = param.size;
 
-	if (param.mode == DEV_TYPE_HDD_PLAIN)
-		type = PHD_PLAIN_HARD_DISK;
-	else
-		type = PHD_EXPANDING_HARD_DISK;
 	if ((ret = PrlVmDevHd_SetDiskType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDevHd_SetDiskType: %s",
 				get_error_str(ret).c_str());
