@@ -141,7 +141,7 @@ static Option set_options[] = {
 			[--enable | --disable]
 	HDD
            --device-add <hdd> [--image <image>]
-                [--type <expand | plain>] [--size 32M] [--split]
+                [--size 32M] [--split]
 		[--iface <ide |scsi>] [--passthr] [--position <n>]
            --device-add <hdd> --device <real_name>]
 		[--iface <ide | scsi>] [--passthr] [--position <n>]
@@ -818,7 +818,7 @@ static void usage_vm(const char * argv0)
 "	--device-add <hdd | cdrom | net | fdd | serial | usb | pci>\n"
 "		[Device options] [--enable|--disable] [--connect|--disconnect]\n"
 "	--device-add hdd [--image <image>] [--recreate]\n"
-"		[--type <expand | plain>] [--size <n>] [--split]\n"
+"		[--size <n>] [--split]\n"
 "		[--iface <ide|scsi|virtio>] [--position <n>]\n"
 "		[--mnt <path>]\n"
 "	--device-add hdd --device <real_name>\n"
@@ -977,8 +977,6 @@ int CmdParamData::set_dev_mode(const std::string &str)
 {
 	if (str == "expand")
 		dev.mode = DEV_TYPE_HDD_EXPAND;
-	else if (str == "plain")
-		dev.mode = DEV_TYPE_HDD_PLAIN;
 	else if (str == "host" || str == "host-only")
 		dev.mode = DEV_TYPE_NET_HOST;
 	else if (str == "bridged")
@@ -1934,8 +1932,7 @@ bool CmdParamData::is_dev_valid() const
 	if (mode != DEV_TYPE_NONE) {
 		switch (type) {
 		case DEV_HDD:
-			if (mode != DEV_TYPE_HDD_EXPAND &&
-			    mode != DEV_TYPE_HDD_PLAIN)
+			if (mode != DEV_TYPE_HDD_EXPAND)
 			{
 				fprintf(stderr, "An invalid device type for %s is"
 					" specified.\n", devtype2str(dev.type));
