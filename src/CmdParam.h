@@ -838,11 +838,6 @@ public:
 	int vertical_sync;
 	int high_resolution;
 	int mem_hotplug;
-	int memquota_min;
-	int memquota_max;
-	int memquota_maxballoon;
-	int memquota_prio;
-	int memquota_auto;
 	PRL_MEMGUARANTEE_DATA memguarantee;
 	bool memguarantee_set;
 	std::string desc;
@@ -1018,11 +1013,6 @@ public:
 		vertical_sync(-1),
 		high_resolution(-1),
 		mem_hotplug(-1),
-		memquota_min(-2),
-		memquota_max(-2),
-		memquota_maxballoon(-1),
-		memquota_prio(-1),
-		memquota_auto(-1),
 		memguarantee_set(false),
 		autostart_delay(-1),
 		is_template(-1),
@@ -1148,7 +1138,6 @@ private:
 	CmdParamData parse_monitor_args(int argc, char **argv);
 	CmdParamData get_xmlrpc_param(int argc, char **argv, Action action,
 		const Option *options, int offset);
-	int parse_memquota(const char *value, CmdParamData &param);
 	int parse_memguarantee(const char *value, CmdParamData &param);
 };
 
