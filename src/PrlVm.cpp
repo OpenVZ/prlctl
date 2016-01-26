@@ -938,18 +938,6 @@ int PrlVm::set_userpasswd(const std::string &userpasswd, bool crypted)
 	PRL_RESULT ret;
 	std::string err;
 
-	PrlHandle hLoginJob(PrlVm_LoginInGuest(m_hVm, PRL_PRIVILEGED_GUEST_OS_SESSION, 0, 0));
-	if ((ret = get_job_retcode(hLoginJob.get_handle(), err)))
-		return prl_err(ret, "%s", err.c_str());
-
-	PrlHandle hResult;
-	if ((ret = PrlJob_GetResult(hLoginJob.get_handle(), hResult.get_ptr())))
-		return prl_err(ret, "PrlJob_GetResult: %s",  get_error_str(ret).c_str());
-
-	PrlHandle hVmGuest;
-	if ((ret = PrlResult_GetParam(hResult.get_handle(), hVmGuest.get_ptr())))
-		return prl_err(ret, "PrlResult_GetParam: %s",  get_error_str(ret).c_str());
-
 	std::string::size_type pos = userpasswd.find_first_of(":");
 	std::string user;
 	std::string passwd;
@@ -957,7 +945,7 @@ int PrlVm::set_userpasswd(const std::string &userpasswd, bool crypted)
 		user = userpasswd.substr(0, pos);
 		passwd = userpasswd.substr(pos + 1);
 	}
-	PrlHandle h(PrlVmGuest_SetUserPasswd(hVmGuest.get_handle(),
+	PrlHandle h(PrlVm_SetUserPasswd(m_hVm,
 				user.c_str(), passwd.c_str(),
 				crypted ? PSPF_PASSWD_CRYPTED : 0));
 	if ((ret = get_job_retcode(h.get_handle(), err)))
@@ -965,9 +953,6 @@ int PrlVm::set_userpasswd(const std::string &userpasswd, bool crypted)
 
 	if (ret == 0)
 		prl_log(0, "Authentication tokens updated successfully.");
-
-	PrlHandle hJob(PrlVmGuest_Logout(hVmGuest.get_handle(), 0));
-	get_job_retcode(hJob.get_handle(), err);
 
 	return ret;
 }
