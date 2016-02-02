@@ -799,6 +799,7 @@ static void usage_vm(const char * argv0)
 "    [--swappages P[:P]] [--swap N] [--quotaugidlimit <n>]\n"
 "    [--capability <name>:<on|off>[,<name>:<on|off>...] [--autocompact <on | off>]\n"
 "    [--netfilter <disabled | stateless | stateful | full>]\n"
+"    [--features <name>:<on|off>[,<name>:<on:off>...]]\n"
 "Boot order management options are:\n"
 "	 [--device-bootorder \"<name1 name2 ...>\"]\n"
 "    [--efi-boot <on | off>] [--select-boot-device <on | off>]\n"
