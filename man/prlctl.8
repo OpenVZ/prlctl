@@ -302,7 +302,10 @@ Set the amount of memory that the virtual environment can consume.
 Enable or disable memory (RAM) hot-plugging support in the virtual environment.
 .TP
 \fB--memguarantee\fR <\fIauto\fR|\fIvalue\fR>
-Set the amount of the host memory (RAM) that is required to start VM/CT, in percent of guest RAM.
+Set the amount of memory (RAM) that will be guaranteed to a virtual machine or container.
+The guaranteed memory is a percentage of total RAM that is set for the virtual machine or
+container with the \fB--memsize\fR option. By default, memory guarantee is set to 'auto'
+(20% for containter and 40% for virtual machine).
 .TP
 \fBBoot order parameters\fR
 .TP
