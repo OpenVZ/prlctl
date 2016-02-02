@@ -767,7 +767,7 @@ static void usage_vm(const char * argv0)
 "  problem-report <ID | NAME> <-d,--dump|-s,--send [--proxy [user[:password]@proxyhost[:port]]]> "
 	"[--no-proxy] [--name <your name>] [--email <your E-mail>] [--description <problem description>]\n"
 "  set <ID | NAME>\n"
-"    [--memquota <auto|min:max[:priority[:maxballoon]]] [--mem-hotplug <on|off>]\n"
+"    [--memquarantee <auto|value>] [--mem-hotplug <on|off>]\n"
 "    [--applyconfig <conf>] [--tools-autoupdate <yes|no>]\n"
 "    [--vnc-mode <auto | manual | off>] [--vnc-port <port>] [{--vnc-passwd <passwd> | --vnc-nopasswd}]\n"
 "    [--cpu-hotplug <on|off>]\n"
