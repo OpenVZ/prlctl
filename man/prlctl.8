@@ -89,6 +89,8 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR] [\fB--quotaugidlimit\fR \fInum\fR]
 .br
+	[\fB--features\fR \fIname\fR:\fBon\fR|\fBoff\fR[\fB,\fR...]]
+.br
 	[\fB--device-add\fR <\fIhdd\fR|\fIcdrom\fR|\fInet\fR|\fIfdd\fR|\fIserial\fR|\fIusb\fR> | \fB--device-del\fR <\fIname\fR> [\fB--destroy-image\fR|\fB--destroy-image-force\fR|\fB--detach-only\fR] | \fB--device-set\fR <\fIname\fR>]
 .br
 	[\fB--device-connect\fR <\fIname\fR> | \fB--device-disconnect\fR <\fIname\fR>]
@@ -410,6 +412,12 @@ Setting the \fInum\fR parameter to a value greater than 0 enables the quota,
 and \fB0\fR disables the quota.
 
 Note: Changing this parameter for a running Container, requires the Container be restarted.
+.TP
+\fB--features\fR \fIname\fR:\fBon\fR|\fBoff\fR[\fB,\fR...]
+Enables/disables feature for CT. Multiple comma-separated values can be specified.
+
+You can use the following values for \fIname\fR:
+\fBnfs\fR, \fBipip\fR, \fBsit\fR, \fBppp\fR, \fBipgre\fR, \fBbridge\fR, \fBnfsd\fR.
 .TP
 \fBVNC parameters\fR
 .TP
