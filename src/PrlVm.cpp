@@ -32,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <termios.h>
 #include <fstream>
 #include <sstream>
 #include <memory>
@@ -811,6 +812,13 @@ int PrlVm::console()
 	return prl_err(-1, "Unimplemented");
 }
 
+static struct termios saved_ts;
+
+static void term_handler(int sig)
+{
+	tcsetattr(0, TCSAFLUSH, &saved_ts);
+}
+
 int PrlVm::exec(char **argv, Action action)
 {
 	PRL_RESULT ret;
@@ -880,6 +888,22 @@ int PrlVm::exec(char **argv, Action action)
 		const char *cmd;
 
 		if (action == VmEnterAction) {
+			struct termios ts;
+			struct sigaction sa = { 0 };
+
+			sa.sa_handler = term_handler;
+
+			tcgetattr(0, &ts);
+
+			sigaction(SIGINT, &sa, NULL);
+			sigaction(SIGHUP, &sa, NULL);
+			sigaction(SIGTERM, &sa, NULL);
+			sigaction(SIGQUIT, &sa, NULL);
+
+			memcpy(&saved_ts, &ts, sizeof(ts));
+			cfmakeraw(&ts);
+			ts.c_lflag &= ~(ECHO|ECHOE|ECHOK|ECHONL);
+			tcsetattr(0, TCSAFLUSH, &ts);
 			nFlags = PFD_ALL | PRPM_RUN_PROGRAM_ENTER;
 			cmd = enter_cmd;
 		} else {
@@ -923,6 +947,19 @@ int PrlVm::exec(char **argv, Action action)
 
 		ret = retcode;
 	} while (0);
+
+	if (action == VmEnterAction) {
+		struct sigaction sa = { 0 };
+
+		sa.sa_handler = SIG_DFL;
+
+		tcsetattr(0, TCSAFLUSH, &saved_ts);
+
+		sigaction(SIGINT, &sa, NULL);
+		sigaction(SIGHUP, &sa, NULL);
+		sigaction(SIGTERM, &sa, NULL);
+		sigaction(SIGQUIT, &sa, NULL);
+	}
 
 	get_cleanup_ctx().unregister_hook(hSessionCleanupHook);
 	PrlVm_Disconnect(m_hVm);
