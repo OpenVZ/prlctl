@@ -812,12 +812,14 @@ int PrlVm::console()
 	return prl_err(-1, "Unimplemented");
 }
 
+#ifdef _LIN_
 static struct termios saved_ts;
 
 static void term_handler(int sig)
 {
 	tcsetattr(0, TCSAFLUSH, &saved_ts);
 }
+#endif
 
 int PrlVm::exec(char **argv, Action action)
 {
@@ -883,27 +885,36 @@ int PrlVm::exec(char **argv, Action action)
 
 	}
 #endif
+#ifdef _LIN_
+	bool termiosFlag = false;
+#endif
 	do {
 		PRL_UINT32 nFlags;
 		const char *cmd;
 
 		if (action == VmEnterAction) {
-			struct termios ts;
-			struct sigaction sa = { 0 };
+#ifdef _LIN_		
+			if (m_ostype == PVS_GUEST_TYPE_LINUX) {
+				struct termios ts;
+				struct sigaction sa = { 0 };
 
-			sa.sa_handler = term_handler;
+				sa.sa_handler = term_handler;
 
-			tcgetattr(0, &ts);
+				tcgetattr(0, &ts);
 
-			sigaction(SIGINT, &sa, NULL);
-			sigaction(SIGHUP, &sa, NULL);
-			sigaction(SIGTERM, &sa, NULL);
-			sigaction(SIGQUIT, &sa, NULL);
+				sigaction(SIGINT, &sa, NULL);
+				sigaction(SIGHUP, &sa, NULL);
+				sigaction(SIGTERM, &sa, NULL);
+				sigaction(SIGQUIT, &sa, NULL);
 
-			memcpy(&saved_ts, &ts, sizeof(ts));
-			cfmakeraw(&ts);
-			ts.c_lflag &= ~(ECHO|ECHOE|ECHOK|ECHONL);
-			tcsetattr(0, TCSAFLUSH, &ts);
+				memcpy(&saved_ts, &ts, sizeof(ts));
+				cfmakeraw(&ts);
+				ts.c_lflag &= ~(ECHO|ECHOE|ECHOK|ECHONL);
+				tcsetattr(0, TCSAFLUSH, &ts);
+
+				termiosFlag = true;
+			}
+#endif
 			nFlags = PFD_ALL | PRPM_RUN_PROGRAM_ENTER;
 			cmd = enter_cmd;
 		} else {
@@ -948,7 +959,8 @@ int PrlVm::exec(char **argv, Action action)
 		ret = retcode;
 	} while (0);
 
-	if (action == VmEnterAction) {
+#ifdef _LIN_
+	if (termiosFlag) {
 		struct sigaction sa = { 0 };
 
 		sa.sa_handler = SIG_DFL;
@@ -960,6 +972,7 @@ int PrlVm::exec(char **argv, Action action)
 		sigaction(SIGTERM, &sa, NULL);
 		sigaction(SIGQUIT, &sa, NULL);
 	}
+#endif
 
 	get_cleanup_ctx().unregister_hook(hSessionCleanupHook);
 	PrlVm_Disconnect(m_hVm);
