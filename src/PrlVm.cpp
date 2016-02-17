@@ -821,8 +821,10 @@ static void term_handler(int sig)
 }
 #endif
 
-int PrlVm::exec(char **argv, Action action)
+int PrlVm::exec(const CmdParamData &param)
 {
+	char **argv = param.argv;
+	Action action = param.action;
 	PRL_RESULT ret;
 	std::string err;
 	const char enter_cmd[] = "enter";
@@ -918,7 +920,9 @@ int PrlVm::exec(char **argv, Action action)
 			nFlags = PFD_ALL | PRPM_RUN_PROGRAM_ENTER;
 			cmd = enter_cmd;
 		} else {
-			nFlags = PFD_ALL | PRPM_RUN_PROGRAM_IN_SHELL;
+			nFlags = PFD_ALL;
+			if (param.exec_in_shell)
+				nFlags |= PRPM_RUN_PROGRAM_IN_SHELL;
 			cmd = argv[0];
 		}
 		PrlHandle hExecJob(PrlVmGuest_RunProgram(hVmGuest.get_handle(),
