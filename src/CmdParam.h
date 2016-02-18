@@ -976,6 +976,8 @@ public:
 	std::string backup_id;
 	std::string backup_disk;
 
+	bool exec_in_shell;
+
 public:
 	CmdParamData() :
 		action(InvalidAction),
@@ -1078,7 +1080,8 @@ public:
 		ha_prio(-1),
 		template_sign(-1),
 		autocompact(-1),
-		backup_cmd(None)
+		backup_cmd(None),
+		exec_in_shell(true)
 	{
 		cpulimit.value = 0;
 		cpulimit.type = (PRL_CPULIMIT_TYPE)0;
@@ -1487,6 +1490,8 @@ enum cmdOptions {
 	CMD_ATTACH_BACKUP_ID,
 	CMD_ATTACH_BACKUP_DISK,
 	CMD_DETACH_BACKUP_ID,
+
+	CMD_EXEC_NO_SHELL,
 };
 
 #endif // __CMDPARAM_H__

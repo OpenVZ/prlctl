@@ -701,6 +701,12 @@ static Option start_options[] = {
 	OPTION_END
 };
 
+static Option exec_options[] = {
+	OPTION_GLOBAL
+	{"without-shell", '\0', OptNoArg, CMD_EXEC_NO_SHELL},
+	OPTION_END
+};
+
 static const char *version()
 {
 	return VER_PRODUCTVERSION_STR;
@@ -738,7 +744,7 @@ static void usage_vm(const char * argv0)
 "  delete <ID | NAME>\n"
 //"  installtools <ID | NAME>\n"
 "  enter <ID | NAME>\n"
-"  exec <ID | NAME> <command> [arg ...]\n"
+"  exec <ID | NAME> [--without-shell] <command> [arg ...]\n"
 "  list [-a,--all] [-t,--template] [--vmtype ct|vm|all] [-L] [-o,--output name[,name...]] [-s,--sort name]\n"
 "  list -i,--info [-f,--full] [-j, --json] [<ID | NAME>] [--vmtype ct|vm|all]\n"
 "  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src] [--ssh <options>]\n"
@@ -3349,6 +3355,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		case CMD_ATTACH_BACKUP_DISK:
 			param.backup_disk = val;
 			break;
+		case CMD_EXEC_NO_SHELL:
+			param.exec_in_shell = true;
+			break;
 		default:
 			fprintf(stderr, "Unhandled option: %d\n", id);
 			return invalid_action;
@@ -4016,7 +4025,7 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
                                     no_options, 2);
 	} else if (!strcmp(argv[1], "exec")) {
 		return get_param(argc, argv, VmExecAction,
-                                    no_options, 2);
+                                    exec_options, 2);
 	} else if (!strcmp(argv[1], "backup")) {
 		return get_backup_param(argc, argv, VmBackupAction, backup_options, 2);
 	} else if (!strcmp(argv[1], "restore")) {

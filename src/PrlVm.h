@@ -114,7 +114,7 @@ public:
 	int problem_report(const CmdParamData &param);
 	int console();
 	int enter();
-	int exec(char **argv, Action action);
+	int exec(const CmdParamData &param);
 	int set_userpasswd(const std::string &userpasswd, bool crypted);
 	int internal_cmd(char **argv);
 	PrlDevList &get_devs()
