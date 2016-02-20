@@ -32,7 +32,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#ifndef _WIN_
 #include <termios.h>
+#include <sys/ioctl.h>
+#endif
 #include <fstream>
 #include <sstream>
 #include <memory>
@@ -828,16 +831,6 @@ int PrlVm::exec(const CmdParamData &param)
 	PRL_RESULT ret;
 	std::string err;
 	const char enter_cmd[] = "enter";
-#ifndef _WIN_
-	const char *envs_enter[] = {"HOME=/",
-		"HISTFILE=/dev/null",
-		"PATH=/bin:/sbin:/usr/bin:/usr/sbin:.",
-		"SHELL=/bin/bash",
-		NULL
-	};
-	char buf[64];
-	char *term;
-#endif
 
 	if (action == VmExecAction && (!argv || !argv[0]))
 		return prl_err(-1, "Incorrect exec command");
@@ -878,13 +871,31 @@ int PrlVm::exec(const CmdParamData &param)
 	PrlApi_CreateStringsList(hEnvs.get_ptr());
 #ifndef _WIN_
 	if (action == VmEnterAction) {
-		for (const char **p = envs_enter; *p != NULL; p++)
-			PrlStrList_AddItem(hEnvs.get_handle(), *p);
-		if ((term = getenv("TERM")) != NULL) {
-			snprintf(buf, sizeof(buf), "TERM=%s", term);
+		const char *envs_enter[] = {"HOME=/",
+			"HISTFILE=/dev/null",
+			"PATH=/bin:/sbin:/usr/bin:/usr/sbin:.",
+			"SHELL=/bin/bash",
+		};
+		const char *envs[] = { "TERM" };
+		char buf[64];
+		char *val;
+		size_t i;
+		for (i = 0; i < sizeof(envs_enter)/sizeof(*envs_enter);  i++)
+			PrlStrList_AddItem(hEnvs.get_handle(), envs_enter[i]);
+		buf[sizeof(buf)-1] = 0;
+		for (i = 0; i < sizeof(envs)/sizeof(*envs); i++) {
+			if ((val = getenv(envs[i])) != NULL) {
+				snprintf(buf, sizeof(buf)-1, "%s=%s", envs[i], val);
+				PrlStrList_AddItem(hEnvs.get_handle(), buf);
+			}
+		}
+		struct winsize winsz;
+		if (ioctl(0, TIOCGWINSZ, &winsz) == 0) {
+			snprintf(buf, sizeof(buf)-1, "LINES=%d", winsz.ws_row);
+			PrlStrList_AddItem(hEnvs.get_handle(), buf);
+			snprintf(buf, sizeof(buf)-1, "COLUMNS=%d", winsz.ws_col);
 			PrlStrList_AddItem(hEnvs.get_handle(), buf);
 		}
-
 	}
 #endif
 #ifdef _LIN_
