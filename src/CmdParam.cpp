@@ -3356,7 +3356,7 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.backup_disk = val;
 			break;
 		case CMD_EXEC_NO_SHELL:
-			param.exec_in_shell = true;
+			param.exec_in_shell = false;
 			break;
 		default:
 			fprintf(stderr, "Unhandled option: %d\n", id);
