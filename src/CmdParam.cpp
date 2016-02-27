@@ -220,6 +220,8 @@ static Option set_options[] = {
 	{"external-boot-device", '\0', OptRequireArg, CMD_EXT_BOOT_DEV},
 	{"output", '\0', OptRequireArg, CMD_OUTPUT},
 	{"socket", '\0', OptRequireArg, CMD_SOCKET},
+	{"socket-tcp", '\0', OptRequireArg, CMD_SOCKET_TCP},
+	{"socket-udp", '\0', OptRequireArg, CMD_SOCKET_UDP},
 	{"socket-mode", '\0', OptRequireArg, CMD_SOCKET_MODE},
 
 	{"mixer", '\0', OptRequireArg, CMD_MIXER},
@@ -849,7 +851,9 @@ static void usage_vm(const char * argv0)
 "	--device-add fdd [--device <real_name>]\n"
 "	--device-add fdd --image <image> [--recreate]\n"
 "	--device-add serial {--device <name> | --output <file>\n"
-"		|--socket <name> [--socket-mode <server | client>]}\n"
+"		|--socket <name> [--socket-mode <server | client>]\n"
+"		|--socket-tcp <ip:port> [--socket-mode <server | client>]\n"
+"		|--socket-udp <ip:port>}\n"
 "	--device-add pci --device <name>\n"
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"
@@ -2366,6 +2370,12 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_SOCKET:
 			param.dev.socket = val;
+			break;
+		case CMD_SOCKET_TCP:
+			param.dev.socket_tcp = val;
+			break;
+		case CMD_SOCKET_UDP:
+			param.dev.socket_udp = val;
 			break;
 		case CMD_SOCKET_MODE: {
 			if (val == "server" )
