@@ -672,7 +672,8 @@ drop packages not addressed to its virtual environment.
 
 \fBAdding virtual serial port to VE\fR
 .br
-\fB--device-add\fR \fIserial\fR {\fB--device\fR <\fIname\fR> | \fB--output\fR <\fIfile\fR> | \fB--socket\fR <\fIfile\fR>
+\fB--device-add\fR \fIserial\fR {\fB--device\fR <\fIname\fR> | \fB--output\fR <\fIfile\fR> | \fB--socket\fR <\fIfile\fR> [\fB--socket-mode\fr <\fIserver\fR|\fIclient\fR>] | \fB--socket-tcp\fR <\fIip:port\fR> [\fB--socket-mode\fr <\fIserver\fR|\fIclient\fR>] | \fB--socket-udp\fR <\fIip:port\fR>
+
 	[\fB--socket-mode\fr <\fIserver\fR|\fIclient\fR>]}
 
 \fBdevice\fR: the number of the serial port on the Virtuozzo server to be used by the VE.
@@ -680,6 +681,10 @@ drop packages not addressed to its virtual environment.
 \fBoutput\fR: the path to the file where the output of the virtual serial port will be sent.
 .br
 \fBsocket\fR: the name of the physical socket on the Virtuozzo server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
+.br
+\fBsocket-tcp\fR: the address of the socket on the Virtuozzo server where the serial port is to be connected. This socket uses TCP protocol. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
+.br
+\fBsocket-udp\fR: the address of the socket on the Virtuozzo server where the serial port is to be connected. This socket uses UDP protocol and operates in both client and server modes.
 
 \fBEnable USB support\fR
 .br

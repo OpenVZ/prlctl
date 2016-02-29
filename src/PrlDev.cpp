@@ -2059,9 +2059,18 @@ int PrlDevSerial::set_device(const DevInfo &param)
 		if (param.socket_mode != -1)
 			mode = (PRL_SERIAL_PORT_SOCKET_OPERATION_MODE)param.socket_mode;
 		path = param.socket;
+	} else if (!param.socket_tcp.empty()) {
+		type = PDT_USE_SERIAL_PORT_TCP_MODE;
+		if (param.socket_mode != -1)
+			mode = (PRL_SERIAL_PORT_SOCKET_OPERATION_MODE)param.socket_mode;
+		path = param.socket_tcp;
+	} else if (!param.socket_udp.empty()) {
+		type = PDT_USE_SERIAL_PORT_UDP_MODE;
+		path = param.socket_udp;
 	} else if (param.socket_mode != -1) {
 		type = get_emu_type();
-		if (type != PDT_USE_SERIAL_PORT_SOCKET_MODE)
+		if (type != PDT_USE_SERIAL_PORT_SOCKET_MODE &&
+				type != PDT_USE_SERIAL_PORT_TCP_MODE)
 			return prl_err(-1, "The serial port type is not sutable with socket-mode");
 
 		mode = (PRL_SERIAL_PORT_SOCKET_OPERATION_MODE)param.socket_mode;
@@ -2072,7 +2081,8 @@ int PrlDevSerial::set_device(const DevInfo &param)
 		return ret;
 	if (!path.empty() && (ret = set_fname(path)))
 		return ret;
-	if (type == PDT_USE_SERIAL_PORT_SOCKET_MODE) {
+	if (type == PDT_USE_SERIAL_PORT_SOCKET_MODE ||
+			type == PDT_USE_SERIAL_PORT_TCP_MODE) {
 		if ((ret = PrlVmDevSerial_SetSocketMode(m_hDev, mode)))
 			return prl_err(ret, "PrlVmDevSerial_SetSocketMode: %s",
 					param.device.c_str());
@@ -2087,7 +2097,9 @@ int PrlDevSerial::create(const DevInfo &param)
 {
 	if (param.device.empty() &&
 	    param.output.empty() &&
-	    param.socket.empty())
+	    param.socket.empty() &&
+	    param.socket_tcp.empty() &&
+	    param.socket_udp.empty())
 		return prl_err(-1, "The serial port type is not specified."
 			" Use one of the following options: --device, --output, or --socket.");
 
@@ -2122,11 +2134,31 @@ void PrlDevSerial::append_info(PrlOutFormatter &f)
 
 	PRL_VM_DEV_EMULATION_TYPE type = get_emu_type();
 	const char *str_type;
-	str_type = (type == PDT_USE_REAL_DEVICE) ? "real" :
-		(type == PDT_USE_OUTPUT_FILE ?"output" : "socket");
+	switch (type)
+	{
+	case PDT_USE_REAL_DEVICE:
+		str_type = "real";
+		break;
+	case PDT_USE_OUTPUT_FILE:
+		str_type = "output";
+		break;
+	case PDT_USE_SERIAL_PORT_SOCKET_MODE:
+		str_type = "socket";
+		break;
+	case PDT_USE_SERIAL_PORT_TCP_MODE:
+		str_type = "tcp";
+		break;
+	case PDT_USE_SERIAL_PORT_UDP_MODE:
+		str_type = "udp";
+		break;
+	default:
+		str_type = "unknown";
+	}
+
 	f.add(str_type, get_fname(), true, true);
 
-	if (type == PDT_USE_SERIAL_PORT_SOCKET_MODE) {
+	if (type == PDT_USE_SERIAL_PORT_SOCKET_MODE ||
+			type == PDT_USE_SERIAL_PORT_TCP_MODE) {
 		PRL_SERIAL_PORT_SOCKET_OPERATION_MODE mode = PSP_SERIAL_SOCKET_SERVER;
 		PrlVmDevSerial_GetSocketMode(m_hDev, &mode);
 		switch(mode) {

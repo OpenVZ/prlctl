@@ -251,6 +251,8 @@ public:
 	std::string vnetwork;
 	std::string output;
 	std::string socket;
+	std::string socket_tcp;
+	std::string socket_udp;
 	int socket_mode;
 	std::string mixer;
 	NetParam net;
@@ -1222,6 +1224,8 @@ enum cmdOptions {
 	CMD_MEMGUARANTEE,
 	CMD_OUTPUT,
 	CMD_SOCKET,
+	CMD_SOCKET_TCP,
+	CMD_SOCKET_UDP,
 	CMD_SOCKET_MODE,
 	CMD_MIXER,
 	CMD_DESC,
