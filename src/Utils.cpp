@@ -1024,8 +1024,8 @@ PRL_DEVICE_TYPE type2prl_dev_type(DevType type)
 }
 
 static OsDistribution def_dist_map [] = {
-        {"windows", PVS_GUEST_TYPE_WINDOWS, PVS_GUEST_VER_WIN_2008},
-		{"win", PVS_GUEST_TYPE_WINDOWS, PVS_GUEST_VER_WIN_2008},
+        {"windows", PVS_GUEST_TYPE_WINDOWS, PVS_GUEST_VER_WIN_2012},
+		{"win", PVS_GUEST_TYPE_WINDOWS, PVS_GUEST_VER_WIN_2012},
         {"linux", PVS_GUEST_TYPE_LINUX, PVS_GUEST_VER_LIN_CENTOS},
 		{"lin", PVS_GUEST_TYPE_LINUX, PVS_GUEST_VER_LIN_CENTOS},
         {"freebsd", PVS_GUEST_TYPE_FREEBSD, PVS_GUEST_VER_BSD_5X},
