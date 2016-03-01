@@ -127,6 +127,7 @@ static Option convert_options[] = {
 static Option register_options[] = {
 	OPTION_GLOBAL
 	{"force", '\0', OptNoArg, CMD_FORCE},
+	{"ignore-ha-cluster", '\0', OptNoArg, CMD_IGNORE_HA_CLUSTER},
 	{"preserve-uuid", '\0', OptNoArg, CMD_PRESERVE_UUID},
 	{"regenerate-src-uuid", '\0', OptNoArg, CMD_REGENERATE_SRC_UUID},
 	{"uuid", '\0', OptRequireArg, CMD_UUID},
@@ -698,7 +699,6 @@ static Option mount_options[] = {
 
 static Option start_options[] = {
 	OPTION_GLOBAL
-	{"ignore-ha-cluster", '\0', OptNoArg, CMD_IGNORE_HA_CLUSTER},
 	{"wait", '\0', OptNoArg, CMD_WAIT},
 	OPTION_END
 };
