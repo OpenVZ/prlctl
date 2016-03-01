@@ -857,7 +857,6 @@ static void usage_vm(const char * argv0)
 "	--device-add pci --device <name>\n"
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"
-"    [--start-as-user <administrator|owner|user:passwd>]\n"
 "    [--autostop <stop|suspend|shutdown>]\n"
 "    [--undo-disks <off|discard|ask>]\n"
 "Optimization options are:\n"
