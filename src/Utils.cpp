@@ -2035,7 +2035,7 @@ static const RegisterDescriptionItem s_cpuid_00000001_ECX_items[] = {
 	FLAG_ITEM("tm2"),
 	FLAG_ITEM("ssse3"),
 	FLAG_ITEM("cid"),
-	RESERVED_FLAG,
+	FLAG_ITEM("sdbg"),
 	FLAG_ITEM("fma"),
 	FLAG_ITEM("cx16"),
 	FLAG_ITEM("xtpr"),
