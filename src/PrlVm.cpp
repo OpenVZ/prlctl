@@ -1764,6 +1764,9 @@ int PrlVm::get_dev_info()
 	PRL_HANDLE_PTR handles = (PRL_HANDLE_PTR) malloc(sizeof(PRL_HANDLE) *
 								count);
 
+	/* m_DevNetList is filtered vector of m_DevList pointers */
+	m_DevNetList.clear();
+
 	m_DevList.del();
 	if (!(ret = PrlVmCfg_GetDevsList(m_hVm, handles, &count))) {
 		for (unsigned int i = 0; i < count; ++i) {
