@@ -997,7 +997,7 @@ public:
 		ignore_ha_cluster(false),
 		tmpl(false),
 		clone_flags( PCVF_DETACH_EXTERNAL_VIRTUAL_HDD),
-		commit_flags(PVCF_WAIT_FOR_APPLY | PVCF_DESTROY_HDD_BUNDLE | PVCF_DETACH_HDD_BUNDLE),
+		commit_flags(PVCF_WAIT_FOR_APPLY | PVCF_DETACH_HDD_BUNDLE),
 		list_no_hdr(false),
 		list_all(false),
 		list_stopped(false),
