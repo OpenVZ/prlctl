@@ -701,7 +701,7 @@ Used to configure various parameters of the specified virtual device. After its 
 .TP
 \fB--device-del\fR <\fIdevice_name\fR>  [\fB--detach-only\fR|\fB--destroy-image\fR]
 Removes the specified device from the virtual environment. If \fB--detach-only\fR is specified and the device is a virtual hard disk drive, the disk image is preserved. If \fB--destroy-image\fR is specified, the virtual HDD image is removed from the server. If \fB--destroy-image-force\fR is specified,
- the virtual HDD image is removed from all snapshots and from the server. The default action on deleting a virtual HDD is to destroy the HDD image as if \fB--destroy-image\fR was specified.
+ the virtual HDD image is removed from all snapshots and from the server. The default action on deleting a virtual HDD is to preserve the HDD image as if \fB--detach-image\fR was specified.
 .TP
 \fB--device-connect\fR <\fIdevice_name\fR>
 Used to connect the specified device to a running VE. 
