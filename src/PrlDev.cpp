@@ -889,11 +889,9 @@ int PrlDevCdrom::set_iface(const std::string &iface)
 		type = PMS_SCSI_DEVICE;
 	else if (iface == "ide")
 		type = PMS_IDE_DEVICE;
-	else if (iface == "virtio")
-		type = PMS_VIRTIO_BLOCK_DEVICE;
 	else
 			return prl_err(-1, "Invalid interface: %s,"
-					" supported one: ide, scsi, virtio",
+					" supported one: ide, scsi",
 					iface.c_str());
 	if ((ret = PrlVmDev_SetIfaceType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetIfaceType: %s",
