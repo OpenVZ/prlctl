@@ -1656,9 +1656,6 @@ int PrlSrv::get_srv_info()
 		m_product_version = buf;
 
 	len = sizeof(buf);
-	if (!PrlSrvInfo_GetOsVersion(hSrvInfo.get_handle(), buf, &len))
-		m_os = buf;
-
 	if (!PrlSrvInfo_GetHostName(hSrvInfo.get_handle(), buf, &len))
 		m_hostname = buf;
 
@@ -1686,7 +1683,6 @@ void PrlSrv::append_info(PrlOutFormatter &f)
 	}//if
 
 	f.add("Version", product + " " + m_product_version);
-	f.add("OS", m_os);
 #if defined(_DEBUG)
 	if (m_run_via_launchd != -1)
 		f.add("Started as service", m_run_via_launchd ? "on" : "off");

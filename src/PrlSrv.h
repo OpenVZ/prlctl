@@ -163,7 +163,6 @@ private:
 	std::string m_sessionid;
 	int	m_run_via_launchd;
 	std::string m_product_version;
-	std::string m_os;
 	std::string m_hostname;
 	PrlDisp *m_disp;
 
