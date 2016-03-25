@@ -272,7 +272,8 @@ int PrlSrv::restore_vm(const CmdParamData &param)
 		if (ret == 0)
 			vm_id = tree.get_vm_uuid_by_id(bparam.id);
 
-		prl_log(0, "Restore the backup %s", bparam.id.c_str());
+		prl_log(0, "Restore the backup id=%s uuid=%s",
+				vm_id.c_str(), bparam.id.c_str());
 	} else
 		return prl_err(1, "VM ID is not specified.");
 
@@ -626,10 +627,12 @@ void PrlBackupTree::print_list(const BackupParam &param, bool no_hdr, PrlSrv &sr
 	}
 }
 
-const BackupData *PrlBackupTree::find_backup_data(const std::string &id) const
+const BackupData *PrlBackupTree::find_backup_data(const std::string &id,
+		std::string &vmid) const
 {
 	for (VmBackupDataList::const_iterator it = m_tree.begin(), eit = m_tree.end(); it != eit; ++it)
 	{
+		vmid = (*it)->uuid;
 		/* For each full backup */
 		for (FullBackupList::const_iterator it_full = (*it)->lst_backups.begin(),
 				eit_full = (*it)->lst_backups.end();
@@ -653,13 +656,18 @@ const BackupData *PrlBackupTree::find_backup_data(const std::string &id) const
 
 std::string PrlBackupTree::get_vm_uuid_by_id(const std::string &id) const
 {
-	const BackupData *backup = find_backup_data(id);
-	return backup ? backup->uuid : std::string();
+	std::string vmid;
+
+	if (find_backup_data(id, vmid) != NULL)
+		return vmid;
+
+	return std::string();
 }
 
 int PrlBackupTree::get_disks_by_id(const std::string& id, std::list<std::string>& disks) const
 {
-	const BackupData *backup = find_backup_data(id);
+	std::string vmid;
+	const BackupData *backup = find_backup_data(id, vmid);
 	if (!backup)
 		return -1;
 	for (BackupDiskList::const_iterator it = backup->lst_disks.begin();

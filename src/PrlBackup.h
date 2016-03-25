@@ -83,7 +83,7 @@ public:
 	void parse_data(const char *str, BackupData &backup);
 	VmBackupData *parse_entry(const char *str);
 	void print_list(const BackupParam &param, bool no_hdr, PrlSrv &srv);
-	const BackupData *find_backup_data(const std::string &id) const;
+	const BackupData *find_backup_data(const std::string &id, std::string &vmid) const;
 	std::string get_vm_uuid_by_id(const std::string &pid) const;
 	int get_disks_by_id(const std::string& id, std::list<std::string>& disks) const;
 	void parse_disk(const char *str, BackupDisk &disk);
