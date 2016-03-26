@@ -83,7 +83,7 @@ _prlctl()
 	local set_flags='--cpus --memsize --videosize --description \
 		--onboot --name --device-add --device-del --device-set \
 		--device-connect --device-disconnect --applyconfig \
-		--capability --netfilter --swappages --swap --quotaugidlimit \
+		--netfilter --swappages --swap --quotaugidlimit \
 		--autostart --autstart-delay --autostop --start-as-user \
 		--vnc-mode --vnc-port --vnc-passwd --shf-host --shf-host-add \ 
 		--shf-host-set --shf-host-del --shf-guest --shf-guest-automount --ioprio \
@@ -244,15 +244,6 @@ _prlctl()
 		--applyconfig)
 			COMPREPLY=($(compgen -A file -- "${cur}"))
 			return 0
-			;;
-		--capability)
-			opts='chown dac_override dac_read_search fowner \
-						fsetid kill setgid setuid setpcap linux_immutable \
-						net_bind_service net_broadcast net_admin net_raw \
-						ipc_lock ipc_owner sys_module sys_rawio sys_chroot \
-						sys_ptrace sys_pacct sys_admin sys_boot sys_nice \
-						sys_resource sys_time sys_tty_config mknod lease \
-						audit_write ve_admin setfcap fs_mask'
 			;;
 		--netfilter)
 			opts='disabled stateless stateful full'

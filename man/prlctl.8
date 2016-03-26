@@ -81,8 +81,6 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--name\fR <\fIname\fR>] [\fB--rename-ext-disks\fR] [\fB--userpasswd\fR <\fIuser:passwd\fR> [\fB--host-admin\fR <\fIname\fR>]]
 .br
-	[\fB--capability\fR \fIcapname\fR:\fBon\fR|\fBoff\fR[\fB,\fR...]]
-.br
 	[\fB--netfilter\fR <\fIdisabled\fR|\fIstateless\fR|\fIstateful\fR|\fIfull\fR>]
 .br
 	[\fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR] [\fB--quotaugidlimit\fR \fInum\fR]
@@ -368,24 +366,6 @@ Assigns Input/Output Operations Per Second limit.
 If set to "yes", the hostname, nameserver, and search domain settings from the virtual environment/Container configuration file are ignored.
 .TP
 \fBContainer specific parameters\fR
-.TP
-\fB--capability\fR \fIcapname\fR:\fBon\fR|\fBoff\fR[\fB,\fR...]
-Sets a capability inside the CT. Multiple comma-separated values can be specified.
-CT has default set of capabilities, and any operations on capabilities is
-logical AND with the default capability mask.
-
-You can use the following values for \fIcapname\fR:
-\fBchown\fR, \fBdac_override\fR, \fBdac_read_search\fR, \fBfowner\fR,
-\fBfsetid\fR, \fBkill\fR, \fBsetgid\fR, \fBsetuid\fR,
-\fBsetpcap\fR, \fBlinux_immutable\fR, \fBnet_bind_service\fR,
-\fBnet_broadcast\fR, \fBnet_admin\fR, \fBnet_raw\fR,
-\fBipc_lock\fR, \fBipc_owner\fR, \fBsys_module\fR, \fBsys_rawio\fR,
-\fBsys_chroot\fR, \fBsys_ptrace\fR, \fBsys_pacct\fR,
-\fBsys_admin\fR, \fBsys_boot\fR, \fBsys_nice\fR, \fBsys_resource\fR,
-\fBsys_time\fR, \fBsys_tty_config\fR, \fBmknod\fR, \fBlease\fR,
-\fBaudit_write\fR, \fBve_admin\fR, \fBsetfcap\fR, \fBfs_mask\fR.
-
-Note: This parameter could not be applied to a running Container.
 .TP
 \fB--netfilter\fR <\fIdisabled\fR|\fIstateless\fR|\fIstateful\fR|\fIfull\fR>
 Restrict access to iptable modules inside the Container. The following modes are available:
