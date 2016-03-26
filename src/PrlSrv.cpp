@@ -582,7 +582,7 @@ int PrlSrv::run_action(const CmdParamData &param)
 	case VmPauseAction:
 		return vm->pause();
 	case VmDestroyAction:
-		return vm->destroy();
+		return vm->destroy(param);
 	case VmUnregisterAction:
 		return vm->unreg();
 	case VmCloneAction:

@@ -132,7 +132,7 @@ public:
 	int clone(const std::string &name, const std::string &uuid,
 			const std::string &location, unsigned int flags);
 	int unreg();
-	int destroy();
+	int destroy(const CmdParamData &param);
 	int set_boot_dev(const PrlDev *dev, int bootindex, bool inuse = true) const;
 	unsigned int get_cpu_count() const;
 	PRL_VM_ACCELERATION_LEVEL get_cpu_acc_level() const;

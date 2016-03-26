@@ -1330,13 +1330,20 @@ int PrlVm::unreg()
 	return ret;
 }
 
-int PrlVm::destroy()
+int PrlVm::destroy(const CmdParamData &param)
 {
 	PRL_RESULT ret;
 
 	prl_log(0, "Removing the %s...", get_vm_type_str());
-
 	std::string err;
+
+	if (param.force && get_state() != VMS_STOPPED) {
+		PrlHandle hJob(PrlVm_StopEx(m_hVm, PSM_KILL, PSF_FORCE));
+		if ((ret = get_job_retcode(hJob.get_handle(), err)))
+			return prl_err(ret, "Failed to stop the %s: %s",
+				get_vm_type_str(), err.c_str());
+		prl_log(0, "The %s has been forcibly stopped", get_vm_type_str());
+	}
 
 	PrlHandle hJob(PrlVm_Delete(m_hVm, PRL_INVALID_HANDLE));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))

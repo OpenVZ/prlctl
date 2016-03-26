@@ -79,6 +79,12 @@ static Option stop_options[] = {
 	OPTION_END
 };
 
+static Option destroy_options[] = {
+	OPTION_GLOBAL
+	{"force", '\0', OptNoArg, CMD_FORCE},
+	OPTION_END
+};
+
 static Option clone_options[] = {
 	OPTION_GLOBAL
 	{"location", '\0', OptRequireArg, CMD_LOCATION},
@@ -3988,7 +3994,7 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 	} else if (!strcmp(argv[1], "convert")) {
 		return get_param(argc, argv, VmConvertAction, convert_options, 2);
 	} else if (!strcmp(argv[1], "delete") || !strcmp(argv[1], "destroy")) {
-		return get_param(argc, argv, VmDestroyAction, no_options, 2);
+		return get_param(argc, argv, VmDestroyAction, destroy_options, 2);
 	} else if (!strcmp(argv[1], "register")) {
 		return get_param(argc, argv, VmRegisterAction, register_options, 1);
 	} else if (!strcmp(argv[1], "unregister")) {
