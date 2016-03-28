@@ -835,7 +835,7 @@ int PrlSrv::register_vm(const CmdParamData &param)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "Register the VM...");
+	prl_log(0, "Register the virtual environment...");
 
 	std::string err;
 	PRL_UINT32 flags = PACF_NON_INTERACTIVE_MODE;
@@ -865,8 +865,9 @@ int PrlSrv::register_vm(const CmdParamData &param)
 	}
 
 	if (ret)
-		return prl_err(ret, "Failed to register the VM: %s", err.c_str());
-	prl_log(0, "The VM has been successfully registered.");
+		return prl_err(ret, "Failed to register the virtual environment: %s",
+				err.c_str());
+	prl_log(0, "The virtual environment has been successfully registered.");
 
 	return 0;
 }
