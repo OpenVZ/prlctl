@@ -805,7 +805,7 @@ static void usage_vm(const char * argv0)
 "    [--rename-ext-disks]\n"
 "Container management options are:\n"
 "    [--swappages P[:P]] [--swap N] [--quotaugidlimit <n>]\n"
-"    [--capability <name>:<on|off>[,<name>:<on|off>...] [--autocompact <on | off>]\n"
+"    [--autocompact <on | off>]\n"
 "    [--netfilter <disabled | stateless | stateful | full>]\n"
 "    [--features <name>:<on|off>[,<name>:<on:off>...]]\n"
 "Boot order management options are:\n"
