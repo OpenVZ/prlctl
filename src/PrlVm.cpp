@@ -945,6 +945,7 @@ int PrlVm::exec(const CmdParamData &param)
 
 		get_cleanup_ctx().register_hook(cancel_job, hExecJob.get_handle());
 		if ((ret = get_job_retcode(hExecJob.get_handle(), err))) {
+			handle_job_err(hExecJob, ret);
 			prl_err(ret, "PrlVmGuest_RunProgram: %s", err.c_str());
 			break;
 		}
