@@ -85,6 +85,7 @@ int get_result_as_string(PRL_HANDLE hResult, std::string &out, bool xml = false)
 std::string get_error_str(int nErrCode);
 PRL_RESULT get_result_error_string(PRL_HANDLE hResult, std::string &err);
 std::string get_details(PRL_HANDLE hJob);
+void handle_job_err(PRL_HANDLE hJob, PRL_RESULT ret);
 int parse_auth(const std::string &auth, LoginInfo &login, char *hide_passwd = NULL);
 int parse_userpw(const std::string &userpw, std::string &user, std::string &pw);
 std::string parse_mac(const char *mac);

@@ -597,6 +597,25 @@ std::string get_details(PRL_HANDLE hJob)
 	return std::string("");
 }
 
+void handle_job_err(PRL_HANDLE hJob, PRL_RESULT ret)
+{
+	if (ret != PRL_ERR_TIMEOUT)
+		return;
+
+	prl_log(0, "Operation timeout. Cancelling job.");
+	PRL_HANDLE hCancel = PrlJob_Cancel(hJob);
+	if (hCancel == PRL_INVALID_HANDLE) {
+		prl_log(0, "Failed to cancel job.") ;
+		return;
+	}
+	std::string err;
+	if ((ret = get_job_retcode(hCancel, err, 60 * 1000)))
+		prl_err(ret, "Failed to cancel job: %s.", err.c_str());
+	else
+		prl_log(0, "Job cancelled.");
+	PrlHandle_Free(hCancel);
+}
+
 using namespace std;
 
 /* Parse audentification line in format:

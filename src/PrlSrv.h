@@ -281,7 +281,6 @@ private:
 	void print_ct_template_info(const PrlHandle *phTmpl, size_t width, PrlOutFormatter &f);
 	int fill_ct_templates_list(PrlCtTemplateList &list) const;
 	int convert_handle_to_event(PRL_HANDLE h, PRL_HANDLE* phEvent);
-	void handle_job_err(PRL_HANDLE hJob, PRL_RESULT ret);
 };
 
 #endif // __PRLSRV_H__
