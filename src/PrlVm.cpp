@@ -1241,6 +1241,7 @@ int PrlVm::reg(const std::string &location, PRL_UINT32 nFlags)
 
 	nFlags |= PACF_NON_INTERACTIVE_MODE;/* Forcing non interactive mode on */
 	PrlHandle hJob(PrlVm_RegEx(m_hVm, location.c_str(), nFlags));
+	get_cleanup_ctx().register_hook(cancel_job, hJob.get_handle());
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		prl_err(ret, "Failed to register the %s: %s",
 				get_vm_type_str(), err.c_str());
