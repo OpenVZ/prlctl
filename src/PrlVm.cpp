@@ -1341,13 +1341,20 @@ int PrlVm::unreg()
 	return ret;
 }
 
-int PrlVm::destroy()
+int PrlVm::destroy(const CmdParamData &param)
 {
 	PRL_RESULT ret;
 
 	prl_log(0, "Removing the %s...", get_vm_type_str());
-
 	std::string err;
+	VIRTUAL_MACHINE_STATE state = get_state();
+
+	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED)) {
+		CmdParamData p;
+		p.force = p.fast = true;
+		if (ret = stop(p))
+			return ret;
+	}
 
 	PrlHandle hJob(PrlVm_Delete(m_hVm, PRL_INVALID_HANDLE));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
