@@ -1336,8 +1336,9 @@ int PrlVm::destroy(const CmdParamData &param)
 
 	prl_log(0, "Removing the %s...", get_vm_type_str());
 	std::string err;
+	VIRTUAL_MACHINE_STATE state = get_state();
 
-	if (param.force && get_state() != VMS_STOPPED) {
+	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED)) {
 		PrlHandle hJob(PrlVm_StopEx(m_hVm, PSM_KILL, PSF_FORCE));
 		if ((ret = get_job_retcode(hJob.get_handle(), err)))
 			return prl_err(ret, "Failed to stop the %s: %s",
