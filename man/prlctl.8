@@ -19,7 +19,7 @@ prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\f
 .PP
 prlctl \fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]
 .PP
-prlctl \fBdelete\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
+prlctl \fBdelete\fR <\fIve_id\fR|\fIve_name\fR> [\fB--force\fR]
 .PP
 prlctl \fBexec\fR <\fIve_id\fR|\fIve_name\fR> [\fB--without-shell\fR] <\fBcommand\fR>
 .PP
@@ -195,6 +195,7 @@ Use the \fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR> option to specify wheth
  
 .IP "\fBdelete\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Remove the specified virtual environment from the Virtuozzo server by deleting all VE-related files and directories.
+You can use the \fB--force\fR option to forcibly stop the VE.
 .IP "\fBexec\fR <\fIve_id\fR|\fIve_name\fR> <\fBcommand\fR>" 4
 Execute the \fBcommand\fR command in the virtual environment. For virtual machines, it requires Virtuozzo Guest Tools to be installed. Commands in Linux and Windows guests are run via bash -c "command" and cmd /c "command", respectively.
 If the \fB--without-shell\fR option is specified, the command is run directly without bash or cmd shell.

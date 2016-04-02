@@ -954,25 +954,34 @@ int PrlVm::exec(const CmdParamData &param)
 			prl_err(ret, "PrlJob_GetResult: %s",  get_error_str(ret).c_str());
 			break;
 		}
-		PrlHandle hEvent;
-		if ((ret = PrlResult_GetParamByIndex(hResult.get_handle(), 0, hEvent.get_ptr()))) {
-			prl_err(ret, "PrlResult_GetParamByIndex: %s",  get_error_str(ret).c_str());
+
+		PRL_UINT32 nCount = 0;
+		if ((ret = PrlResult_GetParamsCount(hResult.get_handle(), &nCount))) {
+			prl_err(ret, "PrlResult_GetParamsCount: %s", get_error_str(ret).c_str());
 			break;
 		}
 
-		PrlHandle hRetCode;
-		if ((ret = PrlEvent_GetParamByName(hEvent.get_handle(), EVT_PARAM_VM_EXEC_APP_RET_CODE, hRetCode.get_ptr()))) {
-			prl_err(ret, "PrlEvent_GetParamByName (EVT_PARAM_VM_EXEC_APP_RET_CODE): %s",  get_error_str(ret).c_str());
-			break;
-		}
+		if (nCount > 0) {
+			PrlHandle hEvent;
+			if ((ret = PrlResult_GetParamByIndex(hResult.get_handle(), 0, hEvent.get_ptr()))) {
+				prl_err(ret, "PrlResult_GetParamByIndex: %s",  get_error_str(ret).c_str());
+				break;
+			}
 
-		PRL_UINT32 retcode;
-		if ((ret = PrlEvtPrm_ToUint32(hRetCode.get_handle(), &retcode))) {
-			prl_err(ret, "PrlEvtPrm_ToUint32: %s",  get_error_str(ret).c_str());
-			break;
-		}
+			PrlHandle hRetCode;
+			if ((ret = PrlEvent_GetParamByName(hEvent.get_handle(), EVT_PARAM_VM_EXEC_APP_RET_CODE, hRetCode.get_ptr()))) {
+				prl_err(ret, "PrlEvent_GetParamByName (EVT_PARAM_VM_EXEC_APP_RET_CODE): %s",  get_error_str(ret).c_str());
+				break;
+			}
 
-		ret = retcode;
+			PRL_UINT32 retcode;
+			if ((ret = PrlEvtPrm_ToUint32(hRetCode.get_handle(), &retcode))) {
+				prl_err(ret, "PrlEvtPrm_ToUint32: %s",  get_error_str(ret).c_str());
+				break;
+			}
+
+			ret = retcode;
+		}
 	} while (0);
 
 #ifdef _LIN_
@@ -1332,13 +1341,20 @@ int PrlVm::unreg()
 	return ret;
 }
 
-int PrlVm::destroy()
+int PrlVm::destroy(const CmdParamData &param)
 {
 	PRL_RESULT ret;
 
 	prl_log(0, "Removing the %s...", get_vm_type_str());
-
 	std::string err;
+	VIRTUAL_MACHINE_STATE state = get_state();
+
+	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED)) {
+		CmdParamData p;
+		p.force = p.fast = true;
+		if (ret = stop(p))
+			return ret;
+	}
 
 	PrlHandle hJob(PrlVm_Delete(m_hVm, PRL_INVALID_HANDLE));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
