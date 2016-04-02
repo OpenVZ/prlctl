@@ -215,6 +215,7 @@ struct StorageUrl
 	StorageUrl(const std::string& backup_id, const std::string& diskname);
 	std::string getBackupId() const;
 	std::string getDiskName() const;
+	std::string getSchema() const;
 
 private:
 	str_list_t split() const;

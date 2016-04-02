@@ -2020,6 +2020,16 @@ std::string StorageUrl::getDiskName() const
 	return parts.back();
 }
 
+std::string StorageUrl::getSchema() const
+{
+	size_t sp = m_url.find_first_of("://");
+	if (sp != string::npos) {
+		std::string s(m_url.begin(), m_url.begin() + sp);
+		return s;
+	}
+	return std::string();
+}
+
 str_list_t StorageUrl::split() const
 {
 	return ::split(m_url.substr(m_schema.size()), "/");

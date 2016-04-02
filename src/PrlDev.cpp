@@ -772,8 +772,11 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 		f.add("real", get_fname(), true, true);
 
 	if (!url.isEmpty()) {
-		f.add("backup", url.getBackupId(), true, true);
-		f.add("disk", url.getDiskName(), true, true);
+		if (url.getSchema() == "backup") {
+			f.add("backup", url.getBackupId(), true, true);
+			f.add("disk", url.getDiskName(), true, true);
+		} else
+			f.add("url", url.getUrl(), true, true);
 	}
 
 	if (type == PDT_USE_IMAGE_FILE) {
