@@ -212,9 +212,9 @@ public:
 	int find_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet);
 	int fill_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet);
 	int fill_vnetwork_nat_rules(const VNetParam &vnet, PrlHandle &hVirtNet);
-	void print_boundto_bridged(const PrlHandle *phVirtNet,
+	void print_boundto_bridged(const PrlHandle *phVirtNet, const std::string &netId,
 			char *buf, int size, PrlOutFormatter &f, bool detailed);
-	void print_boundto_host_only(const PrlHandle *phVirtNet,
+	void print_boundto_host_only(const PrlHandle *phVirtNet, const std::string &netId,
 								PrlOutFormatter &f, bool detailed);
 	void print_vnetwork_info(const PrlHandle *phVirtNet,
 								PrlOutFormatter &f, bool detailed);
@@ -269,6 +269,7 @@ private:
 	void append_deactivation_id(PrlOutFormatter &f);
 	const PrlVm *find_dev_in_use(PrlDevSrv *dev);
 	void append_hw_info(PrlOutFormatter &f);
+	void append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, bool detailed);
 	int print_info(bool is_license_info, bool is_activation_id
 		, bool is_deactivation_id, bool use_json);
 	int pre_hibernate();
