@@ -1352,7 +1352,7 @@ int PrlVm::destroy(const CmdParamData &param)
 	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED)) {
 		CmdParamData p;
 		p.force = p.fast = true;
-		if (ret = stop(p))
+		if ((ret = stop(p)))
 			return ret;
 	}
 

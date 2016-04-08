@@ -178,6 +178,7 @@ public:
 	int get_ip(ip_list_t &ips);
 	void append_info(PrlOutFormatter &f);
 	std::string get_mac();
+	std::string get_vnetwork();
 
 	std::string get_veth_name() const;
 	virtual std::string get_name() const;
@@ -196,7 +197,6 @@ private:
 	int build_ip(const NetParam &net, ip_list_t &ips);
 	int set_network(const DevInfo& param);
 	int set_firewall(const NetParam &net);
-	std::string get_vnetwork();
 };
 
 class PrlDevUsb : public PrlDev {
