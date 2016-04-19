@@ -3515,6 +3515,12 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 			return invalid_action;
 		}
 	}
+
+	if (param.migrate.change_sid && !param.migrate.clone_mode) {
+		fprintf(stderr, "The --changesid option can be used with --keep-src only\n");
+		return invalid_action;
+	}
+
 	return param;
 }
 
