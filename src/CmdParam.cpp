@@ -3631,7 +3631,8 @@ CmdParamData cmdParam::get_restore_param(int argc, char **argv, Action action,
 		switch (id) {
 		CASE_PARSE_OPTION_GLOBAL(val, param)
 		case CMD_BACKUP_ID:
-			normalize_uuid(val, param.backup.id);
+			if (normalize_uuid(val, param.backup.id))
+				param.backup.id = val;
 			break;
 		case CMD_VM_ID:
 			param.id = val;
@@ -3716,7 +3717,8 @@ CmdParamData cmdParam::get_backup_delete_param(int argc, char **argv, Action act
 		switch (id) {
 		CASE_PARSE_OPTION_GLOBAL(val, param)
 		case CMD_BACKUP_ID:
-			normalize_uuid(val, param.backup.id);
+			if (normalize_uuid(val, param.backup.id))
+				param.backup.id = val;
 			break;
 		case CMD_BACKUP_STORAGE:
 			if (parse_auth(val, param.backup.storage)) {
@@ -3782,7 +3784,8 @@ CmdParamData cmdParam::get_backup_list_param(int argc, char **argv, Action actio
 			param.list_no_hdr = true;
 			break;
 		case CMD_BACKUP_ID:
-			normalize_uuid(val, param.backup.id);
+			if (normalize_uuid(val, param.backup.id))
+				param.backup.id = val;
 			break;
 		case CMD_LIST_LOCAL_VM:
 			param.backup.list_local_vm = true;
