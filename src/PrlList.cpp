@@ -458,13 +458,15 @@ int PrlSrv::list_vm(const CmdParamData &param)
 		return 0;
 	}
 
+	unsigned flags = 0;
 	// sort by name by default
 	sort_fld = vm_field_tbl->find("name");
 	if (!param.list_field.empty())
 		order_str = param.list_field.c_str();
-	else if (param.tmpl)
+	else if (param.tmpl) {
 		order_str = default_template_order;
-	else
+		flags |= LIST_TEMPLATES;
+	} else
 		order_str = g_vzcompat_mode ?
 				(param.list_name ? default_vzcompat_name_field_order : default_vzcompat_field_order) :
 				default_field_order;
@@ -497,10 +499,12 @@ int PrlSrv::list_vm(const CmdParamData &param)
 	if (!param.list_no_hdr && !param.use_json)
 		vm_field_tbl->print_hdr(field_order);
 
+	if (param.info)
+		flags |= LIST_FULL_INFO;
 
 	std::vector<PrlVm *> vm_list;
 	if (param.id.empty()) {
-		if ((ret = update_vm_list(param.vmtype, param.info)))
+		if ((ret = update_vm_list(param.vmtype, flags)))
 			return ret;
 
 		/* Copy of VmList to perform sort operation */
