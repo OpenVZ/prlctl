@@ -257,8 +257,13 @@ private:
 	int get_hw_dev_info(DevType type);
 	int get_user_info(PrlList<PrlUser *> &users);
 	int vm_from_result(PrlHandle &hResult, int idx, PrlVm **vm);
-	int get_vm_list(PrlList<PrlVm *> &list, unsigned vmtype, bool full_info);
-	int update_vm_list(unsigned vmtype, bool full_info = true);
+	int get_vm_list(PrlList<PrlVm *> &list, unsigned vmtype, unsigned list_flags);
+	enum
+	{
+		LIST_FULL_INFO = 0x1,
+		LIST_TEMPLATES = 0x2
+	};
+	int update_vm_list(unsigned vmtype, unsigned flags = LIST_FULL_INFO);
 	int problem_report(const CmdParamData &param);
 	int shutdown(bool force, bool suspend_vm_to_pram);
 	PrlLic get_lic_info();
