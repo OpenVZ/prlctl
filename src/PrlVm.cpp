@@ -2257,6 +2257,37 @@ std::string PrlVm::get_cpumask()
 	return std::string(buf);
 }
 
+int PrlVm::set_nodemask(const std::string &mask)
+{
+	PRL_RESULT ret;
+
+	prl_log(0, "set node mask %s",  mask.c_str());
+	if ((ret = PrlVmCfg_SetNodeMask(m_hVm,
+			(mask == "all" ? "" : mask.c_str()))))
+	{
+		return prl_err(-1, "Failed to set nodemask: %s",
+			ret == PRL_ERR_INVALID_ARG ?
+			"invalid node mask is specified" : get_error_str(ret).c_str());
+	}
+
+	set_updated();
+	return 0;
+}
+
+int PrlVm::get_nodemask(std::string& mask)
+{
+	PRL_RESULT ret;
+	char buf[512];
+	unsigned int len = sizeof(buf);
+
+	if ((ret = PrlVmCfg_GetNodeMask(m_hVm, buf, &len)))
+		return prl_err(-1, "PrlVmCfg_GetNodeMask: %s",
+			get_error_str(ret).c_str());
+
+	mask = buf;
+	return 0;
+}
+
 int PrlVm::get_cpuunits(unsigned int *cpuunits)
 {
 	/* cpuunits makes sense on Linux/VZWIN for now */
@@ -3603,6 +3634,10 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_cpumask(param.cpumask)))
 			return ret;
 	}
+	if (!param.nodemask.empty()) {
+		if ((ret = set_nodemask(param.nodemask)))
+			return ret;
+	}
 	if ((ret = set_cpulimit(&param.cpulimit)))
 		return ret;
 	if (param.ioprio != (unsigned int) -1) {
@@ -4726,6 +4761,10 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	std::string cpumask = get_cpumask();
 	if (!cpumask.empty())
 		f.add("mask", cpumask, true);
+
+	std::string nodemask;
+	if (!get_nodemask(nodemask) && !nodemask.empty())
+		f.add("nodemask", nodemask, true);
 
 	f.close(true);
 

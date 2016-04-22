@@ -832,6 +832,7 @@ public:
 	PRL_CPULIMIT_DATA cpulimit;
 	unsigned int ioprio;
 	std::string cpumask;
+	std::string nodemask;
 	unsigned int iolimit;
 	unsigned int iopslimit;
 	unsigned int memsize;
@@ -1211,6 +1212,7 @@ enum cmdOptions {
 	CMD_CPUUNITS,
 	CMD_CPULIMIT,
 	CMD_CPUMASK,
+	CMD_NODEMASK,
 	CMD_IOPRIO,
 	CMD_IOLIMIT,
 	CMD_IOPSLIMIT,

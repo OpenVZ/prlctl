@@ -55,7 +55,7 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--3d-accelerate\fR <\fIoff\fR|\fIhighest\fR|\fIdx9\fR>] [\fB--vertical-sync\fR <\fIon\fR|\fIoff\fR>]
 .br
-	[\fB--cpuunits\fR <\fIn\fR>] [\fB--cpulimit\fR <\fIn\fR>] [\fB--cpumask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>]
+	[\fB--cpuunits\fR <\fIn\fR>] [\fB--cpulimit\fR <\fIn\fR>] [\fB--cpumask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>] [\fB--nodemask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>]
 .br
 	[\fB--cpu-hotplug\fR <\fIon\fR|\fIoff\fR>]
 .br
@@ -292,6 +292,10 @@ Note: If the computer has 2 CPUs, the total CPU time equals 200%.
 \fB--cpumask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>
 Defines the CPUs on the physical server to use for executing the virtual environment process.
 A CPU affinity mask can be a single CPU number or a CPU range separated by commas (0,2,3-10).
+.TP
+\fB--nodemask\fR <{\fIn\fR[,\fIn\fR,\fIn1\fR-\fIn2\fR]|\fIall\fR}>
+Defines the NUMA node on the physical server to use for executing the virtual environment process.
+A node mask can be a single number or a range separated by commas, e.g., 0,2,3-10.
 .TP
 \fBMemory parameters\fR
 .TP

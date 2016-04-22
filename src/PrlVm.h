@@ -144,6 +144,8 @@ public:
 	int get_cpuunits(unsigned int *cpuunits);
 	int set_cpumask(const std::string &mask);
 	std::string get_cpumask();
+	int set_nodemask(const std::string& mask);
+	int get_nodemask(std::string& mask);
 	int set_cpulimit(PRL_CONST_CPULIMIT_DATA_PTR cpulimit);
 	int get_cpulimit(PRL_CPULIMIT_DATA_PTR cpulimit);
 	int set_distribution(PRL_UINT32 nOsVersion);
