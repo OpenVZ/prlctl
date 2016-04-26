@@ -326,6 +326,7 @@ static Option set_options[] = {
 	{"cpuunits",		'\0', OptRequireArg, CMD_CPUUNITS},
 	{"cpulimit",		'\0', OptRequireArg, CMD_CPULIMIT},
 	{"cpumask",		'\0', OptRequireArg, CMD_CPUMASK},
+	{"nodemask",		'\0', OptRequireArg, CMD_NODEMASK},
 	{"apptemplate",		'\0', OptRequireArg, CMD_APPTEMPLATE},
 
 	{"swappages",		'\0', OptRequireArg, CMD_SWAPPAGES},
@@ -786,7 +787,7 @@ static void usage_vm(const char * argv0)
 "    [--vnc-mode <auto | manual | off>] [--vnc-port <port>] [{--vnc-passwd <passwd> | --vnc-nopasswd}]\n"
 "    [--cpu-hotplug <on|off>]\n"
 "    [--distribution <name|list>]\n"
-"    [--cpuunits <N>] [--cpulimit <N>] [--cpumask <{N[,N,N1-N2]|all}>]\n"
+"    [--cpuunits <N>] [--cpulimit <N>] [--cpumask <{N[,N,N1-N2]|all}>] [--nodemask <{N[,N,N1-N2]|all}>]\n"
 "    [--rate <class:KBits>] [--ratebound <yes|no>]\n"
 "    [--ioprio <priority>] [--iolimit <limit>] [--iopslimit <limit>]\n"
 "    [--offline-management <on|off>] [--offline-service <service_name>]\n"
@@ -2425,6 +2426,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_CPUMASK:
 			param.cpumask = val;
+			break;
+		case CMD_NODEMASK:
+			param.nodemask = val;
 			break;
 		case CMD_CPULIMIT:
 			if (parse_cpulimit(val.c_str(), &param.cpulimit)) {
