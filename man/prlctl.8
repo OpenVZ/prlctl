@@ -4,7 +4,7 @@ prlctl \- utility for managing Virtuozzo servers and virtual environments residi
 .SH SYNOPSIS
 prlctl \fBcreate\fR <\fIve_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
-prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB-u,--uncompressed\fR]
+prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR]
 .PP
 prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
@@ -35,7 +35,7 @@ prlctl \fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR]
 [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR] 
 .PP
 prlctl \fBmigrate\fR <[\fBsrc_node/\fR]\fBID\fR> <\fBdst_node\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>]
-[\fB--changesid\fR] [\fB--keep-src\fR] [\fB--ssh\fR <\fIoptions\fR>]
+[\fB--changesid\fR] [\fB--keep-src\fR] [\fB--no-compression\fR] [\fB--ssh\fR <\fIoptions\fR>]
 .PP
 prlctl \fBpause\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
@@ -723,7 +723,7 @@ NOTE: To detach a single backup disk, use the \fB--device-del\fR command.
 The following command and options can be used to back up and restore a virtual environment.
 The \fB--storage\fR option allows you to specify the backup server.
 If this option is omitted, the local server is used.
-.IP "\fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]" 4
+.IP "\fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB--no-compression\fR]" 4
 Backs up the specified virtual environment.
 .TP
 \fB-f,--full\fB
@@ -733,7 +733,7 @@ Create a full backup of the virtual environment. A full backup contains all virt
 Create an incremental backup of the virtual environment.
 An incremental backup contains only the files changed since the previous full or incremental backup. This is the default backup type.
 .TP
-\fB-u,--uncompressed\fB
+\fB--no-compression\fR
 Do not compress backup image.
 .IP "\fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--vmtype ct|vm|all\fR] [\fR--localvms\fB] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]" 4
 Lists the existing backups.
@@ -756,7 +756,7 @@ The following options can be used to migrate a virtual environment from the sour
 If the virtual environment is running, the migration is performed as follows.
 First, virtual environment data is copied to the destination server, then the virtual environment is suspended, and, finally, the remaining data is migrated.
 After the virtual environment has been successfully migrated, it is removed from the source server.
-.IP "\fBmigrate\fR <[\fBsrc/\fR]\fBID\fR> <\fBdst\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--keep-src\fR] [\fB--ssh\fR <\fIoptions\fR>]" 4
+.IP "\fBmigrate\fR <[\fBsrc/\fR]\fBID\fR> <\fBdst\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--keep-src\fR] [\fB--no-compression\fR] [\fB--ssh\fR <\fIoptions\fR>]" 4
 Migrates the specified virtual environment from the source server \fBsrc\fR to the destination server \fBdst\fR. The source and
 destination servers must be specified in this format: [user[:password]@]server_IP_address_or_hostname[:port].
 If the source server is omitted, the local server is assumed.
@@ -772,6 +772,9 @@ a different UUID, MAC address, and SID (Windows-based virtual machines only; if
 \fB--changesid\fR is used) and will have offline management disabled. If this option
 is omitted, the original virtual environment will be removed from the source server
 after migration.
+.TP
+\fB--no-compression\fR
+Do not compress data during migration.
 .TP
 \fB--ssh\fR <\fIoptions\fR>
 Options to pass to ssh when it is used to establish a connection to the destination server. Any of the standard ssh options are allowed.

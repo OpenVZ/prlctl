@@ -480,20 +480,14 @@ public:
 	std::string sessionid;
 	bool force;
 	unsigned int security_level;
-	bool clone_mode;
-	bool switch_template;
-	bool change_sid;
-	bool ignore_existing_bundle;
+	unsigned int flags;
 	str_list_t ssh_opts;
 
 public:
 	MigrateParam()
 		: force(false),
 		security_level(0),
-		clone_mode(false),
-		switch_template(false),
-		change_sid(false),
-		ignore_existing_bundle(false) {}
+		flags(0) {}
 };
 
 struct BackupParam {
@@ -1370,7 +1364,7 @@ enum cmdOptions {
 	CMD_BACKUP_ID,
 	CMD_BACKUP_PATH,
 	CMD_BACKUP_TMPDIR,
-	CMD_BACKUP_UNCOMPRESSED,
+	CMD_UNCOMPRESSED,
 	CMD_BACKUP_TIMEOUT,
 	CMD_VM_ID,
 	CMD_VM_CPULIMIT_TYPE,

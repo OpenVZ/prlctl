@@ -4323,19 +4323,6 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 		param.dst_id.c_str(),
 		param.vm_location.c_str());
 
-	PRL_UINT32 nFlags = 0;
-	if (param.clone_mode)
-		nFlags |= PVMT_CLONE_MODE;
-
-	if (param.switch_template)
-		nFlags |= PVMT_SWITCH_TEMPLATE;
-
-	if (param.change_sid)
-		nFlags |= PVMT_CHANGE_SID;
-
-	if (param.ignore_existing_bundle)
-		nFlags |= PVMT_IGNORE_EXISTING_BUNDLE;
-
 	security_level = m_srv.get_min_security_level();
 	if (param.sessionid.empty()) {
 		if ((ret = dst.login(param.dst)))
@@ -4350,7 +4337,7 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 		hJob = PrlVm_MigrateWithRename(m_hVm,
 					dst.get_handle(),
 					param.dst_id.c_str(), param.vm_location.c_str(),
-					security_level | nFlags, 0, PRL_TRUE);
+					security_level | param.flags, 0, PRL_TRUE);
 	} else {
 		if (security_level < param.security_level)
 			security_level = param.security_level;
@@ -4361,7 +4348,7 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 					param.dst.port,
 					param.sessionid.c_str(),
 					param.dst_id.c_str(), param.vm_location.c_str(),
-					security_level | nFlags, 0, PRL_TRUE);
+					security_level | param.flags, 0, PRL_TRUE);
 	}
 
 	reg_event_callback(migrate_event_handler, 0);

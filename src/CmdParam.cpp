@@ -588,6 +588,7 @@ static Option migrate_options[] = {
 	{"changesid", '\0', OptNoArg, CMD_CHANGE_SID},
 	{"ignore-existing-bundle", '\0', OptNoArg, CMD_IGNORE_EXISTING_BUNDLE},
 	{"ssh", '\0', OptRequireArg, CMD_SSH_OPTS},
+	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
 	OPTION_END
 };
 
@@ -608,7 +609,8 @@ static Option backup_options[] = {
 	{"storage",	's',	OptRequireArg, CMD_BACKUP_STORAGE},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
 	{"description", '\0',	OptRequireArg, CMD_DESC},
-	{"uncompressed", 'u',	OptNoArg, CMD_BACKUP_UNCOMPRESSED},
+	{"uncompressed", 'u',	OptNoArg, CMD_UNCOMPRESSED},
+	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
 	OPTION_END
 };
 
@@ -738,7 +740,7 @@ static void usage_vm(const char * argv0)
 "Usage: %s ACTION <ID | NAME> [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
 "  backup <ID | NAME> [-s,--storage <user[[:passwd]@server[:port]>] [--description <desc>]\n"
-"    [-f,--full | -i,--incremental] [-u,--uncompressed]\n"
+"    [-f,--full | -i,--incremental] [--no-compression]\n"
 "  backup-list [ID | NAME] [-f,--full] [--vmtype ct|vm|all] [--localvms]\n"
 "    [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  backup-delete {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
@@ -756,7 +758,7 @@ static void usage_vm(const char * argv0)
 "  exec <ID | NAME> [--without-shell] <command> [arg ...]\n"
 "  list [-a,--all] [-t,--template] [--vmtype ct|vm|all] [-L] [-o,--output name[,name...]] [-s,--sort name]\n"
 "  list -i,--info [-f,--full] [-j, --json] [<ID | NAME>] [--vmtype ct|vm|all]\n"
-"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src] [--ssh <options>]\n"
+"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src] [--no-compression] [--ssh <options>]\n"
 "  pause <ID | NAME>\n"
 "  register <PATH> [--preserve-uuid | --uuid <UUID>] [--regenerate-src-uuid] [--force]\n"
 "  reset <ID | NAME>\n"
@@ -3496,19 +3498,22 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 			param.migrate.sessionid = val;
 			break;
 		case CMD_CLONE_MODE:
-			param.migrate.clone_mode = true;
+			param.migrate.flags |= PVMT_CLONE_MODE;
 			break;
 		case CMD_SWITCH_TEMPLATE:
-			param.migrate.switch_template = true;
+			param.migrate.flags |= PVMT_SWITCH_TEMPLATE;
 			break;
 		case CMD_CHANGE_SID:
-			param.migrate.change_sid = true;
+			param.migrate.flags |= PVMT_CHANGE_SID;
 			break;
 		case CMD_IGNORE_EXISTING_BUNDLE:
-			param.migrate.ignore_existing_bundle = true;
+			param.migrate.flags |= PVMT_IGNORE_EXISTING_BUNDLE;
 			break;
 		case CMD_SSH_OPTS:
 			param.migrate.ssh_opts = split(val.c_str(), " ");
+			break;
+		case CMD_UNCOMPRESSED:
+			param.migrate.flags |= PVMT_UNCOMPRESSED;
 			break;
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
@@ -3520,7 +3525,7 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 		}
 	}
 
-	if (param.migrate.change_sid && !param.migrate.clone_mode) {
+	if ((param.migrate.flags & (PVMT_CHANGE_SID | PVMT_CLONE_MODE)) == PVMT_CHANGE_SID) {
 		fprintf(stderr, "The --changesid option can be used with --keep-src only\n");
 		return invalid_action;
 	}
@@ -3595,7 +3600,7 @@ CmdParamData cmdParam::get_backup_param(int argc, char **argv, Action action,
 		case CMD_DESC:
 			param.desc = val;
 			break;
-		case CMD_BACKUP_UNCOMPRESSED:
+		case CMD_UNCOMPRESSED:
 			param.backup.flags |= PBT_UNCOMPRESSED;
 			break;
 		case GETOPTUNKNOWN:
