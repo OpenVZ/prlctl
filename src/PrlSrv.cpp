@@ -42,6 +42,8 @@
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlApiDeprecated.h>
+#include <Interfaces/ParallelsDomModel.h>
+
 
 #include "CmdParam.h"
 #include "PrlSrv.h"
@@ -1272,13 +1274,12 @@ PrlLic & PrlSrv::get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo)
 {
 	/* we do not want to provide public API for license values decoding,
 	 * thus use this hacky way to retrieve them */
-#if 0
 	PrlHandle hEvent;
 	if (convert_handle_to_event(hLicInfo.get_handle(), hEvent.get_ptr()))
 		return lic;
 
 	PRL_UINT32 i, nCount;
-	PRL_BOOL is_unlimited;
+	PRL_BOOL is_unlimited = 0;
 	PrlEvent_GetParamsCount(hEvent.get_handle(), &nCount);
 	for (i = 0; i < nCount; i++) {
 		PrlHandle hParam;
@@ -1416,9 +1417,8 @@ PrlLic & PrlSrv::get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo)
 			len = sizeof(buf);
 			PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
 			lic.m_deactivation_id = buf;
-}
+		}
 	}
-#endif
 	return lic;
 }
 
