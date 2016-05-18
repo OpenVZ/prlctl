@@ -3536,18 +3536,17 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 CmdParamData cmdParam::get_backup_param(int argc, char **argv, Action action,
 		const Option *options, int offset)
 {
-	std::string val;
-
-	CmdParamData param;
-
 	if (argc - offset < 1) {
 		fprintf(stderr, "Incorrect backup usage.\n");
 		return invalid_action;
 	}
 
-	param.action = action;
+	CmdParamData param = parse_backup_args(argc, argv, action, options, offset + 1);
+	if (param.action == InvalidAction)
+		return param;
+
 	/* backup node */
-	val = argv[offset];
+	std::string val = argv[offset];
 	std::string::size_type pos = val.find_first_of("/");
 	if (pos != std::string::npos) {
 		param.id = val.substr(pos + 1, val.length() - pos);
@@ -3561,57 +3560,6 @@ CmdParamData cmdParam::get_backup_param(int argc, char **argv, Action action,
 		param.id = val;
 	}
 
-	GetOptLong opt(argc, argv, options, ++offset);
-	while (1) {
-		int id = opt.parse(val);
-		if (id == -1) // the end mark
-			break;
-		switch (id) {
-		CASE_PARSE_OPTION_GLOBAL(val, param)
-		case CMD_BACKUP_FULL:
-			param.backup.flags |= PBT_FULL;
-			break;
-		case CMD_BACKUP_INC:
-			param.backup.flags |= PBT_INCREMENTAL;
-			break;
-		case CMD_BACKUP_DIFF:
-			param.backup.flags |= PBT_DIFFERENTIAL;
-			break;
-		case CMD_SECURITY_LEVEL:
-			if (get_security_level(val, &param.security_level)) {
-				 fprintf(stderr, "An incorrect security level is"
-					" specified: %s\n",
-					val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_BACKUP_ID:
-			normalize_uuid(val, param.backup.id);
-			break;
-		case CMD_BACKUP_STORAGE:
-			if (parse_auth(val, param.backup.storage)) {
-				fprintf(stderr, "An incorrect value is"
-						" specified for backup storage: %s\n",
-						val.c_str());
-				return invalid_action;
-			}
-			opt.hide_arg();
-			break;
-		case CMD_DESC:
-			param.desc = val;
-			break;
-		case CMD_UNCOMPRESSED:
-			param.backup.flags |= PBT_UNCOMPRESSED;
-			break;
-		case GETOPTUNKNOWN:
-			fprintf(stderr, "Unrecognized option: %s\n",
-				opt.get_next());
-			return invalid_action;
-		case GETOPTERROR:
-		default:
-			return invalid_action;
-		}
-	}
 	if ((param.backup.flags & (PBT_INCREMENTAL | PBT_FULL)) == 0 )
 		param.backup.flags |= PBT_INCREMENTAL;
 
@@ -4574,6 +4522,81 @@ CmdParamData cmdParam::parse_monitor_args(int argc, char **argv)
 	return param;
 }
 
+CmdParamData cmdParam::parse_backup_node_args(int argc, char **argv,
+		const Option *options, int offset)
+{
+	CmdParamData param = parse_backup_args(argc, argv, SrvBackupNodeAction, options, offset);
+	if (param.action == InvalidAction)
+		return param;
+
+	if ((param.backup.flags & (PBT_INCREMENTAL | PBT_FULL)) == 0)
+		param.backup.flags |= PBT_INCREMENTAL;
+
+	return param;
+}
+
+CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
+		const Option *options, int offset)
+{
+	std::string val;
+	CmdParamData param;
+	param.action = action;
+
+	GetOptLong opt(argc, argv, options, offset);
+	while (1) {
+		int id = opt.parse(val);
+		if (id == -1) // the end mark
+			break;
+		switch (id) {
+		CASE_PARSE_OPTION_GLOBAL(val, param)
+		case CMD_BACKUP_FULL:
+			param.backup.flags |= PBT_FULL;
+			break;
+		case CMD_BACKUP_INC:
+			param.backup.flags |= PBT_INCREMENTAL;
+			break;
+		case CMD_BACKUP_DIFF:
+			param.backup.flags |= PBT_DIFFERENTIAL;
+			break;
+		case CMD_SECURITY_LEVEL:
+			if (get_security_level(val, &param.security_level)) {
+				 fprintf(stderr, "An incorrect security level is"
+					" specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
+			break;
+		case CMD_BACKUP_ID:
+			normalize_uuid(val, param.backup.id);
+			break;
+		case CMD_BACKUP_STORAGE:
+			if (parse_auth(val, param.backup.storage)) {
+				fprintf(stderr, "An incorrect value is"
+						" specified for backup storage: %s\n",
+						val.c_str());
+				return invalid_action;
+			}
+			opt.hide_arg();
+			break;
+		case CMD_DESC:
+			param.desc = val;
+			break;
+		case CMD_UNCOMPRESSED:
+			param.backup.flags |= PBT_UNCOMPRESSED;
+			break;
+		case GETOPTUNKNOWN:
+			fprintf(stderr, "Unrecognized option: %s\n",
+				opt.get_next());
+			return invalid_action;
+		case GETOPTERROR:
+		default:
+			return invalid_action;
+		}
+	}
+
+	return param;
+}
+
 CmdParamData cmdParam::get_disp(int argc, char **argv)
 {
 	if (argc < 2) {
@@ -4651,8 +4674,10 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 		return parse_ct_template_args(argc, argv, ++i);
 	else if (!strcmp(argv[i], "plugin"))
 		return parse_plugin_args(argc, argv, ++i);
-    	else if (!strcmp(argv[i], "monitor"))
-        	return parse_monitor_args(argc, argv);
+	else if (!strcmp(argv[i], "monitor"))
+		return parse_monitor_args(argc, argv);
+	else if (!strcmp(argv[i], "backup"))
+		return parse_backup_node_args(argc, argv, backup_options, 2);
 	else if (!strcmp(argv[i], "help") ||
 			!strcmp(argv[i], "--help"))
 	{

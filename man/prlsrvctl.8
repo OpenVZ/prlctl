@@ -69,6 +69,8 @@ prlsrvctl \fBcttemplate\fR \fBlist\fR [\fB-j, --json\fR]
 .PP
 prlsrvctl \fBcttemplate\fR \fBremove\fR <\fIname\fR> [<\fIos_template_name\fR>]
 .PP
+prlsrvctl \fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]
+.PP
 .SH DESCRIPTION
 The \fBprlsrvctl\fR utility is used to manage Parallels Server.
 .SH OPTIONS
@@ -277,6 +279,25 @@ To delete an application template, you need to additionally indicate the
 List all installed Parallels plugins.
 .IP "\fBplugin\fR \fBrefresh\fR" 4
 Refresh installed Parallels plugins.
+.SS Backup management
+.IP "\fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]" 4
+Back up all virtual environments on the node.
+.TP
+\fB-f,--full\fB
+Create a full backup of each virtual environment on the node. A full backup contains all the virtual environment data.
+.TP
+\fB-i,--incremental\fR
+Create an incremental backup of each virtual environment on the node.
+An incremental backup contains only the files that were changed since the previous full or incremental backup. This is the default backup type.
+.TP
+\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>
+Specify the host to store backup images at.
+.TP
+\fB--description\fR <\fIdesc\fR>
+Add a description \fIdesc\fR to each virtual environment backup.
+.TP
+\fB-u,--uncompressed\fB
+Do not compress backup images.
 .SH DIAGNOSTICS
 \fBprlsrvctl\fR returns 0 upon successful command execution. If a command fails, it returns the appropriate error code.
 .SH SEE ALSO

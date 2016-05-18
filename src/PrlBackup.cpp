@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <memory>
 
 #include <PrlApiDisp.h>
 
@@ -115,7 +116,7 @@ static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 	return 0;
 }
 
-int PrlSrv::backup_vm(const CmdParamData &param)
+int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param)
 {
 	PRL_RESULT ret;
 	const BackupParam& bparam = param.backup;
@@ -138,24 +139,16 @@ int PrlSrv::backup_vm(const CmdParamData &param)
 			security_level = storage.get_min_security_level();
 	}
 
-	PrlVm *vm = NULL;
-	ret = get_vm_config(param, &vm);
-	if (ret != 0)
-		return ret;
-	if (vm == NULL)
-		return prl_err(-1, "The %s virtual machine does not exist.",
-				param.id.c_str());
-
 	if (security_level < param.security_level)
 		security_level = param.security_level;
 
 	prl_log(L_DEBUG, "security_level=%d", security_level);
 	prl_log(0, "Backing up the %s %s",
-			vm->get_vm_type_str(), vm->get_name().c_str());
+			vm.get_vm_type_str(), vm.get_name().c_str());
 	PRL_HANDLE hBackup;
 	hBackup = PrlSrv_CreateVmBackup(
 		m_hSrv,
-		vm->get_id().c_str(),
+		vm.get_id().c_str(),
 		server,
 		port,
 		sessionid,
@@ -164,14 +157,14 @@ int PrlSrv::backup_vm(const CmdParamData &param)
 		0,
 		PRL_TRUE);
 
-	strcpy(vm_uuid, vm->get_id().c_str());
+	strcpy(vm_uuid, vm.get_id().c_str());
 	reg_event_callback(backup_event_handler, vm_uuid);
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hBackup);
 	std::string err;
 	if ((ret = get_job_retcode(hBackup, err))) {
 		handle_job_err(hBackup, ret);
 		prl_err(ret, "Failed to backed up the %s: %s",
-				 vm->get_vm_type_str(), err.c_str());
+				 vm.get_vm_type_str(), err.c_str());
 	} else {
 		PrlHandle hResult;
 		PRL_UINT32 count = 0;
@@ -200,13 +193,62 @@ int PrlSrv::backup_vm(const CmdParamData &param)
 			}
 		}
 		prl_log(0, "The %s has been successfully backed up with backup id %s.",
-				 vm->get_vm_type_str(), backup_id.c_str());
+				 vm.get_vm_type_str(), backup_id.c_str());
 	}
 	get_cleanup_ctx().unregister_hook(h);
 
 	PrlHandle_Free(hBackup);
+	unreg_event_callback(backup_event_handler, vm_uuid);
 
 	return ret;
+}
+
+int PrlSrv::backup_vm(const CmdParamData& param)
+{
+	PrlVm *v = NULL;
+	PRL_RESULT ret = get_vm_config(param, &v);
+	if (PRL_FAILED(ret))
+		return ret;
+	if (v == NULL)
+	{
+		return prl_err(-1, "The %s virtual machine does not exist.",
+				param.id.c_str());
+	}
+
+	std::auto_ptr<PrlVm> vm(v);
+	return do_vm_backup(*vm, param);
+}
+
+
+int PrlSrv::backup_node(const CmdParamData& param)
+{
+	int ret;
+	if ((ret = update_vm_list(param.vmtype, 0)))
+		return ret;
+
+	for (PrlVmList::const_iterator i = m_VmList.begin();
+			i != m_VmList.end(); ++i)
+	{
+		std::string u = (*i)->get_uuid();
+		PrlVm *v = NULL;
+		ret = get_vm_config(u, &v);
+
+		if (PRL_FAILED(ret))
+		{
+			if (ret != PRL_ERR_VM_UUID_NOT_FOUND)
+				prl_log(0, "Can not get %s VM config", u.c_str());
+
+			continue;
+		}
+
+		std::auto_ptr<PrlVm> vm(v);
+
+		CmdParamData p(param);
+		p.id = u;
+
+		do_vm_backup(*vm, p);
+	}
+	return 0;
 }
 
 int PrlSrv::restore_vm(const CmdParamData &param)

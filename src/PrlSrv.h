@@ -245,7 +245,9 @@ private:
 	int create_ct(const CmdParamData &param);
 	int register_vm(const CmdParamData &param);
 	int convert_vm(const CmdParamData &param);
-	int backup_vm(const CmdParamData &param);
+	int do_vm_backup(const PrlVm& vm, const CmdParamData& param);
+	int backup_vm(const CmdParamData& param);
+	int backup_node(const CmdParamData &param);
 	int restore_vm(const CmdParamData &param);
 	int backup_delete(const CmdParamData &param);
 	int backup_list(const CmdParamData &param);

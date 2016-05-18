@@ -98,6 +98,7 @@ enum Action {
 	SrvMonitorAction,
 	SrvUpdateHostRegInfoAction,
 	SrvPrepareForUninstallAction,
+	SrvBackupNodeAction,
 
 	DispSetAction,
 	DispListAction,
@@ -1138,7 +1139,11 @@ private:
 	CmdParamData parse_monitor_args(int argc, char **argv);
 	CmdParamData get_xmlrpc_param(int argc, char **argv, Action action,
 		const Option *options, int offset);
+	CmdParamData parse_backup_node_args(int argc, char **argv,
+		const Option *options, int offset);
 	int parse_memguarantee(const char *value, CmdParamData &param);
+	CmdParamData parse_backup_args(int argc, char **argv, Action action,
+		const Option *options, int offset);
 };
 
 enum cmdOptions {

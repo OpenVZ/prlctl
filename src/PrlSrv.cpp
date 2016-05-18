@@ -698,6 +698,8 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 		return plugin(param.plugin, param.use_json);
 	case SrvMonitorAction:
 		return run_monitor();
+	case SrvBackupNodeAction:
+		return backup_node(param);
 	default:
 		return -1;
 	}
