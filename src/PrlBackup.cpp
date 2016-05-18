@@ -211,7 +211,7 @@ int PrlSrv::backup_vm(const CmdParamData& param)
 		return ret;
 	if (v == NULL)
 	{
-		return prl_err(-1, "The %s virtual machine does not exist.",
+		return prl_err(-1, "The virtual machine %s does not exist.",
 				param.id.c_str());
 	}
 
@@ -236,7 +236,7 @@ int PrlSrv::backup_node(const CmdParamData& param)
 		if (PRL_FAILED(ret))
 		{
 			if (ret != PRL_ERR_VM_UUID_NOT_FOUND)
-				prl_log(0, "Can not get %s VM config", u.c_str());
+				prl_log(0, "Failed to get config of VM %s", u.c_str());
 
 			continue;
 		}
