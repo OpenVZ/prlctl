@@ -870,7 +870,8 @@ int PrlVm::exec(const CmdParamData &param)
 	PrlHandle hEnvs;
 	PrlApi_CreateStringsList(hEnvs.get_ptr());
 #ifndef _WIN_
-	if (action == VmEnterAction) {
+	if (action == VmEnterAction &&
+	    m_ostype == PVS_GUEST_TYPE_LINUX) {
 		const char *envs_enter[] = {"HOME=/",
 			"HISTFILE=/dev/null",
 			"PATH=/bin:/sbin:/usr/bin:/usr/sbin:.",
