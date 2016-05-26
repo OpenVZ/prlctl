@@ -4180,9 +4180,12 @@ int PrlVm::install_tools()
 
 	PrlHandle hJob(PrlVm_InstallTools(m_hVm));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		prl_err(ret, "Failed to install the Parallels tools: %s", err.c_str());
+		prl_err(ret, "Failed to attach the Guest Tools iso: %s", err.c_str());
 	else
-		prl_log(0, "The Parallels tools have been successfully installed.");
+	{
+		prl_log(0, "The Guest Tools iso was attached. "
+			"Please install Guest Tools according to the documentation.");
+	}
 
 	return ret;
 }
