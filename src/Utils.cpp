@@ -860,6 +860,14 @@ static bool is_terminal_input()
 	return !!isatty(STDIN_FILENO);
 }
 
+static bool is_terminal_output()
+{
+	static int is_tty = -1;
+	if (is_tty == -1)
+		is_tty = isatty(STDOUT_FILENO);
+	return is_tty;
+}
+
 #else
 
 static int WindowsTerminal_getConsoleMode(DWORD *mode)
@@ -919,6 +927,12 @@ static void term_printf(const char *format, ...)
 }
 
 static bool is_terminal_input()
+{
+	/* TODO: implement this */
+	return true;
+}
+
+static bool is_terminal_output()
 {
 	/* TODO: implement this */
 	return true;
@@ -1568,6 +1582,9 @@ int str2on_off(const std::string &val)
 
 void print_procent(unsigned int procent, std::string message)
 {
+	if (!is_terminal_output())
+		return;
+
 	if(message.empty())
 		fprintf(stdout, "\rOperation progress %s%2d%%",
 				procent == 100?"   ":"...",
@@ -1672,7 +1689,8 @@ void print_vz_progress(PRL_HANDLE h)
 	if (progress == 100)
 		return;
 
-	fprintf(stdout, "%s\n", stage.c_str());
+	if (is_terminal_output())
+		fprintf(stdout, "%s\n", stage.c_str());
 }
 
 #define UUID_LEN			36
