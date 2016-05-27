@@ -4180,11 +4180,13 @@ int PrlVm::install_tools()
 
 	PrlHandle hJob(PrlVm_InstallTools(m_hVm));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		prl_err(ret, "Failed to attach the Guest Tools iso: %s", err.c_str());
+		prl_err(ret, "Failed to mount the guest tools ISO: %s", err.c_str());
 	else
 	{
-		prl_log(0, "The Guest Tools iso was attached. "
-			"Please install Guest Tools according to the documentation.");
+		prl_log(0, "The guest tools ISO is mounted.\n"
+			"Inside Linux VM, run 'mount /dev/cdrom /mnt/cdrom', then 'bash /mnt/cdrom/install'.\n"
+			"Inside Windows VM, use autorun or open the drive in Explorer and run the installer."
+		);
 	}
 
 	return ret;
