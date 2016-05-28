@@ -3273,14 +3273,13 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_ATTACH_BACKUP_ID:
 			param.backup_cmd = Add;
-			normalize_uuid(val, param.backup_id);
+			if (normalize_uuid(val, param.backup_id))
+				param.backup_id = val;
 			break;
 		case CMD_DETACH_BACKUP_ID:
 			param.backup_cmd = Del;
-			if (val == std::string("all"))
+			if (normalize_uuid(val, param.backup_id))
 				param.backup_id = val;
-			else
-				normalize_uuid(val, param.backup_id);
 			break;
 		case CMD_ATTACH_BACKUP_DISK:
 			param.backup_disk = val;
