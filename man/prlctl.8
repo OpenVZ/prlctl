@@ -790,7 +790,8 @@ if no option specified the snapshot tree represented in two columns
 "PARENT_SNAPSHOT_ID SNAPSHOT_ID". If \fB-t\fR,\fB--tree\fR option is specified draw the tree.
 If \fB-i\fR,\fB--id\fR <\fIsnapid\fR> option is specified, display the snapshot information 
 .IP "\fBsnapshot-delete\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]" 4
-Used to delete snapshot by \fIsnapid\fR and all children.
+Deletes snapshot with the specified \fIsnapid\fR. If the \fB-c\fR,\fB--children\fR option is specified, all snapshot's children are also deleted.
+Otherwise they become the children of the deleted snapshot's parent.
 .IP "\fBsnapshot-switch\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR>" 4
 Used to revert to selected snapshot.
 .SS Hostname management
