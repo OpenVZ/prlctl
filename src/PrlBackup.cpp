@@ -95,12 +95,10 @@ static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 				prl_log(L_DEBUG, "PrlEvent_GetParamByName %s",
 						get_error_str(ret).c_str());
 
-			fprintf(stdout, "\r%s hdd.%d progress: %2d%%",
-					(evt_type == PET_DSP_EVT_BACKUP_PROGRESS_CHANGED) ? "backup" : "restore",
-					idx, progress);
-			if (progress == 100)
-				fprintf(stdout, "\n");
-			fflush(stdout);
+			std::stringstream out;
+			out << ((evt_type == PET_DSP_EVT_BACKUP_PROGRESS_CHANGED) ? "backup hdd." : "restore hdd.")
+				<< idx << " progress:";
+			print_procent(progress, out.str());
 		} else if (evt_type == PET_DSP_EVT_BACKUP_STARTED) {
 			prl_log(L_INFO, "Backup started.");
 		} else if (evt_type == PET_DSP_EVT_CREATE_BACKUP_FINISHED) {
