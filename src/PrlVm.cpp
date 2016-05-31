@@ -91,9 +91,6 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	m_ostype(ostype),
 	m_template(false),
 	m_VmState(VMS_UNKNOWN),
-	m_shf_host_enabled(PRL_FALSE),
-	m_shf_guest_enabled(PRL_FALSE),
-	m_shf_guest_automount(PRL_FALSE),
 	m_updated(PRL_FALSE),
 	m_is_vnc_server_started(PRL_FALSE),
 	m_is_encrypted(false),
@@ -1736,21 +1733,6 @@ int PrlVm::create_dev(DevType type, const DevInfo &param)
 	return 0;
 }
 
-int PrlVm::create_shared_folder(const SharedFolderParam &param)
-{
-	PRL_RESULT ret;
-	PrlHandle hVmShare;
-
-	if ((ret = PrlVmCfg_CreateShare(m_hVm, hVmShare.get_ptr())))
-		return prl_err(ret, "Failed to create the shared folder: %s",
-			get_error_str(ret).c_str());
-
-	PrlSharedFolder *shf = m_shf_list.add(new PrlSharedFolder(hVmShare.release_handle()));
-	if ((ret = shf->create(param)))
-		return ret;
-	return 0;
-}
-
 PrlDevSrv *PrlVm::find_srv_dev(DevType type, const std::string &name) const
 {
 	return m_srv.find_dev(type, name);
@@ -1810,90 +1792,6 @@ int PrlVm::get_dev_info()
 				get_error_str(ret).c_str());
 	}
 	free(handles);
-	return ret;
-}
-
-int PrlVm::shf_enable_host(bool flag)
-{
-	int ret;
-	PRL_BOOL enable = flag;
-
-	ret = PrlVmCfg_SetUserDefinedSharedFoldersEnabled(m_hVm, enable);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_SetUserDefinedSharedFoldersEnabled: %s",
-			get_error_str(ret).c_str());
-	set_updated();
-
-	return 0;
-}
-
-int PrlVm::shf_enable_guest(bool flag)
-{
-	int ret;
-	PRL_BOOL enable = flag;
-
-	ret = PrlVmCfg_SetGuestSharingEnabled(m_hVm, enable);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_SetGuestSharingEnabled: %s",
-			get_error_str(ret).c_str());
-	set_updated();
-
-	return 0;
-}
-
-int PrlVm::shf_enable_guest_automount(bool flag)
-{
-	int ret;
-	PRL_BOOL enable = flag;
-
-	ret = PrlVmCfg_SetGuestSharingAutoMount(m_hVm, enable);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_SetGuestSharingAutoMount: %s",
-			get_error_str(ret).c_str());
-	set_updated();
-
-	return 0;
-}
-
-int PrlVm::shf_get_info()
-{
-	PRL_RESULT ret;
-	PRL_UINT32 count;
-
-	/* Guest sharing supported only for WIN */
-	if (m_ostype == PVS_GUEST_TYPE_WINDOWS) {
-		ret = PrlVmCfg_IsGuestSharingEnabled(m_hVm, &m_shf_guest_enabled);
-		if (ret)
-			return prl_err(ret, "PrlVmCfg_IsGuestSharingEnabled",
-					get_error_str(ret).c_str());
-
-		if (m_shf_guest_enabled)
-			PrlVmCfg_IsGuestSharingAutoMount(m_hVm, &m_shf_guest_automount);
-	}
-
-	ret = PrlVmCfg_IsUserDefinedSharedFoldersEnabled(m_hVm, &m_shf_host_enabled);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_IsUserDefinedSharedFoldersEnabled: %s",
-			get_error_str(ret).c_str());
-
-	ret = PrlVmCfg_GetSharesCount(m_hVm, &count);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_GetSharesCount: %s",
-			get_error_str(ret).c_str());
-	if (count == 0)
-		return 0;
-
-	m_shf_list.del();
-	for (unsigned int i = 0; i < count; ++i) {
-		PrlHandle hVmShare;
-
-		ret = PrlVmCfg_GetShare(m_hVm, i, hVmShare.get_ptr());
-		if (ret)
-			return prl_err(ret, "PrlVmCfg_GetShare: %s",
-				get_error_str(ret).c_str());
-
-		m_shf_list.add(new PrlSharedFolder(hVmShare.release_handle()));
-	}
 	return ret;
 }
 
@@ -2053,8 +1951,6 @@ int PrlVm::get_vm_info()
 	get_confirmation_list();
 
 	if ((ret = get_dev_info()))
-		return ret;
-	if ((ret = shf_get_info()))
 		return ret;
 	update_state();
 
@@ -3821,64 +3717,8 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_boot_list(param)))
 			return ret;
 	}
-	if (param.enable_shf_host) {
-		if ((ret = shf_enable_host(true)))
-			return ret;
-	}
-	if (param.disable_shf_host) {
-		if ((ret = shf_enable_host(false)))
-			return ret;
-	}
-	if (param.enable_shf_guest) {
-		if ((ret = shf_enable_guest(true)))
-			return ret;
-	}
-	if (param.disable_shf_guest) {
-		if ((ret = shf_enable_guest(false)))
-			return ret;
-	}
-	if (param.enable_shf_guest_automount) {
-		if ((ret = shf_enable_guest_automount(true)))
-			return ret;
-	}
 	if ((ret = set_vnc(param.vnc)))
 		return ret;
-	if (param.disable_shf_guest_automount) {
-		if ((ret = shf_enable_guest_automount(false)))
-			return ret;
-	}
-	if (param.shared_folder.cmd == Add) {
-		if ((ret = shf_get_info()))
-			return ret;
-		if (m_shf_list.find(param.shared_folder.name))
-			return prl_err(-1, "The shared folder name '%s' already"
-				" used for VM.",
-				param.shared_folder.name.c_str());
-		if ((ret = create_shared_folder(param.shared_folder)))
-			return ret;
-		PrlSharedFolder *shf= m_shf_list.back();
-		if (shf->is_updated())
-			set_updated();
-	}
-	if (param.shared_folder.cmd == Set || param.shared_folder.cmd == Del) {
-		if ((ret = shf_get_info()))
-			return ret;
-		PrlSharedFolder *shf = m_shf_list.find(param.shared_folder.name);
-		if (!shf)
-			return prl_err(1, "The shared folder with name '%s'"
-				" does not exist.",
-				param.shared_folder.name.c_str());
-		if (param.shared_folder.cmd == Set) {
-			if ((ret = shf->configure(param.shared_folder)))
-				return ret;
-		} else {
-			if ((ret = shf->remove()))
-				return ret;
-		}
-
-		if (shf->is_updated())
-			set_updated();
-	}
 	if (!param.userpasswd.empty()) {
 		if ((ret = set_userpasswd(param.userpasswd, param.crypted)))
 			return ret;
@@ -4793,25 +4633,6 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	}
 	f.close();
 
-	/* Shared folders */
-	{
-		PrlList<PrlSharedFolder *>::const_iterator it = m_shf_list.begin(),
-			eit = m_shf_list.end();
-		f.open_shf("Host Shared Folders", prl_bool(m_shf_host_enabled));
-
-		for (; it != eit; ++it)
-			(*it)->append_info(f);
-		f.close();
-
-		if (m_shf_guest_enabled) {
-			f.open_shf("Guest Shared Folders", true);
-			f.open_dev("automount");
-			f.add_isenabled(prl_bool(m_shf_guest_automount));
-			f.close(true);
-			f.close();
-		}
-	}
-
 	FeaturesParam feature = get_features();
 	if (get_vm_type() == PVT_CT) {
 		f.add("Features", feature2str(feature));
@@ -4894,7 +4715,6 @@ void PrlVm::clear()
 		m_hVm = 0;
 	}
 	m_DevList.del();
-	m_shf_list.del();
 }
 
 int PrlVm::internal_cmd(char **argv)
