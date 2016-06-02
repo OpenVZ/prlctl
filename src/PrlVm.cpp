@@ -500,6 +500,8 @@ static int migrate_event_handler(PRL_HANDLE hEvent, void *data)
 			std::string m;
 			get_result_error_string(h.get_handle(), m);
 			prl_log(L_ERR, m.c_str());
+		} else if (evt_type == PET_JOB_STAGE_PROGRESS_CHANGED) {
+			print_vz_progress(h);
 		}
 	}
 	return 0;
