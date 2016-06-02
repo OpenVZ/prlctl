@@ -226,8 +226,6 @@ public:
 	int get_dev_info();
 	int get_vm_info();
 	int get_confirmation_list();
-	int set_eowner(const std::string &owner);
-	std::string get_eowner_info() const;
 	int get_new_dir(const char *pattern, std::string &new_dir,
 		const char *dir = 0) const;
 	void clear();
