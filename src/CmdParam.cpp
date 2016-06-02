@@ -238,7 +238,6 @@ static Option set_options[] = {
 		{"onboot", '\0', OptRequireArg, CMD_AUTOSTART},
 	{"autostart-delay", '\0', OptRequireArg, CMD_AUTOSTART_DELAY},
 	{"autostop", '\0', OptRequireArg, CMD_AUTOSTOP},
-	{"start-as-user", '\0', OptRequireArg, CMD_EOWNER},
 	{"startup-view",	'\0', OptRequireArg, CMD_STARTUP_VIEW},
 	{"on-shutdown",		'\0', OptRequireArg, CMD_ON_SHUTDOWN},
 	{"on-window-close",	'\0', OptRequireArg, CMD_ON_WINDOW_CLOSE},
@@ -2293,10 +2292,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
-			break;
-		case CMD_EOWNER:
-			param.eowner = val;
-			opt.hide_arg();
 			break;
 		case CMD_STARTUP_VIEW:
 			param.startup_view = val;

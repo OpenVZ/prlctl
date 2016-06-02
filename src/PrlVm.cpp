@@ -1883,69 +1883,6 @@ int PrlVm::update_owner(PRL_HANDLE hVmInfo)
 	return 0;
 }
 
-int PrlVm::set_eowner(const std::string &owner)
-{
-	PRL_RESULT ret;
-	PRL_VM_START_LOGIN_MODE mode = PLM_START_ACCOUNT;
-
-	if (owner == "administrator") {
-		mode = PLM_ROOT_ACCOUNT;
-	} else if (owner == "owner") {
-		mode = PLM_START_ACCOUNT;
-	} else {
-		std::string user, pw;
-
-		if (parse_userpw(owner, user, pw))
-			return prl_err(-1, "An incorrect user specified: %s",
-				owner.c_str());
-
-		prl_log(L_INFO, "set_eowner: %s", user.c_str());
-		if ((ret = PrlVmCfg_SetStartUserCreds(m_hVm, user.c_str(),
-								pw.c_str())))
-			return prl_err(ret, "PrlVmCfg_SetStartUserCreds: %s",
-				get_error_str(ret).c_str());
-		mode = PLM_USER_ACCOUNT;
-	}
-
-	if ((ret = PrlVmCfg_SetStartLoginMode(m_hVm, mode)))
-		return prl_err(ret, "PrlVmCfg_SetStartLoginMode: %s",
-			get_error_str(ret).c_str());
-	set_updated();
-
-	return 0;
-}
-
-std::string PrlVm::get_eowner_info() const
-{
-	PRL_RESULT ret;
-	PRL_VM_START_LOGIN_MODE mode = PLM_START_ACCOUNT;
-	std::string out;
-
-	if ((ret = PrlVmCfg_GetStartLoginMode(m_hVm, &mode))) {
-		prl_err(ret, "PrlAcl_GetOwnerName: %s",
-			get_error_str(ret).c_str());
-		return "";
-	}
-
-	switch (mode) {
-	case PLM_START_ACCOUNT:
-		out = "owner";
-		break;
-	case PLM_ROOT_ACCOUNT:
-		out = "administrator";
-		break;
-	case PLM_USER_ACCOUNT: {
-		char buf[128];
-		unsigned int len = sizeof(buf);
-
-		if (!PrlVmCfg_GetStartUserLogin(m_hVm, buf, &len))
-			out += buf;
-		break;
-	}
-	}
-	return out;
-}
-
 int PrlVm::get_vm_info()
 {
 	PRL_RESULT ret;
@@ -3604,10 +3541,6 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_autocompact(param.autocompact)))
 			return ret;
 	}
-	if (!param.eowner.empty()) {
-		if ((ret = set_eowner(param.eowner)))
-			return ret;
-	}
 	if (!param.startup_view.empty()) {
 		if ((ret = set_startup_view(param.startup_view)))
 			return ret;
@@ -4518,7 +4451,6 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.add("Home", x);
 
 	f.add("Owner", m_owner);
-	f.add("Effective owner", get_eowner_info());
 	get_tools_info(f);
 	f.add("Autostart", get_autostart_info());
 	f.add("Autostop", get_autostop_info());

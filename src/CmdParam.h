@@ -844,7 +844,6 @@ public:
 	unsigned int autostart_delay;
 	std::string autostop;
 	std::string file;
-	std::string eowner;
 	std::string startup_view;
 	std::string on_shutdown;
 	std::string on_window_close;
@@ -1222,7 +1221,6 @@ enum cmdOptions {
 	CMD_AUTOSTART,
 	CMD_AUTOSTART_DELAY,
 	CMD_AUTOSTOP,
-	CMD_EOWNER,
 	CMD_STARTUP_VIEW,
 	CMD_ON_SHUTDOWN,
 	CMD_ON_WINDOW_CLOSE,
