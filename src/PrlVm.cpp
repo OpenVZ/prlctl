@@ -1349,10 +1349,10 @@ int PrlVm::destroy(const CmdParamData &param)
 	std::string err;
 	VIRTUAL_MACHINE_STATE state = get_state();
 
-	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED)) {
+	if (param.force && (state == VMS_RUNNING || state == VMS_PAUSED || state == VMS_UNKNOWN)) {
 		CmdParamData p;
 		p.force = p.fast = true;
-		if ((ret = stop(p)))
+		if ((ret = stop(p)) && state != VMS_UNKNOWN)
 			return ret;
 	}
 
