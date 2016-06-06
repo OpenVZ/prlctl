@@ -30,6 +30,7 @@
 
 #ifndef __PRLBACKUP_H__
 #define	__PRLBACKUP_H__
+#include <boost/property_tree/ptree.hpp>
 #include "PrlTypes.h"
 
 struct BackupParam;
@@ -76,18 +77,20 @@ struct VmBackupData {
 };
 
 class PrlBackupTree {
+	typedef boost::property_tree::ptree tree_type;
+
 public:
 	PrlBackupTree() {}
 	~PrlBackupTree();
 	int parse(const char *str);
-	void parse_data(const char *str, BackupData &backup);
-	VmBackupData *parse_entry(const char *str);
+	void parse_data(const tree_type& item_, BackupData &backup);
+	VmBackupData *parse_entry(const tree_type& entry_);
 	void print_list(const BackupParam &param, bool no_hdr, PrlSrv &srv);
 	const BackupData *find_backup_data(const std::string &id, std::string &vmid) const;
 	std::string get_vm_uuid_by_id(const std::string &pid) const;
 	int get_disks_by_id(const std::string& id, std::list<std::string>& disks) const;
-	void parse_disk(const char *str, BackupDisk &disk);
-	void parse_disk_list(const char *str, BackupDiskList &list);
+	void parse_disk(const tree_type& disk_, BackupDisk &disk);
+	void parse_disk_list(const tree_type& disks_, BackupDiskList &list);
 
 private:
 	typedef std::list<VmBackupData *> VmBackupDataList;
