@@ -25,6 +25,10 @@
 #include <stdio.h>
 #include <memory>
 
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/foreach.hpp>
+#include <boost/optional.hpp>
+
 #include <PrlApiDisp.h>
 
 #include "PrlBackup.h"
@@ -517,120 +521,99 @@ int PrlSrv::get_backup_disks(const std::string& id, std::list<std::string>& disk
 	return 0;
 }
 
-void PrlBackupTree::parse_disk(const char *str, BackupDisk &disk)
+void PrlBackupTree::parse_disk(const tree_type& disk_, BackupDisk &disk)
 {
-	std::string val;
-	PrlXml xml(str);
-
-	if (xml.get_child_value("Name", val))
-		disk.name = val;
-	if (xml.get_child_value("OriginalPath", val))
-		disk.orig_path = val;
-	if (xml.get_child_value("Size", val))
-		disk.size = val;
+	boost::optional<std::string> val;
+	if ((val = disk_.get_optional<std::string>("Name")))
+		disk.name = *val;
+	if ((val = disk_.get_optional<std::string>("OriginalPath")))
+		disk.orig_path = *val;
+	if ((val = disk_.get_optional<std::string>("Size")))
+		disk.size = *val;
 }
 
-void PrlBackupTree::parse_disk_list(const char *str, BackupDiskList &list)
+void PrlBackupTree::parse_disk_list(const tree_type& disks_, BackupDiskList &list)
 {
-	PrlXml xml(str);
-	e_xml_tag_flag tag;
-	do {
-		std::string tag_str;
-		tag = xml.find_tag("BackupDisk", tag_str);
-		if (tag == TAG_START) {
-			BackupDisk disk;
-			parse_disk(tag_str.c_str(), disk);
-			list.push_back(disk);
-		}
-	} while (tag != TAG_NONE);
+	BOOST_FOREACH(const tree_type::value_type& it, disks_) {
+		if (it.first != "BackupDisk")
+			continue;
+		BackupDisk disk;
+		parse_disk(it.second, disk);
+		list.push_back(disk);
+	}
 }
 
-void PrlBackupTree::parse_data(const char *str, BackupData &backup)
+void PrlBackupTree::parse_data(const tree_type& item_, BackupData &backup)
 {
-	std::string val;
-	PrlXml xml(str);
-
-	if (xml.get_child_value("Id", val))
-		backup.uuid = val;
-	if (xml.get_child_value("Host", val))
-		backup.host = val;
-	if (xml.get_child_value("Creator", val))
-		backup.owner = val;
-	if (xml.get_child_value("DateTime", val))
-		backup.date = val;
-	if (xml.get_child_value("Size", val))
-		backup.size = val;
-	if (xml.get_child_value("Type", val))
-		backup.type = val;
-	if (xml.get_child_value("Description", val))
-		backup.desc = val;
-	if (xml.get_child_value("ServerUuid", val))
-		backup.srv_uuid = val;
-
-	std::string list_str;
-	e_xml_tag_flag tag = xml.find_tag("BackupDisks", list_str);
-	if (tag == TAG_START)
-		parse_disk_list(list_str.c_str(), backup.lst_disks);
+	BOOST_FOREACH(const tree_type::value_type& it, item_) {
+		if (it.first == "Id")
+			backup.uuid = it.second.get_value<std::string>();
+		else if (it.first == "Host")
+			backup.host = it.second.get_value<std::string>();
+		else if (it.first == "Creator")
+			backup.owner = it.second.get_value<std::string>();
+		else if (it.first == "DateTime")
+			backup.date = it.second.get_value<std::string>();
+		else if (it.first == "Size")
+			backup.size = it.second.get_value<std::string>();
+		else if (it.first == "Type")
+			backup.type = it.second.get_value<std::string>();
+		else if (it.first == "Description")
+			backup.desc = it.second.get_value<std::string>();
+		else if (it.first == "ServerUuid")
+			backup.srv_uuid = it.second.get_value<std::string>();
+		else if (it.first == "BackupDisks")
+			parse_disk_list(it.second, backup.lst_disks);
+	}
 }
 
-VmBackupData *PrlBackupTree::parse_entry(const char *str)
+VmBackupData *PrlBackupTree::parse_entry(const tree_type& entry_)
 {
-	std::string val;
-	e_xml_tag_flag tag;
-
-	PrlXml xml(str);
-
 	VmBackupData *vm_backup = new VmBackupData();
-	if (xml.get_child_value("Uuid", val))
-		vm_backup->uuid = val;
-	if (xml.get_child_value("Name", val))
-		vm_backup->name = val;
 
-	do {
-		std::string tag_str;
-		tag = xml.find_tag("BackupItem", tag_str);
-		if (tag == TAG_START) {
+	BOOST_FOREACH(const tree_type::value_type& it, entry_) {
+		if (it.first == "Uuid")
+			vm_backup->uuid = it.second.get_value<std::string>();
+		else if (it.first == "Name")
+			vm_backup->name = it.second.get_value<std::string>();
+		else if (it.first == "BackupItem") {
 			FullBackup full_backup;
+			parse_data(it.second, full_backup.data);
 
-			parse_data(tag_str.c_str(), full_backup.data);
-
-			e_xml_tag_flag partial_tag;
-
-			PrlXml xml(tag_str.c_str());
-			do {
-				std::string tag_str;
-				partial_tag = xml.find_tag("PartialBackupItem", tag_str);
-				if (partial_tag == TAG_START) {
-					BackupData partial_backup;
-
-					parse_data(tag_str.c_str(), partial_backup);
-					full_backup.lst_backups.push_back(partial_backup);
-				}
-			} while (partial_tag != TAG_NONE);
-
+			BOOST_FOREACH(const tree_type::value_type& pit, it.second) {
+				if (pit.first != "PartialBackupItem")
+					continue;
+				BackupData partial_backup;
+				parse_data(pit.second, partial_backup);
+				full_backup.lst_backups.push_back(partial_backup);
+			}
 			vm_backup->lst_backups.push_back(full_backup);
 		}
-	} while (tag != TAG_NONE);
-
+	}
 	return vm_backup;
 }
 
 int PrlBackupTree::parse(const char *str)
 {
-	std::string data;
-	e_xml_tag_flag tag;
+	std::istringstream is(str);
+	tree_type t;
+	try {
+		boost::property_tree::xml_parser::read_xml(is, t);
+	} catch (const boost::property_tree::xml_parser::xml_parser_error&) {
+		return 0;
+	}
 
-	PrlXml xml(str);
-	do {
-		tag = xml.find_tag("VmItem", data);
-		if (tag == TAG_START) {
-			VmBackupData *vm_backup;
+	boost::optional<tree_type& > v = t.get_child_optional("BackupTree");
+	if (!v)
+		return 0;
 
-			vm_backup = parse_entry(data.c_str());
-			if (vm_backup != NULL)
-				m_tree.push_back(vm_backup);
-		}
-	} while (tag != TAG_NONE);
+	BOOST_FOREACH(const tree_type::value_type& it, (*v)) {
+		if (it.first != "VmItem")
+			continue;
+		VmBackupData *vm_backup = parse_entry(it.second);
+		if (vm_backup != NULL)
+			m_tree.push_back(vm_backup);
+	}
 
 	return 0;
 }
