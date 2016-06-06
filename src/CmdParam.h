@@ -844,7 +844,6 @@ public:
 	unsigned int autostart_delay;
 	std::string autostop;
 	std::string file;
-	std::string eowner;
 	std::string startup_view;
 	std::string on_shutdown;
 	std::string on_window_close;
@@ -912,15 +911,6 @@ public:
 
 	/* Problem report options */
 	ProblemReportParam problem_report;
-
-	/* Shared Folder options */
-	SharedFolderParam shared_folder;
-	bool enable_shf_host;
-	bool disable_shf_host;
-	bool enable_shf_guest;
-	bool disable_shf_guest;
-	bool enable_shf_guest_automount;
-	bool disable_shf_guest_automount;
 
 	std::string system_flags;
 
@@ -1053,12 +1043,6 @@ public:
 		deferred_install(false),
 		deferred_remove(false),
 		skip_network_errors(false),
-		enable_shf_host(false),
-		disable_shf_host(false),
-		enable_shf_guest(false),
-		disable_shf_guest(false),
-		enable_shf_guest_automount(false),
-		disable_shf_guest_automount(false),
 		crypted(false),
 		off_man(-1),
 		argv(0),
@@ -1230,7 +1214,6 @@ enum cmdOptions {
 	CMD_SOCKET_MODE,
 	CMD_MIXER,
 	CMD_DESC,
-	CMD_SHF_DESC,
 	CMD_VM_NAME,
 	CMD_VM_RENAME_EXT_DISKS,
 	CMD_TEMPLATE,
@@ -1238,7 +1221,6 @@ enum cmdOptions {
 	CMD_AUTOSTART,
 	CMD_AUTOSTART_DELAY,
 	CMD_AUTOSTOP,
-	CMD_EOWNER,
 	CMD_STARTUP_VIEW,
 	CMD_ON_SHUTDOWN,
 	CMD_ON_WINDOW_CLOSE,
@@ -1300,14 +1282,6 @@ enum cmdOptions {
 	CMD_LONGER_BATTERY_LIFE,
 	CMD_BATTERY_STATUS,
 
-	CMD_SHF_HOST_ENABLE,
-	CMD_SHF_GUEST_ENABLE,
-	CMD_SHF_ADD,
-	CMD_SHF_DEL,
-	CMD_SHF_SET,
-	CMD_SHF_PATH,
-	CMD_SHF_MODE,
-	CMD_SHF_GUEST_AUTOMOUNT,
 	CMD_WINSYSTRAY_IN_MACMENU,
 	CMD_AUTO_SWITCH_FULLSCREEN,
 	CMD_DISABLE_AERO,

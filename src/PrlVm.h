@@ -69,10 +69,6 @@ private:
 	PrlDevList m_DevList;
 	PrlDevNetList m_DevNetList;
 	VIRTUAL_MACHINE_STATE m_VmState;
-	PrlList<PrlSharedFolder *> m_shf_list;
-	PRL_BOOL m_shf_host_enabled;
-	PRL_BOOL m_shf_guest_enabled;
-	PRL_BOOL m_shf_guest_automount;
 	bool m_updated;
 	PRL_BOOL m_is_vnc_server_started;
 	std::string m_current_password;
@@ -224,15 +220,12 @@ public:
 	const std::string &get_ctid() const { return m_ctid; }
 	const std::string &get_name() const { return m_name; }
 	int create_dev(DevType type, const DevInfo &param);
-	int create_shared_folder(const SharedFolderParam &param);
 	std::string get_dist() const;
 	std::string get_ostemplate() const;
 	int get_home_dir(std::string &dir) const;
 	int get_dev_info();
 	int get_vm_info();
 	int get_confirmation_list();
-	int set_eowner(const std::string &owner);
-	std::string get_eowner_info() const;
 	int get_new_dir(const char *pattern, std::string &new_dir,
 		const char *dir = 0) const;
 	void clear();
@@ -261,10 +254,6 @@ public:
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);
 	int fixup_configuration();
-	int shf_enable_host(bool flag);
-	int shf_enable_guest(bool flag);
-	int shf_enable_guest_automount(bool flag);
-	int shf_get_info();
 	unsigned int new_dev_idx(DevType type) const;
 	std::string get_bootdev_info();
 	int set_vnc(const VncParam &param);

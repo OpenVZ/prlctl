@@ -107,12 +107,6 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--nested-virt\fR <\fIon\fR|\fIoff\fR>] [\fB--pmu-virt\fR <\fIon\fR|\fIoff\fR>]
 .br
-	[\fB--shf-host\fR <\fIon\fR|\fIoff\fR>]
-.br
-	[\fB--shf-host-add\fR <\fIname\fR> \fB--path\fR <\fIpath\fR> [\fB--mode\fR <\fIro\fR|\fIrw\fR>] [\fB--shf-description\fR <txt\fR>] [\fB--enable\fR|\fB--disable\fR]]
-.br
-	[\fB--shf-host-del\fR <\fIname\fR>]
-.br
 	[\fB--efi-boot\fR <\fIon\fR|\fIoff\fR>] [\fB--select-boot-device\fR <\fIon\fR|\fIoff\fR>] [\fB--external-boot-device\fR <\fIname\fR>]
 .br
 	[\fB--ha-enable\fR <\fIyes\fR|\fIno\fR>] [\fB--ha-prio\fR <\fInumber\fR>]
@@ -309,7 +303,7 @@ Enable or disable memory (RAM) hot-plugging support in the virtual environment.
 Set the amount of memory (RAM) that will be guaranteed to a virtual machine or container.
 The guaranteed memory is a percentage of total RAM that is set for the virtual machine or
 container with the \fB--memsize\fR option. By default, memory guarantee is set to 'auto'
-(20% for containter and 40% for virtual machine).
+(no guarantee for containter and 40% for virtual machine).
 .TP
 \fBBoot order parameters\fR
 .TP
@@ -484,9 +478,6 @@ Delay some seconds at virtual environment autostart.
 .TP
 \fB--autostop\fR <\fIstop\fR|\fIsuspend\fR|\fIshutdown\fR>
 Specifies the mode to set the virtual environment on the Parallels Service shutdown.
-.TP
-\fB--start-as-user\fR <\fIadministrator|owner|user:passwd\fR>
-Autostart virtual environment from specified user.
 .TP
 \fB--undo-disks\fR <\fIoff\fR|\fIdiscard\fR|\fIask\fR>
 Set the virtual environment undo disks options:
@@ -790,7 +781,8 @@ if no option specified the snapshot tree represented in two columns
 "PARENT_SNAPSHOT_ID SNAPSHOT_ID". If \fB-t\fR,\fB--tree\fR option is specified draw the tree.
 If \fB-i\fR,\fB--id\fR <\fIsnapid\fR> option is specified, display the snapshot information 
 .IP "\fBsnapshot-delete\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR> [\fB-c\fR,\fB--children\fR]" 4
-Used to delete snapshot by \fIsnapid\fR and all children.
+Deletes snapshot with the specified \fIsnapid\fR. If the \fB-c\fR,\fB--children\fR option is specified, all snapshot's children are also deleted.
+Otherwise they become the children of the deleted snapshot's parent.
 .IP "\fBsnapshot-switch\fR <\fIve_id\fR|\fIname\fR> \fB-i\fR,\fB--id\fR <\fIsnapid\fR>" 4
 Used to revert to selected snapshot.
 .SS Hostname management
@@ -811,16 +803,6 @@ Specifies the bandwidth guarantee of the virtual environment for the specified n
 .IP "\fB--ratebound\fR <\fIyes\fR|\fIno\fR>" 4
 If set to "\fIyes\fR", the bandwidth guarantee is also the limit for the virtual environment.
 If set to "\fIno\fR", the bandwidth limit is defined by the TOTALRATE parameter in the /etc/vz/vz.conf file. 
-.SS Shared Folders management
-A shared folder is a folder in the host OS which is shared with a given virtual machine. 
-.IP "\fB--shf-host\fR <\fIon\fR|\fIoff\fR>" 4
-Turns the host folder sharing on or off.
-.IP "\fB--shf-host-add\fR <\fIname\fR> \fB--path\fR <\fIpath\fR> [\fB--mode\fR <\fIro\fR|\fIrw\fR>] [\fB--shf-description\fR <txt\fR>] [\fB--enable\fR|\fB--disable\fR]" 4
-Share the folder \fIname\fR on the host with the virtual machine.
-.IP "\fB--shf-host-set\fR <\fIname\fR> \fB--path\fR <\fIpath\fR> [\fB--mode\fR <\fIro\fR|\fIrw\fR>] [\fB--shf-description\fR <txt\fR>] [\fB--enable\fR|\fB--disable\fR]" 4
-Modify the settings of the shared folder \fIname\fR.
-.IP "\fB--shf-host-del\fR <\fIname\fR>" 4
-Remove the specified shared folder from the shared folder list.
 .SH DIAGNOSTICS
 \fBprlctl\fR returns 0 upon successful command execution. If a command fails, it returns the appropriate error code.
 .SH EXAMPLES

@@ -84,9 +84,8 @@ _prlctl()
 		--onboot --name --device-add --device-del --device-set \
 		--device-connect --device-disconnect --applyconfig \
 		--netfilter --swappages --swap --quotaugidlimit \
-		--autostart --autstart-delay --autostop --start-as-user \
-		--vnc-mode --vnc-port --vnc-passwd --shf-host --shf-host-add \ 
-		--shf-host-set --shf-host-del --shf-guest --shf-guest-automount --ioprio \
+		--autostart --autstart-delay --autostop \
+		--vnc-mode --vnc-port --vnc-passwd --ioprio \
 		--ha-enable --ha-prio'
 	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr'
 	local set_device_cdrom_flags='--device --image --iface --position --passthr'
@@ -166,9 +165,6 @@ _prlctl()
 		--device-set)
 			opts=$(get_devs "${COMP_WORDS[2]}")
 			;;
-		--shf-host|--shf-guest|--shf-guest-automount)
-			opts='on off'
-			;;
 		--ioprio)
 			# ioprio range: 0 - 7 (default : 4)
 			opts='0 1 2 3 4 5 6 7'
@@ -237,9 +233,6 @@ _prlctl()
 			;;
 		--autostop)
 			opts='on off auto'
-			;;
-		--start-as-user)
-			opts='administrator owner'
 			;;
 		--applyconfig)
 			COMPREPLY=($(compgen -A file -- "${cur}"))

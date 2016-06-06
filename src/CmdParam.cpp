@@ -238,7 +238,6 @@ static Option set_options[] = {
 		{"onboot", '\0', OptRequireArg, CMD_AUTOSTART},
 	{"autostart-delay", '\0', OptRequireArg, CMD_AUTOSTART_DELAY},
 	{"autostop", '\0', OptRequireArg, CMD_AUTOSTOP},
-	{"start-as-user", '\0', OptRequireArg, CMD_EOWNER},
 	{"startup-view",	'\0', OptRequireArg, CMD_STARTUP_VIEW},
 	{"on-shutdown",		'\0', OptRequireArg, CMD_ON_SHUTDOWN},
 	{"on-window-close",	'\0', OptRequireArg, CMD_ON_WINDOW_CLOSE},
@@ -254,16 +253,6 @@ static Option set_options[] = {
 	{"pmu-virt",		'\0', OptRequireArg, CMD_PMU_VIRT},
 	{"longer-battery-life",		'\0', OptRequireArg, CMD_LONGER_BATTERY_LIFE},
 	{"battery-status",		'\0', OptRequireArg, CMD_BATTERY_STATUS},
-
-	{"shf-host",		'\0', OptRequireArg, CMD_SHF_HOST_ENABLE},
-	{"shf-host-add",	'\0', OptRequireArg, CMD_SHF_ADD},
-	{"shf-host-del",	'\0', OptRequireArg, CMD_SHF_DEL},
-	{"shf-host-set",	'\0', OptRequireArg, CMD_SHF_SET},
-	{"shf-description",	'\0', OptRequireArg, CMD_SHF_DESC},
-	{"path",		'\0', OptRequireArg, CMD_SHF_PATH},
-	{"mode",		'm', OptRequireArg, CMD_SHF_MODE},
-	{"shf-guest",		'\0', OptRequireArg, CMD_SHF_GUEST_ENABLE},
-	{"shf-guest-automount",	'\0', OptRequireArg, CMD_SHF_GUEST_AUTOMOUNT},
 
 	{"winsystray-in-macmenu", '\0', OptRequireArg, CMD_WINSYSTRAY_IN_MACMENU},
 	{"auto-switch-fullscreen", '\0', OptRequireArg, CMD_AUTO_SWITCH_FULLSCREEN},
@@ -872,13 +861,6 @@ static void usage_vm(const char * argv0)
 "    [--faster-vm <on|off>] [--adaptive-hypervisor <on|off>]\n"
 "    [--disable-winlogo <on|off>] [--auto-compress <on|off>]\n"
 "    [--nested-virt <on|off>] [--pmu-virt <on|off>]\n"
-"Shared folder options are:\n"
-"	--shf-host <on | off>\n"
-"	--shf-host-add <name> --path <path> [--mode <ro|rw>]\n"
-"		[--shf-description <txt>] [--enable|--disable]\n"
-"	--shf-host-del <name>\n"
-"	--shf-host-set <name> [--mode <ro|rw>] [--path <path>]\n"
-"		[--shf-description <txt>] [--enable|--disable]\n"
 , prl_basename(argv0));
 }
 
@@ -1874,13 +1856,6 @@ bool CmdParamData::is_valid()
 		return false;
 	if (!get_realpath(dev.image, false))
 		return false;
-	if (!get_realpath(shared_folder.path))
-		return false;
-	if (shared_folder.cmd == Add && shared_folder.path.empty()) {
-		fprintf(stderr, "The --path option have to be"
-			" specified to setup shared folder.\n");
-		return false;
-	}
 	if (dev.recreate && dev.type != DEV_FDD && dev.type != DEV_HDD) {
 		fprintf(stderr, "The --recreate option have to be"
 			" specified to setup fdd/hdd device.\n");
@@ -2285,11 +2260,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_ENABLE:
 			param.dev.enable = true;
-			param.shared_folder.enable = true;
 			break;
 		case CMD_DISABLE:
 			param.dev.disable = true;
-			param.shared_folder.disable = true;
 			break;
 		case CMD_CONNECT:
 			param.dev.connect = true;
@@ -2319,10 +2292,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
-			break;
-		case CMD_EOWNER:
-			param.eowner = val;
-			opt.hide_arg();
 			break;
 		case CMD_STARTUP_VIEW:
 			param.startup_view = val;
@@ -2534,9 +2503,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		case CMD_DESC:
 			param.desc = val;
 			break;
-		case CMD_SHF_DESC:
-			param.shared_folder.desc = val;
-			break;
 		case CMD_VM_NAME:
 			param.name = val;
 			break;
@@ -2643,66 +2609,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			if ((param.battery_status = str2on_off(val)) == -1) {
 				fprintf(stderr, "An incorrect value for"
 					" --battery-status is specified: %s\n", val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_SHF_HOST_ENABLE:
-			if (val == "on") {
-				param.enable_shf_host = true;
-			} else if (val == "off") {
-				param.disable_shf_host = true;
-			} else {
-				fprintf(stderr, "An incorrect value for"
-					" --shf-host is specified: %s\n",
-					val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_SHF_GUEST_ENABLE:
-			if (val == "on") {
-				param.enable_shf_guest = true;
-			} else if (val == "off") {
-				param.disable_shf_guest = true;
-			} else {
-				fprintf(stderr, "An incorrect value for"
-					" --shf-guest is specified: %s\n",
-					val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_SHF_ADD:
-			param.shared_folder.name = val;
-			param.shared_folder.cmd = Add;
-			break;
-		case CMD_SHF_DEL:
-			param.shared_folder.name = val;
-			param.shared_folder.cmd = Del;
-			break;
-		case CMD_SHF_SET:
-			param.shared_folder.name = val;
-			param.shared_folder.cmd = Set;
-			break;
-		case CMD_SHF_PATH:
-			param.shared_folder.path = val;
-			break;
-		case CMD_SHF_MODE:
-			if (val != "ro" && val != "rw") {
-				fprintf(stderr, "An incorrect value for"
-					" --mode is specified: %s\n",
-					val.c_str());
-				return invalid_action;
-			}
-			param.shared_folder.mode = val;
-			break;
-		case CMD_SHF_GUEST_AUTOMOUNT:
-			if (val == "on") {
-				param.enable_shf_guest_automount = true;
-			} else if (val == "off") {
-				param.disable_shf_guest_automount = true;
-			} else {
-				fprintf(stderr, "An incorrect value for"
-					" --shf-guest-automount is specified: %s\n",
-					val.c_str());
 				return invalid_action;
 			}
 			break;
@@ -3367,14 +3273,13 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_ATTACH_BACKUP_ID:
 			param.backup_cmd = Add;
-			normalize_uuid(val, param.backup_id);
+			if (normalize_uuid(val, param.backup_id))
+				param.backup_id = val;
 			break;
 		case CMD_DETACH_BACKUP_ID:
 			param.backup_cmd = Del;
-			if (val == std::string("all"))
+			if (normalize_uuid(val, param.backup_id))
 				param.backup_id = val;
-			else
-				normalize_uuid(val, param.backup_id);
 			break;
 		case CMD_ATTACH_BACKUP_DISK:
 			param.backup_disk = val;
