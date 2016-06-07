@@ -1471,6 +1471,8 @@ enum cmdOptions {
 	CMD_DETACH_BACKUP_ID,
 
 	CMD_EXEC_NO_SHELL,
+
+	CMD_NO_TUNNEL,
 };
 
 #endif // __CMDPARAM_H__

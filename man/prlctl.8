@@ -35,7 +35,7 @@ prlctl \fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR]
 [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR] 
 .PP
 prlctl \fBmigrate\fR <[\fBsrc_node/\fR]\fBID\fR> <\fBdst_node\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>]
-[\fB--changesid\fR] [\fB--keep-src\fR] [\fB--no-compression\fR] [\fB--ssh\fR <\fIoptions\fR>]
+[\fB--changesid\fR] [\fB--keep-src\fR] [\fB--no-compression\fR] [\fB--no-tunnel\fR] [\fB--ssh\fR <\fIoptions\fR>]
 .PP
 prlctl \fBpause\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
@@ -766,6 +766,9 @@ after migration.
 .TP
 \fB--no-compression\fR
 Do not compress data during migration.
+.TP
+\fB--no-tunnel\fR
+Do not use connection tunneling for migration. Connection tunneling is enabled for migration by default to provide secure data transmission.
 .TP
 \fB--ssh\fR <\fIoptions\fR>
 Options to pass to ssh when it is used to establish a connection to the destination server. Any of the standard ssh options are allowed.

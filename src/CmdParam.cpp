@@ -578,6 +578,7 @@ static Option migrate_options[] = {
 	{"ignore-existing-bundle", '\0', OptNoArg, CMD_IGNORE_EXISTING_BUNDLE},
 	{"ssh", '\0', OptRequireArg, CMD_SSH_OPTS},
 	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
+	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 	OPTION_END
 };
 
@@ -747,7 +748,7 @@ static void usage_vm(const char * argv0)
 "  exec <ID | NAME> [--without-shell] <command> [arg ...]\n"
 "  list [-a,--all] [-t,--template] [--vmtype ct|vm|all] [-L] [-o,--output name[,name...]] [-s,--sort name]\n"
 "  list -i,--info [-f,--full] [-j, --json] [<ID | NAME>] [--vmtype ct|vm|all]\n"
-"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src] [--no-compression] [--ssh <options>]\n"
+"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src] [--no-compression] [--no-tunnel] [--ssh <options>]\n"
 "  pause <ID | NAME>\n"
 "  register <PATH> [--preserve-uuid | --uuid <UUID>] [--regenerate-src-uuid] [--force]\n"
 "  reset <ID | NAME>\n"
@@ -3377,6 +3378,7 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 	}
 
 	GetOptLong opt(argc, argv, options, ++offset);
+	// tunneled by default
 	while (1) {
 		int id = opt.parse(val);
 		if (id == -1) // the end mark
@@ -3423,6 +3425,10 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 		case CMD_UNCOMPRESSED:
 			param.migrate.flags |= PVMT_UNCOMPRESSED;
 			break;
+		case CMD_NO_TUNNEL:
+			param.migrate.flags |= PVMT_DIRECT_DATA_CONNECTION;
+			break;
+
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
 					opt.get_next());
