@@ -92,8 +92,6 @@ SnapshotNode * PrlSnapshotTree::parse_entry(const tree_type& entry_, SnapshotNod
 
 int PrlSnapshotTree::parse(const char *str)
 {
-	std::string s(str);
-	std::cout << s.c_str() << std::endl;
 	std::istringstream is(str);
 	tree_type t;
 	try {
