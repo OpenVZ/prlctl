@@ -29,12 +29,16 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include "PrlXml.h"
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/foreach.hpp>
+#include <boost/optional.hpp>
+
 #include "PrlSnapshot.h"
 #include "Logger.h"
 
 #include <string.h>
 #include <stdio.h>
+#include <iostream>
 
 std::string SnapshotData::get_info() const
 {
@@ -52,56 +56,62 @@ std::string SnapshotData::get_info() const
 	return out;
 }
 
-SnapshotData PrlSnapshotTree::parse_entry(const char *str)
+SnapshotNode * PrlSnapshotTree::parse_entry(const tree_type& entry_, SnapshotNode * parent_)
 {
+	SnapshotNode *node = new SnapshotNode(parent_);
 	SnapshotData data;
-	std::string val, tag;
 
-	PrlXml xml(str);
-	val = xml.get_attr("guid");
-	if (!val.empty())
-		data.id = val;
-	val = xml.get_attr("state");
-	if (!val.empty())
-		data.state = val;
-	val = xml.get_attr("current");
-	if (val == "yes")
-		data.current = true;
+	BOOST_FOREACH(const tree_type::value_type& it, entry_.get_child("<xmlattr>")) {
+		if (it.first == "guid")
+			data.id = it.second.get_value<std::string>();
+		else if (it.first == "state")
+			data.state = it.second.get_value<std::string>();
+		else if (it.first == "current" &&
+			it.second.get_value<std::string>() == "yes")
+			data.current = true;
+	}
 
-	if (xml.get_child_value("Name", val))
-		data.name = val;
-	if (xml.get_child_value("DateTime", val))
-		data.date = val;
-	if (xml.get_child_value("Description", val))
-		data.desc = val;
-
+	BOOST_FOREACH(const tree_type::value_type& it, entry_) {
+		if (it.first == "Name")
+			data.name = it.second.get_value<std::string>();
+		else if (it.first == "DateTime")
+			data.date = it.second.get_value<std::string>();
+		else if (it.first == "Description")
+			data.desc = it.second.get_value<std::string>();
+		else if (it.first == "SavedStateItem") {
+			SnapshotNode *n = parse_entry(it.second, node);
+			if (n)
+				node->add_child(n);
+		}
+	}
 	prl_log(L_DEBUG, "%s\n", data.get_info().c_str());
 
-	return data;
+	node->setData(data);
+	return node;
 }
 
 int PrlSnapshotTree::parse(const char *str)
 {
-	std::string data;
-	SnapshotNode *node = 0;
-	e_xml_tag_flag tag;
+	std::string s(str);
+	std::cout << s.c_str() << std::endl;
+	std::istringstream is(str);
+	tree_type t;
+	try {
+		boost::property_tree::xml_parser::read_xml(is, t);
+	} catch (const boost::property_tree::xml_parser::xml_parser_error&) {
+		return 0;
+	}
 
-	PrlXml xml(str);
-	do {
-		tag = xml.find_tag("SavedStateItem", data);
-		if (tag == TAG_START) {
-			SnapshotData snapshot_data = parse_entry(data.c_str());
-			if (!node) {
-				/* root node */
-				node = new SnapshotNode(0, snapshot_data);
-				m_root_tree = node;
-			} else
-				node = node->add_elem(snapshot_data);
-		} else if (tag == TAG_END) {
-			if (node)
-				node = node->parent();
-		}
-	} while (tag != TAG_NONE);
+	boost::optional<tree_type& > v = t.get_child_optional("ParallelsSavedStates");
+	if (!v)
+		return 0;
+
+	BOOST_FOREACH(const tree_type::value_type& it, (*v)) {
+		if (it.first != "SavedStateItem")
+			continue;
+		m_root_tree = parse_entry(it.second, 0);
+		break;
+	}
 
 	return 0;
 }
@@ -213,24 +223,6 @@ void PrlSnapshotTree::print_info(const std::string &id)
 		}
 		add_child_to_pool(pool, node);
 	}
-}
-
-void PrlSnapshotTree::get_current_id(const char *str, std::string &sid)
-{
-	std::string data;
-	e_xml_tag_flag tag;
-
-	PrlXml xml(str);
-	do {
-		tag = xml.find_tag("SavedStateItem", data);
-		if (tag == TAG_START) {
-			SnapshotData snapshot_data = parse_entry(data.c_str());
-			if (snapshot_data.current) {
-				sid = snapshot_data.id;
-				break;
-			}
-		}
-	} while (tag != TAG_NONE);
 }
 
 #if 0

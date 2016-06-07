@@ -143,6 +143,7 @@ template <typename T>
 class TNode {
 public:
 	TNode() : m_parent(0) {}
+	TNode(TNode *parent) : m_parent(parent) {}
 	TNode(TNode *parent, const T &data) :
 		m_parent(parent), m_data(data)
 	{}
@@ -151,6 +152,10 @@ public:
 		TNode *elem = new TNode(this, data);
 		m_siblings.push_back(elem);
 		return elem;
+	}
+	void add_child(TNode *child_)
+	{
+		m_siblings.push_back(child_);
 	}
 	const TNode *parent() const { return m_parent ? m_parent : this; }
 	TNode *parent() { return m_parent ? m_parent : this; }
@@ -164,6 +169,10 @@ public:
 			delete node;
 		}
 		m_siblings.clear();
+	}
+	void setData(const T& data_)
+	{
+		m_data = data_;
 	}
 	const T &data() const { return m_data; }
 	~TNode() { destroy(); }

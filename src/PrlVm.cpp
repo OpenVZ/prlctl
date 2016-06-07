@@ -63,7 +63,6 @@
 #include "PrlCleanup.h"
 #include "PrlSnapshot.h"
 #include "PrlSharedFolder.h"
-#include "PrlXml.h"
 #include "PrlOutFormatter.h"
 
 #ifndef _WIN_
