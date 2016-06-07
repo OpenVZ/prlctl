@@ -11,7 +11,6 @@ OBJS = \
 	GetOpt.o \
 	CmdParam.o \
 	Logger.o \
-	PrlXml.o \
 	PrlSignal.o \
 	PrlCleanup.o \
 	PrlOutFormatter.o \

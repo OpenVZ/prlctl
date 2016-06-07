@@ -30,6 +30,7 @@
 
 #ifndef __PRLSNAPSHOT_H__
 #define	__PRLSNAPSHOT_H__
+#include <boost/property_tree/ptree.hpp>
 #include "PrlTypes.h"
 
 struct SnapshotData {
@@ -49,16 +50,17 @@ typedef TNode<SnapshotData> SnapshotNode;
 typedef std::vector<SnapshotNode *> SnapshotNodePtrList;
 
 class PrlSnapshotTree {
+	typedef boost::property_tree::ptree tree_type;
+
 public:
 	PrlSnapshotTree() : m_root_tree(0) {}
 	int parse(const char *str);
 	void print_tree();
 	void print_list(bool no_hdr);
 	void print_info(const std::string &id);
-	void get_current_id(const char *str, std::string &sid);
 
 private:
-	SnapshotData parse_entry(const char *str);
+	SnapshotNode * parse_entry(const tree_type& entry_, SnapshotNode *parent_);
 	void add_child_to_pool(SnapshotNodePtrList &pool,
 			SnapshotNode *node);
 

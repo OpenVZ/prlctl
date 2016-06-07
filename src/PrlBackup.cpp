@@ -37,7 +37,6 @@
 #include "Utils.h"
 #include "Logger.h"
 #include "PrlCleanup.h"
-#include "PrlXml.h"
 
 static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 {
