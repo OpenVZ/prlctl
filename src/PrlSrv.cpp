@@ -512,10 +512,9 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return shutdown(param.disp.force,
 				param.disp.suspend_vm_to_pram);
 	else if (param.action == SrvHwInfoAction)
-		return print_info(param.disp.info_license, param.disp.info_activation_id
-							, param.disp.info_deactivation_id , param.use_json);
+		return print_info(param.disp.info_license, param.use_json);
 	else if (param.action == SrvInstallLicenseAction)
-		return install_license(param.key, param.new_name, param.company, param.deferred);
+		return install_license(param.key, param.new_name, param.company);
 	else if (param.action == VmRegisterAction)
 		return register_vm(param);
 	else if (param.action == VmConvertAction)
@@ -644,16 +643,13 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 		return shutdown(param.disp.force,
 				param.disp.suspend_vm_to_pram);
 	case SrvHwInfoAction:
-		return print_info(param.disp.info_license
-			, param.disp.info_activation_id, param.disp.info_deactivation_id, param.use_json);
+		return print_info(param.disp.info_license, param.use_json);
 	case SrvUsrListAction:
 		return list_user(param, param.use_json);
 	case SrvUsrSetAction:
 		return set_user(param);
 	case SrvInstallLicenseAction:
-		return install_license(param.key, param.new_name, param.company, param.deferred);
-	case SrvDeferredLicenseAction:
-		return deferred_license_op(param);
+		return install_license(param.key, param.new_name, param.company);
 	case SrvUpdateLicenseAction:
 		return update_license();
 	case DispSetAction:
@@ -1327,11 +1323,6 @@ PrlLic & PrlSrv::get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo)
 			PrlEvtPrm_ToUint32(hParam.get_handle(),
 					&lic.m_max_memory);
 			lic.set_fields |= LIC_MAX_MEMORY;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_VZLICENSE_VTD_AVAILABLE, sizeof(buf))){
-			PRL_BOOL vtd = PRL_FALSE;
-			PrlEvtPrm_ToBoolean(hParam.get_handle(), &vtd);
-			lic.m_vtd_available = (vtd == PRL_TRUE);
-			lic.set_fields |= LIC_VTD_AVAILABLE;
 		} else if (!strncmp(buf, EVT_PARAM_PRL_VZLICENSE_PRODUCT,
 			sizeof(buf))) {
 			len = sizeof(buf);
@@ -1353,38 +1344,6 @@ PrlLic & PrlSrv::get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo)
 			PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
 			lic.m_hwid = buf;
 			lic.set_fields |= LIC_HWID;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_HAS_RESTRICTIONS,
-			sizeof(buf))) {
-			PRL_BOOL bTmp;
-			PrlEvtPrm_ToBoolean(hParam.get_handle(),
-					&bTmp);
-			lic.m_has_restrictions = !!bTmp;
-			lic.set_fields |= LIC_RESTRICTIONS;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_VZLICENSE_VZCC_USERS,
-			sizeof(buf))) {
-			PrlEvtPrm_ToUint64(hParam.get_handle(),
-					&lic.m_vzcc_users);
-			lic.set_fields |= LIC_VZCC_USERS;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_VZLICENSE_IS_VOLUME, sizeof(buf))){
-			PRL_BOOL val = PRL_FALSE;
-			PrlEvtPrm_ToBoolean(hParam.get_handle(), &val);
-			lic.m_is_volume = (val == PRL_TRUE);
-			lic.set_fields |= LIC_IS_VOLUME;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_OFFLINE_EXPIRATION_DATE,
-			sizeof(buf))) {
-			len = sizeof(buf);
-			PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
-			lic.m_offline_expiration_date = convert_time(buf);
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_ACTIVATION_ID,
-			sizeof(buf))) {
-			len = sizeof(buf);
-			PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
-			lic.m_activation_id = buf;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_IS_CONFIRMED ,sizeof(buf))) {
-			PRL_BOOL bTmp;
-			PrlEvtPrm_ToBoolean(hParam.get_handle(), &bTmp);
-			lic.m_is_confirmed = !!bTmp;
-			lic.set_fields |= LIC_IS_CONFIRMED;
 		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_USER,
 			sizeof(buf))) {
 			len = sizeof(buf);
@@ -1409,16 +1368,6 @@ PrlLic & PrlSrv::get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo)
 			PrlEvtPrm_ToBoolean(hParam.get_handle(), &val);
 			lic.m_ha_allowed = (val == PRL_TRUE);
 			lic.set_fields |= LIC_HA_ALLOWED;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_DEFERRED_ACTIVATION, sizeof(buf)))
-		{
-			PRL_BOOL bTmp;
-			PrlEvtPrm_ToBoolean(hParam.get_handle(), &bTmp);
-			lic.m_deferred_allowed = !!bTmp;
-		} else if (!strncmp(buf, EVT_PARAM_PRL_LICENSE_DEACTIVATION_ID,
-			sizeof(buf))) {
-			len = sizeof(buf);
-			PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
-			lic.m_deactivation_id = buf;
 		}
 	}
 	return lic;
@@ -1477,11 +1426,8 @@ void PrlSrv::append_lic_verbose_info(PrlOutFormatter &f)
 
 	PrlLic lic = get_lic_info();
 	if (lic.m_key.empty()) {
-		if (f.type == OUT_FORMATTER_PLAIN){
+		if (f.type == OUT_FORMATTER_PLAIN)
 			printf("No licenses installed.\n");
-			if( lic.m_deferred_allowed )
-				printf("Deferred activation allowed\n");
-		}
 		return;
 	}
 
@@ -1504,8 +1450,6 @@ void PrlSrv::append_lic_verbose_info(PrlOutFormatter &f)
 	if (lic.set_fields & LIC_COMPANY)
 		f.lic_add("organization", lic.m_company);
 
-	if (!lic.m_offline_expiration_date.empty())
-		f.lic_add("unconfirmed_expiration_date", lic.m_offline_expiration_date);
 	if (!lic.m_expiration_date.empty())
 		f.lic_add("expiration", lic.m_expiration_date);
 	if (!lic.m_start_date.empty())
@@ -1519,30 +1463,11 @@ void PrlSrv::append_lic_verbose_info(PrlOutFormatter &f)
 		f.lic_add("cpu_total", lic.m_cpu_total);
 	if (lic.set_fields & LIC_MAX_MEMORY)
 		f.lic_add("max_memory", lic.m_max_memory);
-	if (lic.set_fields & LIC_VTD_AVAILABLE)
-		f.lic_add("vtd_available",
-			  lic.m_vtd_available ? "enabled" : "disabled");
-	if (lic.set_fields & LIC_IS_CONFIRMED)
-		f.lic_add("is_confirmed",
-				lic.m_is_confirmed ? "yes" : "no" );
-
-	/* numbers in JSON are doubles, so 52 bits available for
-	 * mantissa, not enough to store long long */
-	if (lic.set_fields & LIC_VZCC_USERS)
-		f.lic_add("max_vzcc_users", (int)lic.m_vzcc_users);
 
 	if (!lic.m_product.empty())
 		f.lic_add("product", lic.m_product);
 	if (lic.set_fields & LIC_VMS_TOTAL)
 		f.lic_add("nr_vms", lic.m_vms_total);
-	if (lic.set_fields & LIC_IS_VOLUME)
-		f.lic_add( "is_volume", lic.m_is_volume ? "yes" : "no" );
-	if (lic.set_fields & LIC_RESTRICTIONS)
-		f.lic_add("advanced_restrictions",
-			lic.m_has_restrictions ? "enabled" : "disabled");
-
-	f.lic_add( "deferred_activation",
-			lic.m_deferred_allowed?"enabled":"disabled");
 
 	/* PSBM 6 introduced fields */
 	if (lic.set_fields & LIC_RKU_ALLOWED)
@@ -1550,41 +1475,6 @@ void PrlSrv::append_lic_verbose_info(PrlOutFormatter &f)
 	if (lic.set_fields & LIC_HA_ALLOWED)
 		f.lic_add("ha_allowed", (int)lic.m_ha_allowed);
 
-}
-
-void PrlSrv::append_activation_id(PrlOutFormatter &f)
-{
-	if (f.type == OUT_FORMATTER_PLAIN)
-		printf("Asking for activation-id...\n");
-
-	PrlLic lic = get_lic_info();
-	if (lic.m_key.empty()) {
-		if (f.type == OUT_FORMATTER_PLAIN)
-			printf("No licenses installed.\n");
-		return;
-	}
-
-	if (lic.m_activation_id.empty()) {
-		if (f.type == OUT_FORMATTER_PLAIN)
-			printf("Unable to get activation id.\n");
-		return;
-	}
-	f.lic_add("activation_id", lic.m_activation_id);
-}
-
-void PrlSrv::append_deactivation_id(PrlOutFormatter &f)
-{
-	if (f.type == OUT_FORMATTER_PLAIN)
-		printf("Asking for deactivation-id...\n");
-
-	PrlLic lic = get_lic_info();
-
-	if (lic.m_deactivation_id.empty()) {
-		if (f.type == OUT_FORMATTER_PLAIN)
-			printf("Unable to get deactivation id.\n");
-		return;
-	}
-	f.lic_add("deactivation_id", lic.m_deactivation_id);
 }
 
 const PrlVm *PrlSrv::find_dev_in_use(PrlDevSrv *dev)
@@ -1700,10 +1590,7 @@ void PrlSrv::append_info(PrlOutFormatter &f)
 	return;
 }
 
-int PrlSrv::print_info(bool is_license_info
-	, bool is_activation_id
-	, bool is_deactivation_id
-	, bool use_json)
+int PrlSrv::print_info(bool is_license_info, bool use_json)
 {
 	PrlOutFormatter &f = *(get_formatter(use_json));
 
@@ -1711,10 +1598,6 @@ int PrlSrv::print_info(bool is_license_info
 
 	if (is_license_info)
 		append_lic_verbose_info(f);
-	else if (is_activation_id)
-		append_activation_id(f);
-	else if (is_deactivation_id)
-		append_deactivation_id(f);
 	else {
 		append_info(f);
 		append_lic_info(f);
@@ -1731,7 +1614,7 @@ int PrlSrv::print_info(bool is_license_info
 }
 
 int PrlSrv::install_license(const std::string &key, const std::string &name,
-		const std::string &company, bool deferred_mode)
+		const std::string &company)
 {
 	PRL_RESULT ret;
 
@@ -1741,44 +1624,12 @@ int PrlSrv::install_license(const std::string &key, const std::string &name,
 	std::string err;
 
 	PRL_UINT32 nFlags=0;
-	if( deferred_mode )
-		nFlags |= PUPLF_STORE_PRECACHED_KEY;
 
 	PrlHandle hJob(PrlSrv_UpdateLicenseEx(m_hSrv, key.c_str(), name.c_str(), company.c_str(), nFlags));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		return prl_err(ret, "Failed to install the license: %s",
 				err.c_str());
-	const char* success_msg = (!deferred_mode)
-		? "The license has been successfully installed."
-		: "The license has been successfully prepared for deferred installation.";
-	prl_log(0, success_msg );
-	return 0;
-}
-
-int PrlSrv::deferred_license_op(const CmdParamData &param )
-{
-	PRL_RESULT ret;
-
-	if( param.deferred_install && param.deferred_remove)
-		return prl_err(-1, "Wrong parameters.");
-
-	std::string err;
-
-	PRL_UINT32 nFlags=0;
-	if( param.deferred_install )
-		nFlags |= PUPLF_ACTIVATE_PRECACHED_KEY;
-	else if( param.deferred_remove )
-		nFlags |= PUPLF_REMOVE_PRECACHED_KEY;
-	else
-		return prl_err(-1, "Wrong parameters.");
-
-	PrlHandle hJob(PrlSrv_UpdateLicenseEx(m_hSrv, "", "", "", nFlags));
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		return prl_err(ret, "The license operation failed: %s",
-				err.c_str());
-	const char* success_msg = (param.deferred_install)
-		? "The deferred license has been successfully installed."
-		: "The deferred license has been successfully removed.";
+	const char* success_msg = "The license has been successfully installed.";
 	prl_log(0, success_msg );
 	return 0;
 }
