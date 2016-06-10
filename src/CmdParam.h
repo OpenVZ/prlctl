@@ -411,8 +411,6 @@ public:
 	std::string listen_interface;
 	int verbose_log_level;
 	bool info_license;
-	bool info_activation_id;
-	bool info_deactivation_id;
 	OfflineSrvParam offline_service;
 	NetworkBandwidthParam network_bandwidth;
 	NetworkShapingParam network_shaping;
@@ -443,8 +441,6 @@ public:
 		reset_encryption_plugin(false),
 		verbose_log_level(-1),
 		info_license(false),
-		info_activation_id(false),
-		info_deactivation_id(false),
 		log_rotation(-1),
 		adv_security_mode(-1),
 		allow_attach_screenshots(-1),
@@ -888,17 +884,6 @@ public:
 	/* License options */
 	std::string key;
 	std::string company;
-	bool deferred;
-
-	/* Deferred license options */
-	bool deferred_install;
-	bool deferred_remove;
-
-	/* License activation options */
-	std::string confirmation_id;
-
-	/* License deactivation options */
-	bool skip_network_errors;
 
 	/* Snapshot options */
 	SnapshotParam snapshot;
@@ -1039,10 +1024,6 @@ public:
 		pmu_virt(-1),
 		longer_battery_life(-1),
 		battery_status(-1),
-		deferred(false),
-		deferred_install(false),
-		deferred_remove(false),
-		skip_network_errors(false),
 		crypted(false),
 		off_man(-1),
 		argv(0),
@@ -1235,11 +1216,6 @@ enum cmdOptions {
 	CMD_BATCH,
 	CMD_KEY,
 	CMD_COMPANY,
-	CMD_DEFERRED,
-	CMD_CONFIRMATION_ID,
-	CMD_SKIP_NETWORK_ERRORS,
-	CMD_DEFERRED_INSTALL,
-	CMD_DEFERRED_REMOVE,
 	CMD_MEMORY_LIMIT,
 	CMD_SMART_MOUSE_OPTIMIZE,
 	CMD_STICKY_MOUSE,
@@ -1394,8 +1370,6 @@ enum cmdOptions {
 	CMD_ADVANCED_SECURITY_MODE,
 
 	CMD_INFO_LICENSE,
-	CMD_INFO_ACTIVATION_ID,
-	CMD_INFO_DEACTIVATION_ID,
 	CMD_UPDATE_OFFLINE_SERVICE,
 	CMD_DEL_OFFLINE_SERVICE,
 	CMD_ADD_NETWORK_CLASS,

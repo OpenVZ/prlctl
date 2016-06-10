@@ -81,19 +81,10 @@ public:
 	unsigned int m_grace_period;
 	unsigned int m_cpu_total;
 	unsigned int m_max_memory;
-	bool m_vtd_available;
 	unsigned int m_vms_total;
-	bool m_has_restrictions;
-	unsigned long long m_vzcc_users;
-	bool m_is_volume;
 	bool m_rku_allowed;
 	bool m_ha_allowed;
 	std::string m_node_hwid;
-	bool m_is_confirmed;
-	std::string m_activation_id;
-	std::string m_deactivation_id;
-	std::string m_offline_expiration_date;
-	bool m_deferred_allowed;
 
 public:
 #define PRL_LIC_UNLIM_VAL               (0xFFFF)
@@ -102,15 +93,9 @@ public:
 		m_grace_period(0),
 		m_cpu_total(PRL_LIC_UNLIM_VAL),
 		m_max_memory(PRL_LIC_UNLIM_VAL),
-		m_vtd_available(false),
 		m_vms_total(PRL_LIC_UNLIM_VAL),
-		m_has_restrictions(false),
-		m_vzcc_users(0),
-		m_is_volume(false),
 		m_rku_allowed(false),
-		m_ha_allowed(false),
-		m_is_confirmed(false),
-		m_deferred_allowed(false)
+		m_ha_allowed(false)
 	{}
 
 	void append_info(PrlOutFormatter &f)
@@ -133,8 +118,6 @@ public:
 			if (!m_key.empty())
 				f.add("key", m_key, true, true);
 
-			f.add("restricted", m_has_restrictions ? "true" : "false",
-														true, true);
 		} else {
 			f.add("state", "not installed", true, true);
 		}
@@ -196,8 +179,7 @@ public:
 	PRL_HANDLE get_srv_config_handle();
 	void append_info(PrlOutFormatter &f);
 	int install_license(const std::string &key, const std::string &name,
-			const std::string &org, bool deferred_mode);
-	int deferred_license_op(const CmdParamData &param );
+			const std::string &org);
 	int update_license();
 	int get_default_vm_location(std::string &location);
 	int reg_event_callback(PRL_EVENT_HANDLER_PTR fn, void *data = NULL);
@@ -272,13 +254,10 @@ private:
 	PrlLic & get_verbose_lic_info(PrlLic &lic, PrlHandle &hLicInfo);
 	void append_lic_info(PrlOutFormatter &f);
 	void append_lic_verbose_info(PrlOutFormatter &f);
-	void append_activation_id(PrlOutFormatter &f);
-	void append_deactivation_id(PrlOutFormatter &f);
 	const PrlVm *find_dev_in_use(PrlDevSrv *dev);
 	void append_hw_info(PrlOutFormatter &f);
 	void append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, bool detailed);
-	int print_info(bool is_license_info, bool is_activation_id
-		, bool is_deactivation_id, bool use_json);
+	int print_info(bool is_license_info, bool use_json);
 	int pre_hibernate();
 	int after_hibernate();
 	void clear();

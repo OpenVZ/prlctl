@@ -463,8 +463,6 @@ static Option disp_shutdown_options[] = {
 static Option disp_info_options[] = {
 	OPTION_GLOBAL
 	{"license", 'l', OptNoArg, CMD_INFO_LICENSE},
-	{"activation-id", '\0', OptNoArg, CMD_INFO_ACTIVATION_ID},
-	{"deactivation-id", '\0', OptNoArg, CMD_INFO_DEACTIVATION_ID},
 	{"json", 'j', OptNoArg, CMD_USE_JSON},
 	{"full", 'f', OptNoArg, CMD_INFO_FULL},
 	OPTION_END
@@ -522,14 +520,6 @@ static Option lic_options[] = {
 	{"key", 'k',	OptRequireArg, CMD_KEY},
 	{"name", 'n',	OptRequireArg, CMD_NAME},
 	{"company", 'c',	OptRequireArg, CMD_COMPANY},
-	{"deferred", '\0',	OptNoArg, CMD_DEFERRED},
-	OPTION_END
-};
-
-static Option lic_deferred_license_options[] = {
-	OPTION_GLOBAL
-	{"install", '\0',	OptNoArg, CMD_DEFERRED_INSTALL},
-	{"remove" , '\0',	OptNoArg, CMD_DEFERRED_REMOVE},
 	OPTION_END
 };
 
@@ -874,8 +864,7 @@ static void usage_disp(const char * argv0)
 "Supported actions are:\n"
 "  info [-j, --json] [--license] [-f, --full]"
 "\n"
-"  install-license -k,--key <key> [-n,--name <name>] [-c,--company <name>] [--deferred]\n"
-"  deferred-license <--install | --remove>\n"
+"  install-license -k,--key <key> [-n,--name <name>] [-c,--company <name>]\n"
 "  update-license\n"
 "  set [--mem-limit <auto|size>] [-s,--min-security-level <low|normal|high>]\n"
 "	[--mng-settings <allow|deny>] [{--device <device> --assignment <host|vm>}]\n"
@@ -1550,21 +1539,6 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 		case CMD_COMPANY:
 			param.company = val;
 			break;
-		case CMD_DEFERRED:
-			param.deferred= true;
-			break;
-		case CMD_DEFERRED_INSTALL:
-			param.deferred_install= true;
-			break;
-		case CMD_DEFERRED_REMOVE:
-			param.deferred_remove= true;
-			break;
-		case CMD_CONFIRMATION_ID:
-			param.confirmation_id = val;
-			break;
-		case CMD_SKIP_NETWORK_ERRORS:
-			param.skip_network_errors = true;
-			break;
 		case CMD_FORCE:
 			param.disp.force = true;
 			break;
@@ -1584,12 +1558,6 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 			break;
 		case CMD_INFO_LICENSE:
 			param.disp.info_license = true;
-			break;
-		case CMD_INFO_ACTIVATION_ID:
-			param.disp.info_activation_id = true;
-			break;
-		case CMD_INFO_DEACTIVATION_ID:
-			param.disp.info_deactivation_id = true;
 			break;
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
@@ -4542,9 +4510,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 	else if (!strcmp(argv[i], "install-license"))
 		return get_disp_param(argc, argv, SrvInstallLicenseAction,
 				lic_options, ++i);
-	else if (!strcmp(argv[i], "deferred-license"))
-		return get_disp_param(argc, argv, SrvDeferredLicenseAction,
-				lic_deferred_license_options, ++i);
 	else if (!strcmp(argv[i], "update-license"))
 		return get_disp_param(argc, argv, SrvUpdateLicenseAction,
 				no_options, ++i);
