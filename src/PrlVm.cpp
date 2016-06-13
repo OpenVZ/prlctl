@@ -2167,6 +2167,17 @@ int PrlVm::get_cpulimit(PRL_CPULIMIT_DATA_PTR cpulimit)
 	return 0;
 }
 
+int PrlVm::get_cpulimitmode(unsigned int *limitmode)
+{
+	PRL_RESULT ret;
+
+	if ((ret = PrlVmCfg_GetGuestCpuLimitType(m_hVm, limitmode)))
+		return prl_err(-1, "PrlVmCfg_GetGuestCpuLimitType: %s",
+			get_error_str(ret).c_str());
+
+	return 0;
+}
+
 int PrlVm::set_ioprio(unsigned int ioprio)
 {
 	PRL_RESULT ret;
@@ -4509,6 +4520,13 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 		else
 			tmp = "%";
 		f.add("cpulimit", cpulimit.value, tmp, true);
+
+		unsigned int limitmode;
+		if (get_cpulimitmode(&limitmode) == 0)
+		{
+			f.add("cpulimitmode", limitmode == PRL_VM_CPULIMIT_GUEST
+				? "guest" : "full", true);
+		}
 	}
 
 	unsigned int val;
