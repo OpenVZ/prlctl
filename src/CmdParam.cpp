@@ -628,6 +628,7 @@ static Option backup_delete_options[] = {
 	{"tag",		't',	OptRequireArg, CMD_BACKUP_ID},
 		{"id",	'i',    OptRequireArg, CMD_BACKUP_ID},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
+	{"keep-chain", 'k',	OptNoArg, CMD_BACKUP_KEEP_CHAIN},
 	OPTION_END
 };
 
@@ -723,7 +724,7 @@ static void usage_vm(const char * argv0)
 "    [-f,--full | -i,--incremental] [--no-compression]\n"
 "  backup-list [ID | NAME] [-f,--full] [--vmtype ct|vm|all] [--localvms]\n"
 "    [-s,--storage <user[[:passwd]@server[:port]>]\n"
-"  backup-delete {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
+"  backup-delete {<ID> | -t,--tag <backupid>} [--keep-chain] [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  restore {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "    [-n,--name <new_name>] [--dst <path>]\n"
 "  capture <ID | NAME> --file <name>\n"
@@ -3575,6 +3576,9 @@ CmdParamData cmdParam::get_backup_delete_param(int argc, char **argv, Action act
 						val.c_str());
 				return invalid_action;
 			}
+			break;
+		case CMD_BACKUP_KEEP_CHAIN:
+			param.backup.flags |= PBT_KEEP_CHAIN;
 			break;
 		case GETOPTUNKNOWN:
 		{

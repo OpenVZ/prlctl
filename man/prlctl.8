@@ -8,7 +8,7 @@ prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incre
 .PP
 prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
-prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
 prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]
@@ -740,8 +740,9 @@ Restore the virtual environment and assign the name \fBnew_name\fR to it.
 .TP
 \fB--dst\fR <\fBpath\fR>
 Restore the virtual environment data to the specified directory on the Virtuozzo server.
-.IP "\fBbackup-delete\fR {<\fIve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>}" 4
+.IP "\fBbackup-delete\fR {<\fIve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR]" 4
 Delete the backup for specified virtual environment.
+If \fB--keep-chain\fR is specified, the rest of the backup chain is preserved.
 .SS Migration management
 The following options can be used to migrate a virtual environment from the source server \fBsrc\fR to the destination server \fBdst\fR.
 If the virtual environment is running, the migration is performed as follows.
