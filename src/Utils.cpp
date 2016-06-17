@@ -2587,3 +2587,24 @@ void CpuFeatures::set(PRL_CPU_FEATURES_EX reg, PRL_UINT32 v)
 {
 	PrlCpuFeatures_SetValue(m_handle, reg, v);
 }
+
+bool check_address(const std::string& address_)
+{
+	std::string::size_type l = address_.find_last_of(":");
+	if (l == std::string::npos)
+		return false;
+
+	std::string port = address_.substr(l + 1);
+	if (port.empty())
+		return false;
+
+	char *t = NULL;
+	unsigned long p = strtoul(&port[0], &t, 10);
+	if (*t != '\0' || errno == ERANGE)
+		return false;
+
+	PRL_UNUSED_PARAM(p);
+
+	return true;
+}
+

@@ -2319,6 +2319,14 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.dev.socket = val;
 			break;
 		case CMD_SOCKET_TCP:
+			if (!check_address(val))
+			{
+				fprintf(stderr, "An incorrect value for --socket-tcp is"
+					" specified: %s.\n"
+					"The value must be specified as host:port.\n",
+					val.c_str());
+				return invalid_action;
+			}
 			param.dev.socket_tcp = val;
 			break;
 		case CMD_SOCKET_UDP:
