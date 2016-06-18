@@ -1048,6 +1048,8 @@ public:
 	{
 		cpulimit.value = 0;
 		cpulimit.type = (PRL_CPULIMIT_TYPE)0;
+		memguarantee.value = 0;
+		memguarantee.type = PRL_MEMGUARANTEE_AUTO;
 	}
 	int check_consistence(int id) const;
 	bool get_realpath(std::string &path, bool check = true);
