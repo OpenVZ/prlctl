@@ -43,19 +43,23 @@ static int _execvp(const char *path, char *const argv[])
 		if (!p)
 			p = "/bin:/usr/bin:/sbin";
 		for (; p && *p;) {
-			char partial[FILENAME_MAX];
+			char partial[PATH_MAX];
 			const char *p2;
 
 			p2 = strchr(p, ':');
-			if (p2) {
-				size_t len = p2 - p;
+			size_t len = 0;
+			if (p2)
+				len = p2 - p;
+			else
+				len = strlen(p);
 
-				strncpy(partial, p, len);
-				partial[len] = 0;
-			} else {
-				strcpy(partial, p);
-			}
-			if (strlen(partial))
+			if (len >= PATH_MAX)
+				return prl_err(-1, "PATH variable has too long path.");
+
+			strncpy(partial, p, len);
+			partial[len] = 0;
+
+			if (len)
 				strcat(partial, "/");
 			strcat(partial, path);
 
