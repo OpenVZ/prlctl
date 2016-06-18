@@ -74,7 +74,6 @@ public:
 	std::string m_hwid;
 	std::string m_key_number;
 	std::string m_expiration_date;
-	bool m_is_unlimited;
 	std::string m_start_date;
 	std::string m_update_date;
 	std::string m_product;
