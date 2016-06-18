@@ -826,6 +826,11 @@ To remove the \fBwin2003\fR virtual environment from the Virtuozzo server:
 .br
 \f(CR	prlctl delete win2003
 \fR
+.P
+To list all virtual environments, displaying the real IP addresses instead of the configured ones:
+.br
+\f(CR	prlctl list -a -o uuid,status,ip,type,name -s name
+\fR
 .SH SEE ALSO
 .BR prlsrvctl (8)
 .SH COPYRIGHT
