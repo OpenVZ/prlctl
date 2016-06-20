@@ -728,7 +728,6 @@ static void usage_vm(const char * argv0)
 "  backup-delete {<ID> | -t,--tag <backupid>} [--keep-chain] [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  restore {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "    [-n,--name <new_name>] [--dst <path>]\n"
-"  capture <ID | NAME> --file <name>\n"
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
 "  convert <PATH> [--dst <path>] [--force]\n"
