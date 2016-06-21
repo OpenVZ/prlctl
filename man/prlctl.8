@@ -13,8 +13,6 @@ prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\
 prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]
 .PP
-prlctl \fBcapture\fR <\fIve_id\fR|\fIve_name\fR> \fB--file\fR <\fIname\fR>
-.PP
 prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
 .PP
 prlctl \fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]
@@ -226,9 +224,6 @@ Unregister the specified virtual environment.
 Suspend the specified virtual environment.
 .IP "\fBresume\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Resume the specified virtual environment.
-.IP "\fBcapture\fR <\fIve_id\fR|\fIve_name\fR> \fB--file\fR <\fIname\fR>" 4
-Captures a screen area of a virtual environment directly to a file \fIname\fR
-in png format. 
 .IP "\fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Resets the specified virtual environment uptime counter (counter start date/time also will be reset with this action).
 .IP "\fBmount\fR <\fIve_id\fR|\fIve_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]" 4
