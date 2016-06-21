@@ -90,17 +90,9 @@ static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 			PRL_UINT32 progress = 0;
 			PrlEvtPrm_ToUint32(hPrm.get_handle(), &progress);
 
-			PRL_UINT32 idx = 0;
-			ret = PrlEvent_GetParamByName(hEvent, "device_index", hPrm.get_ptr());
-			if (PRL_SUCCEEDED(ret))
-				PrlEvtPrm_ToUint32(hPrm.get_handle(), &idx);
-			else
-				prl_log(L_DEBUG, "PrlEvent_GetParamByName %s",
-						get_error_str(ret).c_str());
-
 			std::stringstream out;
-			out << ((evt_type == PET_DSP_EVT_BACKUP_PROGRESS_CHANGED) ? "backup hdd." : "restore hdd.")
-				<< idx << " progress:";
+			out << ((evt_type == PET_DSP_EVT_BACKUP_PROGRESS_CHANGED) ? "backup" : "restore")
+				<< " hdd progress:";
 			print_procent(progress, out.str());
 		} else if (evt_type == PET_DSP_EVT_BACKUP_STARTED) {
 			prl_log(L_INFO, "Backup started.");
