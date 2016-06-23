@@ -92,7 +92,6 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	m_VmState(VMS_UNKNOWN),
 	m_updated(PRL_FALSE),
 	m_is_vnc_server_started(PRL_FALSE),
-	m_is_encrypted(false),
 	m_efi_boot(false),
 	m_select_boot_dev(false)
 {
@@ -110,11 +109,6 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	PRL_BOOL bTemplate = PRL_FALSE;
 	if (PrlVmCfg_IsTemplate(m_hVm, &bTemplate) == 0)
 		m_template = !!bTemplate;
-
-	PRL_BOOL bEncrypted = PRL_FALSE;
-	if (PrlVmCfg_IsEncrypted(m_hVm, &bEncrypted) == 0)
-		m_is_encrypted = !!bEncrypted;
-
 
 	len = sizeof(buf);
 	if (PrlVmCfg_GetCtId(m_hVm, buf, &len) == 0)
@@ -768,7 +762,7 @@ int PrlVm::problem_report(const CmdParamData &param)
 	}
 //https://bugzilla.sw.ru/show_bug.cgi?id=481561
 #ifdef EXTERNALLY_AVAILABLE_BUILD
-	if ((ret = assembly_problem_report(hProblemReport, param.problem_report, (m_is_encrypted ? PPRF_DO_NOT_CREATE_HOST_SCREENSHOT : 0))) != 0)
+	if ((ret = assembly_problem_report(hProblemReport, param.problem_report, 0)) != 0)
 #else
 	if ((ret = assembly_problem_report(hProblemReport, param.problem_report, 0)) != 0)
 #endif
@@ -1207,8 +1201,6 @@ static int progress_event_handler(PRL_HANDLE hEvent, void *)
 		switch(evt_type)
 		{
 		case PET_JOB_FILE_COPY_PROGRESS_CHANGED:
-		case PET_DSP_EVT_VM_ENCRYPT_PROGRESS_CHANGED:
-		case PET_DSP_EVT_VM_DECRYPT_PROGRESS_CHANGED:
 			print_progress(h, stage);
 			break;
 		case PET_VM_INF_END_BUNCH_COPYING:
@@ -4610,8 +4602,6 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 		}
 	}
 
-	f.add("Encrypted", (m_is_encrypted ? "yes" : "no"));
-
 	get_optimization_info(f);
 
 	PRL_RESULT ret;
@@ -4750,140 +4740,6 @@ void VncParam::append_info(PrlOutFormatter &f) const
 		f.add("address", address, true);
 
 	f.close(true);
-}
-
-/**
- * Some actions do not require authorization against encypted VM
- */
-static bool should_be_skipped(Action curr_action) {
-	switch (curr_action) {
-		case VmProblemReportAction:
-		case VmDestroyAction:
-		case VmUnregisterAction:
-			return true;
-		default:
-			return false;
-	}
-}
-
-int PrlVm::check_whether_encrypted(Action curr_action)
-{
-	PRL_RESULT validity = PRL_ERR_SUCCESS, ret = PRL_ERR_UNINITIALIZED;
-	if ((ret = PrlVmCfg_GetConfigValidity(m_hVm, &validity)))
-		prl_log(L_ERR, "PrlVmCfg_GetConfigValidity: %s",
-				get_error_str(ret).c_str());
-	if (PRL_ERR_AUTH_REQUIRED_TO_ENCRYPTED_VM == validity) {
-		if (should_be_skipped(curr_action))
-			return PRL_ERR_SUCCESS;
-		std::string err;
-		bool ok = false;
-		m_current_password = LoginInfo::get_passwd_from_stack(ok);
-		if (!ok) {
-			if ((ret = read_passwd_for_vm(m_current_password, m_name, "")))
-				return ret;
-		}
-		PrlHandle hJob(PrlVm_Authorise(m_hVm, m_current_password.c_str(),0));
-		if ((ret = get_job_retcode(hJob.get_handle(), err)))
-			return prl_err(ret, "Failed to authorise current session against virtual machine. Error: %s", err.c_str());
-	}
-
-
-	return ret;
-}
-
-int PrlVm::encrypt(const CmdParamData &param)
-{
-	if (m_is_encrypted) {
-		prl_log(L_ERR, "Virtual machine is already encrypted");
-		return PRL_ERR_OPERATION_FAILED;
-	}
-	PRL_RESULT ret = PRL_ERR_UNINITIALIZED;
-	std::string err;
-	bool ok = false;
-	m_current_password = LoginInfo::get_passwd_from_stack(ok);
-	if (!ok) {
-		if ((ret = read_passwd_for_vm(m_current_password, "", "Please enter password phrase to encrypt virtual machine:")))
-			return ret;
-	}
-	m_srv.reg_event_callback(progress_event_handler);
-
-	PRL_UINT32 nFlags = param.dry_run ? PEF_CHECK_PRECONDITIONS_ONLY : 0;
-	PrlHandle hJob(PrlVm_Encrypt(m_hVm, m_current_password.c_str(), "", nFlags));
-	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hJob.get_handle());
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-	{
-		if( !param.dry_run )
-			prl_err(ret, "Failed to encrypt the virtual machine: %s", err.c_str());
-		else
-			prl_err(ret, "Failed to check the prerequisites for the virtual machine encryption: %s", err.c_str());
-	}
-	else
-	{
-		if( !param.dry_run )
-			prl_log(0, "\nThe virtual machine has been successfully encrypted.");
-		else
-			prl_log(0, "\nAll prerequisites for the virtual machine encryption have been met");
-
-	}
-	m_srv.unreg_event_callback(progress_event_handler);
-	get_cleanup_ctx().unregister_hook(h);
-
-	return ret;
-}
-
-int PrlVm::decrypt(const CmdParamData &param)
-{
-	if (!m_is_encrypted) {
-		prl_log(L_ERR, "Virtual machine is not encrypted");
-		return PRL_ERR_OPERATION_FAILED;
-	}
-	PRL_RESULT ret = PRL_ERR_UNINITIALIZED;
-	std::string err;
-	m_srv.reg_event_callback(progress_event_handler);
-	PRL_UINT32 nFlags = param.dry_run ? PEF_CHECK_PRECONDITIONS_ONLY : 0;
-	PrlHandle hJob(PrlVm_Decrypt(m_hVm, m_current_password.c_str(), nFlags));
-	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hJob.get_handle());
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-	{
-		if( !param.dry_run )
-			prl_err(ret, "Failed to decrypt the virtual machine: %s", err.c_str());
-		else
-			prl_err(ret, "Failed to check the prerequisites for the virtual machine decryption: %s", err.c_str());
-	}
-	else
-	{
-		if( !param.dry_run )
-			prl_log(0, "\nThe virtual machine has been successfully decrypted.");
-		else
-			prl_log(0, "\nAll prerequisites for the virtual machine decryption have been met");
-
-	}
-	m_srv.unreg_event_callback(progress_event_handler);
-	get_cleanup_ctx().unregister_hook(h);
-
-	return ret;
-}
-
-int PrlVm::change_passwd()
-{
-	if (!m_is_encrypted) {
-		prl_log(L_ERR, "Virtual machine is not encrypted");
-		return PRL_ERR_OPERATION_FAILED;
-	}
-	PRL_RESULT ret = PRL_ERR_UNINITIALIZED;
-	bool ok = false;
-	std::string err, new_password = LoginInfo::get_passwd_from_stack(ok);
-	if (!ok) {
-		if ((ret = read_passwd_for_vm(new_password, "", "Please enter new password:")))
-			return ret;
-	}
-	PrlHandle hJob(PrlVm_ChangePassword(m_hVm, m_current_password.c_str(), new_password.c_str(), 0));
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		prl_err(ret, "Failed to change password for virtual machine: %s", err.c_str());
-	else
-		prl_log(0, "\nThe password has been successfully changed.");
-
-	return ret;
 }
 
 int PrlVm::set_templates(str_list_t lstTemplates)

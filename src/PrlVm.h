@@ -72,7 +72,6 @@ private:
 	bool m_updated;
 	PRL_BOOL m_is_vnc_server_started;
 	std::string m_current_password;
-	bool m_is_encrypted;
 	std::string m_ctid;
 	bool m_efi_boot;
 	bool m_select_boot_dev;
@@ -242,11 +241,6 @@ public:
 	void append_configuration(PrlOutFormatter &f);
 	int validate_config(PRL_VM_CONFIG_SECTIONS section) const;
 	~PrlVm();
-	int check_whether_encrypted(Action curr_action);
-	int encrypt(const CmdParamData &param);
-	int decrypt(const CmdParamData &param);
-	int change_passwd();
-	bool is_encrypted() const {return m_is_encrypted;}
 	int set_templates(str_list_t lstTemplates);
 	int load_config();
 	const char *get_vm_type_str() const;

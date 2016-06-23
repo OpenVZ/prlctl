@@ -73,10 +73,6 @@ enum Action {
 	VmChangeSidAction,
 	VmResetUptimeAction,
 
-	VmEncryptAction,
-	VmDecryptAction,
-	VmChangePasswdAction,
-
 	SrvShutdownAction,
 	SrvHwInfoAction,
 	SrvUsrInfoAction,
@@ -406,8 +402,6 @@ public:
 	unsigned int backup_timeout;
 	bool change_backup_settings;
 	LoginInfo def_backup_storage;
-	std::string encryption_plugin;
-	bool reset_encryption_plugin;
 	std::string listen_interface;
 	int verbose_log_level;
 	bool info_license;
@@ -438,7 +432,6 @@ public:
 		cep_mechanism(-1),
 		backup_timeout(0),
 		change_backup_settings(false),
-		reset_encryption_plugin(false),
 		verbose_log_level(-1),
 		info_license(false),
 		log_rotation(-1),
@@ -1387,14 +1380,10 @@ enum cmdOptions {
 	CMD_RATEBOUND,
 	CMD_VMTYPE,
 
-	CMD_SET_ECNCRYPTION_PLUGIN,
-	CMD_RESET_ECNCRYPTION_PLUGIN,
 	CMD_LISTEN_INTERFACE,
 
 	CMD_ISCSI_TARGET,
 
-	CMD_ENCRYPT_DRY_RUN,
-	CMD_DECRYPT_DRY_RUN,
 	CMD_APPTEMPLATE,
 
 	CMD_USB_LIST,

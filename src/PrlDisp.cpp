@@ -363,10 +363,6 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	get_backup_timeout(&tmo);
 	f.add("Backup timeout", tmo, "");
 
-	str = get_encryption_plugin();
-	f.add("Default encryption plugin",
-		  str.empty() ? "<parallels-default-plugin>" : str);
-
 	f.add("Traffic shaping", is_network_shaping_enabled() ? "on" : "off");
 	if (is_full_info_mode()) {
 		f.add("CPU model", get_cpu_model());
@@ -713,33 +709,6 @@ int PrlDisp::set_backup_tmpdir(const std::string &tmpdir)
 	set_updated();
 	return 0;
 }
-
-std::string PrlDisp::get_encryption_plugin()
-{
-	int ret;
-	unsigned int len;
-	char buf[256];
-
-	len = sizeof(buf);
-	ret = PrlDispCfg_GetDefaultEncryptionPluginId( m_hDisp, buf, &len);
-	if (ret == 0)
-		return std::string(buf);
-
-	return std::string();
-}
-
-int PrlDisp::set_encryption_plugin(const std::string &plugin_id)
-{
-	int ret;
-
-	if ((ret = PrlDispCfg_SetDefaultEncryptionPluginId(m_hDisp, plugin_id.c_str())))
-		return prl_err(ret, "PrlDispCfg_SetDefaultEncryptionPluginId  %s [%d]",
-		get_error_str(ret).c_str(), ret);
-
-	set_updated();
-	return 0;
-}
-
 
 int PrlDisp::update_offline_service(const OfflineSrvParam &offline_srv)
 {
@@ -1351,14 +1320,6 @@ int PrlDisp::set(const DispParam &param)
 	}
 	if (!param.backup_tmpdir.empty()) {
 		if ((ret = set_backup_tmpdir(param.backup_tmpdir)))
-			return ret;
-	}
-	if (!param.encryption_plugin.empty()) {
-		if ((ret = set_encryption_plugin(param.encryption_plugin)))
-			return ret;
-	}
-	if (param.reset_encryption_plugin) {
-		if ((ret = set_encryption_plugin("")))
 			return ret;
 	}
 
