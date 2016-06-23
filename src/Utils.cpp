@@ -947,23 +947,6 @@ int read_passwd(const std::string &name, const std::string &server,
 	return read_passwd_helper(passwd);
 }
 
-int read_passwd_for_vm(std::string &passwd, const std::string &vm_name, const std::string &prompt)
-{
-	if (!vm_name.empty())
-		term_printf("Virtual machine '%s' is encrypted - password required to continue operation\n",
-			vm_name.c_str());
-	if (prompt.empty())
-		term_printf("Please enter password: ");
-	else
-		term_printf("%s", prompt.c_str());
-	return read_passwd_helper(passwd);
-}
-
-int read_passwd(std::string &passwd)
-{
-	return read_passwd_for_vm(passwd, "", "");
-}
-
 int read_passwd(std::string &passwd, const std::string &prompt)
 {
 	/* if we have a terminal behind stdin - prompt user to enter the password */

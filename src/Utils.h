@@ -94,8 +94,6 @@ int str2dev_assign_mode(const std::string &str);
 const char *dev_assign_mode2str(int mode);
 int read_passwd(const std::string &name, const std::string &server,
 	std::string &passwd);
-int read_passwd_for_vm(std::string &passwd, const std::string &vm_name, const std::string &prompt);
-int read_passwd(std::string &passwd);
 int read_passwd(std::string &passwd, const std::string &prompt);
 int file2str(const char *filename, std::string &out);
 DevType handle2type(PRL_HANDLE_TYPE type);

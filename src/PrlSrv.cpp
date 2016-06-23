@@ -549,9 +549,6 @@ int PrlSrv::run_action(const CmdParamData &param)
 
 	m_VmList.add(vm);
 
-	if ((ret = vm->check_whether_encrypted(param.action)))
-		return ret;
-
 	if ((ret = vm->update_state()))
 		return ret;
 
@@ -566,12 +563,6 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return vm->change_sid();
 	case VmResetUptimeAction:
 		return vm->reset_uptime();
-	case VmEncryptAction:
-		return vm->encrypt(param);
-	case VmDecryptAction:
-		return vm->decrypt(param);
-	case VmChangePasswdAction:
-		return vm->change_passwd();
 	case VmAuthAction:
 		return vm->auth(param.user_name, param.user_password);
 	case VmStopAction:

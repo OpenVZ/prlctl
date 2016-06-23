@@ -375,9 +375,6 @@ static Option disp_set_options[] = {
 	{"backup-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
 	{"idle-connection-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
 
-	{"default-encryption-plugin", '\0', OptRequireArg, CMD_SET_ECNCRYPTION_PLUGIN},
-	{"reset-default-encryption-plugin", '\0', OptNoArg, CMD_RESET_ECNCRYPTION_PLUGIN},
-
 	{"add-offsrv", '\0', OptRequireArg, CMD_UPDATE_OFFLINE_SERVICE},
 	{"del-offsrv", '\0', OptRequireArg, CMD_DEL_OFFLINE_SERVICE},
 
@@ -659,18 +656,6 @@ static Option appliance_options[] = {
 	OPTION_GLOBAL
 	{"file", '\0', OptRequireArg, CMD_FILE},
 	{"batch", 'b', OptNoArg, CMD_BATCH},
-	OPTION_END
-};
-
-static Option encrypt_options[] = {
-	OPTION_GLOBAL
-	{"dry-run", '\0', OptNoArg, CMD_ENCRYPT_DRY_RUN},
-	OPTION_END
-};
-
-static Option decrypt_options[] = {
-	OPTION_GLOBAL
-	{"dry-run", '\0', OptNoArg, CMD_DECRYPT_DRY_RUN},
 	OPTION_END
 };
 
@@ -1451,12 +1436,6 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 			}
 			param.disp.change_backup_settings = true;
 			opt.hide_arg();
-			break;
-		case CMD_SET_ECNCRYPTION_PLUGIN:
-			param.disp.encryption_plugin = val;
-			break;
-		case CMD_RESET_ECNCRYPTION_PLUGIN:
-			param.disp.reset_encryption_plugin = true;
 			break;
 		case CMD_LISTEN_INTERFACE:
 			param.disp.listen_interface = val;
@@ -3128,12 +3107,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case GETOPTERROR:
 			return invalid_action;
-		case CMD_ENCRYPT_DRY_RUN:
-			param.dry_run = true;
-			break;
-		case CMD_DECRYPT_DRY_RUN:
-			param.dry_run = true;
-			break;
 		case CMD_APPTEMPLATE:
 			param.app_templates.push_back(val);
 			break;
@@ -3830,12 +3803,6 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 		return get_param(argc, argv, VmInternalCmd, no_options, 2);
 	} else if (!strcmp(argv[1], "reset-uptime")) {
 		return get_param(argc, argv, VmResetUptimeAction, no_options, 2);
-	} else if (!strcmp(argv[1], "encrypt")) {
-		return get_param(argc, argv, VmEncryptAction, encrypt_options, 2);
-	} else if (!strcmp(argv[1], "decrypt")) {
-		return get_param(argc, argv, VmDecryptAction, decrypt_options, 2);
-	} else if (!strcmp(argv[1], "change-passwd")) {
-		return get_param(argc, argv, VmChangePasswdAction, no_options, 2);
 	} else if (!strcmp(argv[1], "stop")) {
 		return get_param(argc, argv, VmStopAction, stop_options, 2);
 	} else if (!strcmp(argv[1], "mount")) {

@@ -99,8 +99,6 @@ private:
 	int set_def_backup_storage(const LoginInfo &server);
 	std::string get_backup_tmpdir();
 	int set_backup_tmpdir(const std::string &tmpdir);
-	std::string get_encryption_plugin();
-	int set_encryption_plugin(const std::string &plugin_id);
 	int update_offline_service(const OfflineSrvParam &offline_service);
 	int list_network_classes_config();
 	int update_network_classes_config(const NetworkClassParam &param);
