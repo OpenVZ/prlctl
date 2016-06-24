@@ -222,4 +222,6 @@ private:
 	std::string m_url;
 };
 
+bool check_address(const std::string& address_);
+
 #endif // __UTILS_H__
