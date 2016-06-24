@@ -288,8 +288,8 @@ int PrlSrv::restore_vm(const CmdParamData &param)
 		if (ret == 0)
 			vm_id = tree.get_vm_uuid_by_id(bparam.id);
 
-		prl_log(0, "Restore the backup id=%s uuid=%s",
-				vm_id.c_str(), bparam.id.c_str());
+		prl_log(0, "Restore the backup id=%s, virtual environment id=%s",
+				bparam.id.c_str(), vm_id.c_str());
 	} else
 		return prl_err(1, "VM ID is not specified.");
 
