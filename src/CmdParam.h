@@ -95,6 +95,7 @@ enum Action {
 	SrvUpdateHostRegInfoAction,
 	SrvPrepareForUninstallAction,
 	SrvBackupNodeAction,
+	SrvShapingRestartAction,
 
 	DispSetAction,
 	DispListAction,
@@ -112,7 +113,7 @@ enum Action {
 	VmInternalCmd,
 
 	VmConvertAction,
-	
+
 	InvalidAction
 };
 
@@ -1092,6 +1093,7 @@ private:
 	CmdParamData get_privnet_param(int argc, char **argv, unsigned cmd,
 		int offset);
 	CmdParamData parse_vnet_args(int argc, char **argv, int offset);
+	CmdParamData parse_tc_args(int argc, char **argv, int i);
 	CmdParamData parse_privnet_args(int argc, char **argv, int offset);
 	CmdParamData parse_usb_args(int argc, char **argv, int offset);
 	CmdParamData parse_ct_template_args(int argc, char **argv, int i);
