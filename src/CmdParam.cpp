@@ -911,6 +911,7 @@ static void usage_disp(const char * argv0)
 "  cttemplate copy <dst_node> <name> [<os_template_name>] [-f,--force]\n"
 "  plugin list [-j, --json]\n"
 "  plugin refresh\n"
+"  tc restart\n"
 , prl_basename(argv0));
 }
 
@@ -4245,6 +4246,19 @@ CmdParamData cmdParam::parse_vnet_args(int argc, char **argv, int i)
 	return get_vnet_param(argc, argv, cmd, ++i);
 }
 
+CmdParamData cmdParam::parse_tc_args(int argc, char **argv, int i)
+{
+	if (argc - 1 <= i)
+		return invalid_action;
+
+	i++;
+	if (!strcmp(argv[i], "restart"))
+		return get_disp_param(argc, argv, SrvShapingRestartAction,
+				no_options, i);
+
+	return invalid_action;
+}
+
 CmdParamData cmdParam::parse_privnet_args(int argc, char **argv, int i)
 {
 	unsigned cmd;
@@ -4515,6 +4529,8 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 				no_options, ++i);
 	else if (!strcmp(argv[i], "net"))
 		return parse_vnet_args(argc, argv, i);
+	else if (!strcmp(argv[i], "tc"))
+		return parse_tc_args(argc, argv, i);
 	else if (!strcmp(argv[i], "privnet"))
 		return parse_privnet_args(argc, argv, i);
 	else if (!strcmp(argv[i], "usb"))

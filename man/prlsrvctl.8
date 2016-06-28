@@ -71,6 +71,8 @@ prlsrvctl \fBcttemplate\fR \fBremove\fR <\fIname\fR> [<\fIos_template_name\fR>]
 .PP
 prlsrvctl \fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]
 .PP
+prlsrvctl \fBtc\fR \fBrestart\fR
+.PP
 .SH DESCRIPTION
 The \fBprlsrvctl\fR utility is used to manage Parallels Server.
 .SH OPTIONS
@@ -298,6 +300,9 @@ Add a description \fIdesc\fR to each virtual environment backup.
 .TP
 \fB-u,--uncompressed\fB
 Do not compress backup images.
+.SS Traffic control management
+.IP "\fBtc\fR \fBrestart\fR
+Apply the traffic shaping setting to all running virtual environments.
 .SH DIAGNOSTICS
 \fBprlsrvctl\fR returns 0 upon successful command execution. If a command fails, it returns the appropriate error code.
 .SH SEE ALSO

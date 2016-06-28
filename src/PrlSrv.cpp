@@ -687,6 +687,8 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 		return run_monitor();
 	case SrvBackupNodeAction:
 		return backup_node(param);
+	case SrvShapingRestartAction:
+		return restart_shaping();
 	default:
 		return -1;
 	}
@@ -3506,4 +3508,16 @@ unsigned int PrlSrv::get_min_security_level()
 		return 0;
 
 	return m_disp->m_min_security_level;
+}
+
+int PrlSrv::restart_shaping()
+{
+	PrlHandle j = PrlSrv_RestartNetworkShaping(m_hSrv, 0);
+	std::string e;
+	PRL_RESULT res = get_job_retcode(j.get_handle(), e);
+	if (res)
+		return prl_err(res, "Faled to restart network shaping: %s", e.c_str());
+
+	prl_log(0, "Network shaping has been successfully restarted");
+	return 0;
 }
