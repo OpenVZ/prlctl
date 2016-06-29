@@ -247,7 +247,6 @@ static Option set_options[] = {
 
 	{"faster-vm",		'\0', OptRequireArg, CMD_FASTER_VM},
 	{"adaptive-hypervisor",		'\0', OptRequireArg, CMD_ADAPTIVE_HYPERVISOR},
-	{"disable-winlogo",		'\0', OptRequireArg, CMD_DISABLE_WINLOGO},
 	{"auto-compress",		'\0', OptRequireArg, CMD_AUTO_COMPRESS},
 	{"nested-virt",		'\0', OptRequireArg, CMD_NESTED_VIRT},
 	{"pmu-virt",		'\0', OptRequireArg, CMD_PMU_VIRT},
@@ -835,7 +834,6 @@ static void usage_vm(const char * argv0)
 "    [--autostop <stop|suspend|shutdown>]\n"
 "Optimization options are:\n"
 "    [--faster-vm <on|off>] [--adaptive-hypervisor <on|off>]\n"
-"    [--disable-winlogo <on|off>] [--auto-compress <on|off>]\n"
 "    [--nested-virt <on|off>] [--pmu-virt <on|off>]\n"
 , prl_basename(argv0));
 }
@@ -2519,13 +2517,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			if ((param.adaptive_hypervisor = str2on_off(val)) == -1) {
 				fprintf(stderr, "An incorrect value for"
 					" --adaptive-hypervisor is specified: %s\n", val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_DISABLE_WINLOGO:
-			if ((param.disable_winlogo = str2on_off(val)) == -1) {
-				fprintf(stderr, "An incorrect value for"
-					" --disable-winlogo is specified: %s\n", val.c_str());
 				return invalid_action;
 			}
 			break;

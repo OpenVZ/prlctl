@@ -3774,14 +3774,6 @@ int PrlVm::set(const CmdParamData &param)
 					get_error_str(ret).c_str());
 		set_updated();
 	}
-	if (param.disable_winlogo != -1) {
-		PRL_BOOL enable = param.disable_winlogo;
-		ret = PrlVmCfg_SetSwitchOffWindowsLogoEnabled(m_hVm, enable);
-		if (ret)
-			return prl_err(ret, "PrlVmCfg_SetSwitchOffWindowsLogoEnabled: %s",
-					get_error_str(ret).c_str());
-		set_updated();
-	}
 	if (param.auto_compress != -1) {
 		PRL_BOOL enable = param.auto_compress;
 		ret = PrlVmCfg_SetAutoCompressEnabled(m_hVm, enable);

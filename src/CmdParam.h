@@ -864,7 +864,6 @@ public:
 	unsigned int sg_max_snapshots;
 	int faster_vm;
 	int adaptive_hypervisor;
-	int disable_winlogo;
 	int auto_compress;
 	int nested_virt;
 	int pmu_virt;
@@ -1008,7 +1007,6 @@ public:
 		sg_max_snapshots(0),
 		faster_vm(-1),
 		adaptive_hypervisor(-1),
-		disable_winlogo(-1),
 		auto_compress(-1),
 		nested_virt(-1),
 		pmu_virt(-1),
