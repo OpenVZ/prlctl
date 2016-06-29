@@ -4254,7 +4254,7 @@ CmdParamData cmdParam::parse_tc_args(int argc, char **argv, int i)
 	i++;
 	if (!strcmp(argv[i], "restart"))
 		return get_disp_param(argc, argv, SrvShapingRestartAction,
-				no_options, i);
+				no_options, ++i);
 
 	return invalid_action;
 }
