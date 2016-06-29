@@ -83,14 +83,11 @@ enum Action {
 	SrvUpdateLicenseAction,
 	SrvPerfStatsAction,
 	SrvProblemReportAction,
-	SrvPreHibernateAction,
-	SrvAfterHibernateAction,
 	SrvVNetAction,
 	SrvPrivNetAction,
 	SrvInstApplianceAction,
 	SrvCtTemplateAction,
 	SrvCopyCtTemplateAction,
-	SrvPluginAction,
 	SrvMonitorAction,
 	SrvUpdateHostRegInfoAction,
 	SrvPrepareForUninstallAction,
@@ -837,7 +834,6 @@ public:
 	std::string startup_view;
 	std::string on_shutdown;
 	std::string on_window_close;
-	std::string undo_disks;
 	std::string name;
 	int is_template;
 	int smart_mouse_optimize;
@@ -868,7 +864,6 @@ public:
 	unsigned int sg_max_snapshots;
 	int faster_vm;
 	int adaptive_hypervisor;
-	int disable_winlogo;
 	int auto_compress;
 	int nested_virt;
 	int pmu_virt;
@@ -1012,7 +1007,6 @@ public:
 		sg_max_snapshots(0),
 		faster_vm(-1),
 		adaptive_hypervisor(-1),
-		disable_winlogo(-1),
 		auto_compress(-1),
 		nested_virt(-1),
 		pmu_virt(-1),
@@ -1097,7 +1091,6 @@ private:
 	CmdParamData parse_privnet_args(int argc, char **argv, int offset);
 	CmdParamData parse_usb_args(int argc, char **argv, int offset);
 	CmdParamData parse_ct_template_args(int argc, char **argv, int i);
-	CmdParamData parse_plugin_args(int argc, char **argv, int i);
 	CmdParamData parse_monitor_args(int argc, char **argv);
 	CmdParamData get_xmlrpc_param(int argc, char **argv, Action action,
 		const Option *options, int offset);

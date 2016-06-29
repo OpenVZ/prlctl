@@ -2751,52 +2751,6 @@ std::string PrlVm::get_on_window_close_info() const
 	return "";
 }
 
-int PrlVm::set_undo_disks(const std::string &mode)
-{
-	PRL_UNDO_DISKS_MODE prl_mode;
-	PRL_RESULT ret;
-
-	if (mode == "off")
-		prl_mode = PUD_DISABLE_UNDO_DISKS;
-	else if (mode == "discard")
-		prl_mode = PUD_REVERSE_CHANGES;
-	else if (mode == "ask")
-		prl_mode = PUD_PROMPT_BEHAVIOUR;
-	else
-		return prl_err(-1, "The specified startup view mode is not"
-			" supported: %s.", mode.c_str());
-
-	if ((ret = PrlVmCfg_SetUndoDisksMode(m_hVm, prl_mode)))
-		return prl_err(ret, "PrlVmCfg_SetUndoDisksMode: %s",
-			get_error_str(ret).c_str());
-	set_updated();
-
-	return 0;
-}
-
-std::string PrlVm::get_undo_disks_info() const
-{
-	PRL_UNDO_DISKS_MODE mode;
-	PRL_RESULT ret;
-
-	if ((ret = PrlVmCfg_GetUndoDisksMode(m_hVm, &mode))) {
-		prl_err(ret, "PrlVmCfg_GetUndoDisksMode: %s",
-			get_error_str(ret).c_str());
-		return "";
-	}
-
-	switch (mode) {
-	case PUD_DISABLE_UNDO_DISKS:
-		return "off";
-	case PUD_REVERSE_CHANGES:
-		return "discard";
-	case PUD_PROMPT_BEHAVIOUR:
-		return "ask";
-	default:;
-	}
-	return "";
-}
-
 std::string PrlVm::get_system_flags()
 {
 	int ret;
@@ -3555,10 +3509,6 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_on_window_close(param.on_window_close)))
 			return ret;
 	}
-	if (!param.undo_disks.empty()) {
-		if ((ret = set_undo_disks(param.undo_disks)))
-			return ret;
-	}
 	if (!param.system_flags.empty()) {
 		if ((ret = set_system_flags(param.system_flags)))
 			return ret;
@@ -3821,14 +3771,6 @@ int PrlVm::set(const CmdParamData &param)
 		ret = PrlVmCfg_SetAdaptiveHypervisorEnabled(m_hVm, enable);
 		if (ret)
 			return prl_err(ret, "PrlVmCfg_SetAdaptiveHypervisorEnabled: %s",
-					get_error_str(ret).c_str());
-		set_updated();
-	}
-	if (param.disable_winlogo != -1) {
-		PRL_BOOL enable = param.disable_winlogo;
-		ret = PrlVmCfg_SetSwitchOffWindowsLogoEnabled(m_hVm, enable);
-		if (ret)
-			return prl_err(ret, "PrlVmCfg_SetSwitchOffWindowsLogoEnabled: %s",
 					get_error_str(ret).c_str());
 		set_updated();
 	}
@@ -4457,7 +4399,6 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.add("Autostart", get_autostart_info());
 	f.add("Autostop", get_autostop_info());
 	f.add("Autocompact", (get_autocompact() ? "on" : "off"));
-	f.add("Undo disks", get_undo_disks_info());
 	f.add("Boot order", get_bootdev_info());
 	f.add("EFI boot", (m_efi_boot ? "on" : "off"));
 	f.add("Allow select boot device", (m_select_boot_dev ? "on" : "off"));

@@ -247,7 +247,6 @@ static Option set_options[] = {
 
 	{"faster-vm",		'\0', OptRequireArg, CMD_FASTER_VM},
 	{"adaptive-hypervisor",		'\0', OptRequireArg, CMD_ADAPTIVE_HYPERVISOR},
-	{"disable-winlogo",		'\0', OptRequireArg, CMD_DISABLE_WINLOGO},
 	{"auto-compress",		'\0', OptRequireArg, CMD_AUTO_COMPRESS},
 	{"nested-virt",		'\0', OptRequireArg, CMD_NESTED_VIRT},
 	{"pmu-virt",		'\0', OptRequireArg, CMD_PMU_VIRT},
@@ -833,10 +832,8 @@ static void usage_vm(const char * argv0)
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"
 "    [--autostop <stop|suspend|shutdown>]\n"
-"    [--undo-disks <off|discard|ask>]\n"
 "Optimization options are:\n"
 "    [--faster-vm <on|off>] [--adaptive-hypervisor <on|off>]\n"
-"    [--disable-winlogo <on|off>] [--auto-compress <on|off>]\n"
 "    [--nested-virt <on|off>] [--pmu-virt <on|off>]\n"
 , prl_basename(argv0));
 }
@@ -909,8 +906,6 @@ static void usage_disp(const char * argv0)
 "  cttemplate list [-j, --json]\n"
 "  cttemplate remove <name> [<os_template_name>]\n"
 "  cttemplate copy <dst_node> <name> [<os_template_name>] [-f,--force]\n"
-"  plugin list [-j, --json]\n"
-"  plugin refresh\n"
 "  tc restart\n"
 , prl_basename(argv0));
 }
@@ -2252,9 +2247,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		case CMD_ON_WINDOW_CLOSE:
 			param.on_window_close = val;
 			break;
-		case CMD_UNDO_DISKS:
-			param.undo_disks = val;
-			break;
 		case CMD_IFACE:
 			param.dev.iface = val;
 			break;
@@ -2525,13 +2517,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			if ((param.adaptive_hypervisor = str2on_off(val)) == -1) {
 				fprintf(stderr, "An incorrect value for"
 					" --adaptive-hypervisor is specified: %s\n", val.c_str());
-				return invalid_action;
-			}
-			break;
-		case CMD_DISABLE_WINLOGO:
-			if ((param.disable_winlogo = str2on_off(val)) == -1) {
-				fprintf(stderr, "An incorrect value for"
-					" --disable-winlogo is specified: %s\n", val.c_str());
 				return invalid_action;
 			}
 			break;
@@ -4363,36 +4348,6 @@ CmdParamData cmdParam::parse_ct_template_args(int argc, char **argv, int i)
 	return param;
 }
 
-CmdParamData cmdParam::parse_plugin_args(int argc, char **argv, int i)
-{
-	if (argc <= i) {
-		usage_disp(argv[0]);
-		return invalid_action;
-	}
-
-	CmdParamData param;
-	param.action = SrvPluginAction;
-
-	if (!strcmp(argv[i], "list"))
-	{
-		param.plugin.cmd = PluginParam::List;
-		if (argc > i + 1 && (!strcmp(argv[i + 1], "-j") ||
-							!strcmp(argv[i + 1], "--json")))
-			param.use_json = true;
-	}
-	else if (!strcmp(argv[i], "refresh"))
-	{
-		param.plugin.cmd = PluginParam::Refresh;
-	}
-	else
-	{
-		fprintf(stderr, "Unknown plugin command %s\n", argv[i]);
-		return invalid_action;
-	}
-
-	return param;
-}
-
 CmdParamData cmdParam::parse_monitor_args(int argc, char **argv)
 {
 	if (argc != 2) {
@@ -4521,12 +4476,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 	else if (!strcmp(argv[i], "problem-report"))
 		return get_problem_report_param(argc, argv, SrvProblemReportAction,
 				problem_report_options, ++i);
-	else if (!strcmp(argv[i], "pre-hibernate"))
-		return get_disp_param(argc, argv, SrvPreHibernateAction,
-				no_options, ++i);
-	else if (!strcmp(argv[i], "after-hibernate"))
-		return get_disp_param(argc, argv, SrvAfterHibernateAction,
-				no_options, ++i);
 	else if (!strcmp(argv[i], "net"))
 		return parse_vnet_args(argc, argv, i);
 	else if (!strcmp(argv[i], "tc"))
@@ -4555,8 +4504,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 				no_options, ++i);
 	else if (!strcmp(argv[i], "cttemplate"))
 		return parse_ct_template_args(argc, argv, ++i);
-	else if (!strcmp(argv[i], "plugin"))
-		return parse_plugin_args(argc, argv, ++i);
 	else if (!strcmp(argv[i], "monitor"))
 		return parse_monitor_args(argc, argv);
 	else if (!strcmp(argv[i], "backup"))
