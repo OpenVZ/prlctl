@@ -180,8 +180,6 @@ public:
 	std::string get_on_shutdown_info() const;
 	int set_on_window_close(const std::string &mode);
 	std::string get_on_window_close_info() const;
-	int set_undo_disks(const std::string &mode);
-	std::string get_undo_disks_info() const;
 	std::string get_system_flags();
 	int set_system_flags(const std::string &flags);
 	int set_name(const std::string &name);

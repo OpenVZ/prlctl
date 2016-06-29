@@ -834,7 +834,6 @@ public:
 	std::string startup_view;
 	std::string on_shutdown;
 	std::string on_window_close;
-	std::string undo_disks;
 	std::string name;
 	int is_template;
 	int smart_mouse_optimize;

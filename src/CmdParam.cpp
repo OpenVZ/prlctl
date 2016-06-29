@@ -833,7 +833,6 @@ static void usage_vm(const char * argv0)
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"
 "    [--autostop <stop|suspend|shutdown>]\n"
-"    [--undo-disks <off|discard|ask>]\n"
 "Optimization options are:\n"
 "    [--faster-vm <on|off>] [--adaptive-hypervisor <on|off>]\n"
 "    [--disable-winlogo <on|off>] [--auto-compress <on|off>]\n"
@@ -2249,9 +2248,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_ON_WINDOW_CLOSE:
 			param.on_window_close = val;
-			break;
-		case CMD_UNDO_DISKS:
-			param.undo_disks = val;
 			break;
 		case CMD_IFACE:
 			param.dev.iface = val;

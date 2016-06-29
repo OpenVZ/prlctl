@@ -69,8 +69,6 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--autostop\fR <\fIstop\fR|\fIsuspend\fR|\fIshutdown\fR>]
 .br
-	[\fB--undo-disks\fR <\fIoff\fR|\fIdiscard\fR|\fIask\fR>]
-.br
 	[\fB--autocompact\fR <\fIon\fR|\fIoff\fR>]
 .br
 	[\fB--tools-autoupdate\fR <\fIon\fR|\fIoff\fR>]
@@ -473,15 +471,6 @@ Delay some seconds at virtual environment autostart.
 .TP
 \fB--autostop\fR <\fIstop\fR|\fIsuspend\fR|\fIshutdown\fR>
 Specifies the mode to set the virtual environment on the Parallels Service shutdown.
-.TP
-\fB--undo-disks\fR <\fIoff\fR|\fIdiscard\fR|\fIask\fR>
-Set the virtual environment undo disks options:
-.br
-\fIoff\fR: Undo disks mech is off.
-.br
-\fIdiscard\fR: Discard all changes made in the virtual environment after it is stopped.
-.br
-\fIask\fR: Ask the user what to do: apply changes or discard them after the virtual environment is stopped.
 .TP
 \fB--autocompact\fR <\fIon\fR|\fIoff\fR>
 Turns on/off automatic virtual disk image compact. 
