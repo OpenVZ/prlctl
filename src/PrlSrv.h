@@ -211,7 +211,6 @@ public:
 	int appliance_install(const CmdParamData &param);
 	int ct_templates(const CtTemplateParam &param, bool use_json);
 	int copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplateParam &copy_tmpl);
-	int plugin(const PluginParam& plugin_param, bool use_json);
 	int run_monitor();
 	void set_logoff_timeout(unsigned int timeout) { m_logoffTimeout = timeout; }
 	~PrlSrv();
@@ -257,8 +256,6 @@ private:
 	void append_hw_info(PrlOutFormatter &f);
 	void append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, bool detailed);
 	int print_info(bool is_license_info, bool use_json);
-	int pre_hibernate();
-	int after_hibernate();
 	void clear();
 	int status_vm(const CmdParamData &param);
 	int print_statistics(const CmdParamData &param, PrlVm *vm = NULL) ;
