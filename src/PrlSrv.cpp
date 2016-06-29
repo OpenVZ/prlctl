@@ -406,30 +406,6 @@ int PrlSrv::problem_report(const CmdParamData &param)
 	return ret;
 }
 
-int PrlSrv::pre_hibernate()
-{
-	PRL_RESULT ret;
-	std::string err;
-
-	PrlHandle hJob(PrlSrv_PrepareForHibernate(m_hSrv, 0));
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		return prl_err(ret, "Prepare for hibernate failed: %s", err.c_str());
-
-	return 0;
-}
-
-int PrlSrv::after_hibernate()
-{
-	PRL_RESULT ret;
-	std::string err;
-
-	PrlHandle hJob(PrlSrv_AfterHostResume(m_hSrv, 0));
-	if ((ret = get_job_retcode(hJob.get_handle(), err)))
-		return prl_err(ret, "After host resume  failed: %s", err.c_str());
-
-	return 0;
-}
-
 int PrlSrv::status_vm(const CmdParamData &param)
 {
 	int ret;
@@ -670,10 +646,6 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 		return print_statistics(param) ;
 	case SrvProblemReportAction:
 		return problem_report(param);
-	case SrvPreHibernateAction:
-		return pre_hibernate();
-	case SrvAfterHibernateAction:
-		return after_hibernate();
 	case SrvInstApplianceAction:
 		return appliance_install(param);
 	case SrvCtTemplateAction:

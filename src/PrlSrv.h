@@ -256,8 +256,6 @@ private:
 	void append_hw_info(PrlOutFormatter &f);
 	void append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, bool detailed);
 	int print_info(bool is_license_info, bool use_json);
-	int pre_hibernate();
-	int after_hibernate();
 	void clear();
 	int status_vm(const CmdParamData &param);
 	int print_statistics(const CmdParamData &param, PrlVm *vm = NULL) ;

@@ -4489,12 +4489,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 	else if (!strcmp(argv[i], "problem-report"))
 		return get_problem_report_param(argc, argv, SrvProblemReportAction,
 				problem_report_options, ++i);
-	else if (!strcmp(argv[i], "pre-hibernate"))
-		return get_disp_param(argc, argv, SrvPreHibernateAction,
-				no_options, ++i);
-	else if (!strcmp(argv[i], "after-hibernate"))
-		return get_disp_param(argc, argv, SrvAfterHibernateAction,
-				no_options, ++i);
 	else if (!strcmp(argv[i], "net"))
 		return parse_vnet_args(argc, argv, i);
 	else if (!strcmp(argv[i], "tc"))

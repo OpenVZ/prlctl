@@ -83,8 +83,6 @@ enum Action {
 	SrvUpdateLicenseAction,
 	SrvPerfStatsAction,
 	SrvProblemReportAction,
-	SrvPreHibernateAction,
-	SrvAfterHibernateAction,
 	SrvVNetAction,
 	SrvPrivNetAction,
 	SrvInstApplianceAction,
