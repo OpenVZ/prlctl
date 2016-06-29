@@ -211,7 +211,6 @@ public:
 	int appliance_install(const CmdParamData &param);
 	int ct_templates(const CtTemplateParam &param, bool use_json);
 	int copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplateParam &copy_tmpl);
-	int plugin(const PluginParam& plugin_param, bool use_json);
 	int run_monitor();
 	void set_logoff_timeout(unsigned int timeout) { m_logoffTimeout = timeout; }
 	~PrlSrv();

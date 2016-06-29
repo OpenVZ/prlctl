@@ -38,7 +38,6 @@
 #include <stdlib.h>
 
 #include <PrlIOStructs.h>
-#include <PrlPluginClasses.h>
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlApiDeprecated.h>
@@ -681,8 +680,6 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 		 return ct_templates(param.ct_tmpl, param.use_json);
 	case SrvCopyCtTemplateAction:
 		 return copy_ct_template(param.ct_tmpl, param.copy_ct_tmpl);
-	case SrvPluginAction:
-		return plugin(param.plugin, param.use_json);
 	case SrvMonitorAction:
 		return run_monitor();
 	case SrvBackupNodeAction:
@@ -3267,103 +3264,6 @@ int PrlSrv::copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplatePa
 		prl_log(0, "The CT template have been successfully migrated.");
 	get_cleanup_ctx().unregister_hook(h);
 	PrlHandle_Free(hJob);
-
-	return ret;
-}
-
-int PrlSrv::plugin(const PluginParam& plugin_param, bool use_json)
-{
-	PRL_RESULT ret = PRL_ERR_UNEXPECTED;
-
-	if (plugin_param.cmd == PluginParam::List)
-	{
-		PrlOutFormatter &f = *(get_formatter(use_json));
-		std::string hdr_plugin_id = "Plugin ID                              ";
-		std::string hdr_version = "Version        ";
-		std::string hdr_vendor = "Vendor                                  ";
-		std::string hdr_descr = "Description";
-		if (f.type == OUT_FORMATTER_PLAIN)
-			printf("%s%s%s%s\n", hdr_plugin_id.c_str(), hdr_version.c_str(),
-					hdr_vendor.c_str(), hdr_descr.c_str());
-
-		std::string err;
-
-		PrlHandle hJob(PrlSrv_GetPluginsList( m_hSrv, GUID_CLS_BASE_STR, 0 ));
-		if ((ret = get_job_retcode(hJob.get_handle(), err)))
-			return prl_err(ret, "Failed to get plugins list: %s", err.c_str());
-
-		PrlHandle hResult;
-		PRL_UINT32 resultCount = 0;
-
-		if ((ret = PrlJob_GetResult(hJob, hResult.get_ptr())))
-			return prl_err(ret, "PrlJob_GetResult: %s [%d]",
-				get_error_str(ret).c_str(), ret);
-
-		if ((ret = PrlResult_GetParamsCount(hResult.get_handle(), &resultCount)))
-			return prl_err(ret, "PrlResult_GetParamsCount: %s [%d]",
-				get_error_str(ret).c_str(), ret);
-
-		f.open_list();
-		for(PRL_UINT32 j = 0; j < resultCount; ++j)
-		{
-			PrlHandle hPluginInfo;
-			std::stringstream fmt;
-
-			f.tbl_row_open();
-			if ((ret = PrlResult_GetParamByIndex(hResult.get_handle(), j, hPluginInfo.get_ptr())))
-				return prl_err(ret, "PrlResult_GetParamByIndex: %s [%d]",
-							get_error_str(ret).c_str(), ret);
-
-			char buf[4096];
-
-			PRL_UINT32 len = sizeof(buf)-1; buf[0] = '\0';
-			if ( (ret = PrlPluginInfo_GetId(hPluginInfo.get_handle(), buf, &len))
-				&& ret != PRL_ERR_NO_DATA )
-				return prl_err(ret, "PrlPluginInfo_GetId: %s [%d]",
-							get_error_str(ret).c_str(), ret);
-			f.tbl_add_uuid("Plugin ID", "%s ", buf);
-
-			len = sizeof(buf)-1; buf[0] = '\0';
-			if ( (ret = PrlPluginInfo_GetVersion(hPluginInfo.get_handle(), buf, &len))
-				&& ret != PRL_ERR_NO_DATA )
-				return prl_err(ret, "PrlPluginInfo_GetVersion: %s [%d]",
-							get_error_str(ret).c_str(), ret);
-			fmt << "%-" << hdr_version.size() - 1 << "s ";
-			f.tbl_add_item("Version", fmt.str().c_str(), buf);
-
-			len = sizeof(buf)-1; buf[0] = '\0';
-			if ( (ret = PrlPluginInfo_GetVendor(hPluginInfo.get_handle(), buf, &len))
-				&& ret != PRL_ERR_NO_DATA )
-				return prl_err(ret, "PrlPluginInfo_GetVendor: %s [%d]",
-							get_error_str(ret).c_str(), ret);
-
-			fmt.str(std::string());
-			fmt << "\"%-" << hdr_vendor.size() - 3 << "s\" ";
-			f.tbl_add_item("Vendor", fmt.str().c_str(), buf);
-
-			len = sizeof(buf)-1; buf[0] = '\0';
-			if ( (ret = PrlPluginInfo_GetShortDescription(hPluginInfo.get_handle(), buf, &len))
-				&& ret != PRL_ERR_NO_DATA )
-				return prl_err(ret, "PrlPluginInfo_GetShortDescription: %s [%d]",
-							get_error_str(ret).c_str(), ret);
-			f.tbl_add_item("Description", "\"%s\"", buf);
-
-			f.tbl_row_close();
-		}
-
-		f.close_list();
-		fprintf(stdout, "%s", f.get_buffer().c_str());
-	}
-	else if (plugin_param.cmd == PluginParam::Refresh)
-	{
-		std::string err;
-
-		PrlHandle hJob(PrlSrv_RefreshPlugins( m_hSrv, 0 ));
-		if ((ret = get_job_retcode(hJob.get_handle(), err)))
-			return prl_err(ret, "Failed to refresh installed plugins: %s", err.c_str());
-
-		prl_log(0, "Refresh installed plugins was done successfully.");
-	}
 
 	return ret;
 }

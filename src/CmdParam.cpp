@@ -909,8 +909,6 @@ static void usage_disp(const char * argv0)
 "  cttemplate list [-j, --json]\n"
 "  cttemplate remove <name> [<os_template_name>]\n"
 "  cttemplate copy <dst_node> <name> [<os_template_name>] [-f,--force]\n"
-"  plugin list [-j, --json]\n"
-"  plugin refresh\n"
 "  tc restart\n"
 , prl_basename(argv0));
 }
@@ -4363,36 +4361,6 @@ CmdParamData cmdParam::parse_ct_template_args(int argc, char **argv, int i)
 	return param;
 }
 
-CmdParamData cmdParam::parse_plugin_args(int argc, char **argv, int i)
-{
-	if (argc <= i) {
-		usage_disp(argv[0]);
-		return invalid_action;
-	}
-
-	CmdParamData param;
-	param.action = SrvPluginAction;
-
-	if (!strcmp(argv[i], "list"))
-	{
-		param.plugin.cmd = PluginParam::List;
-		if (argc > i + 1 && (!strcmp(argv[i + 1], "-j") ||
-							!strcmp(argv[i + 1], "--json")))
-			param.use_json = true;
-	}
-	else if (!strcmp(argv[i], "refresh"))
-	{
-		param.plugin.cmd = PluginParam::Refresh;
-	}
-	else
-	{
-		fprintf(stderr, "Unknown plugin command %s\n", argv[i]);
-		return invalid_action;
-	}
-
-	return param;
-}
-
 CmdParamData cmdParam::parse_monitor_args(int argc, char **argv)
 {
 	if (argc != 2) {
@@ -4555,8 +4523,6 @@ CmdParamData cmdParam::get_disp(int argc, char **argv)
 				no_options, ++i);
 	else if (!strcmp(argv[i], "cttemplate"))
 		return parse_ct_template_args(argc, argv, ++i);
-	else if (!strcmp(argv[i], "plugin"))
-		return parse_plugin_args(argc, argv, ++i);
 	else if (!strcmp(argv[i], "monitor"))
 		return parse_monitor_args(argc, argv);
 	else if (!strcmp(argv[i], "backup"))

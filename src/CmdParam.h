@@ -90,7 +90,6 @@ enum Action {
 	SrvInstApplianceAction,
 	SrvCtTemplateAction,
 	SrvCopyCtTemplateAction,
-	SrvPluginAction,
 	SrvMonitorAction,
 	SrvUpdateHostRegInfoAction,
 	SrvPrepareForUninstallAction,
@@ -1097,7 +1096,6 @@ private:
 	CmdParamData parse_privnet_args(int argc, char **argv, int offset);
 	CmdParamData parse_usb_args(int argc, char **argv, int offset);
 	CmdParamData parse_ct_template_args(int argc, char **argv, int i);
-	CmdParamData parse_plugin_args(int argc, char **argv, int i);
 	CmdParamData parse_monitor_args(int argc, char **argv);
 	CmdParamData get_xmlrpc_param(int argc, char **argv, Action action,
 		const Option *options, int offset);
