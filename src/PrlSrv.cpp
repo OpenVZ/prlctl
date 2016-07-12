@@ -511,6 +511,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return backup_list(param);
 	else if (param.action == VmStatusAction)
 		return status_vm(param);
+	else if (param.action == VmPerfStatsAction && param.list_all)
+		return print_statistics(param);
 
 	/* Per VM actions */
 	PrlVm *vm = NULL;
