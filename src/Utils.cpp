@@ -1676,9 +1676,6 @@ void print_vz_progress(PRL_HANDLE h)
 		fprintf(stdout, "%s\n", stage.c_str());
 }
 
-#define UUID_LEN			36
-#define NORMALIZED_UUID_LEN (UUID_LEN + 2)
-
 bool is_uuid(const std::string &str)
 {
 	const char *s;
