@@ -2246,7 +2246,7 @@ static const RegisterDescriptionItem s_cpuid_00000007_EBX_items[] = {
 	FLAG_ITEM("smap"),
 	RESERVED_FLAG,
 	RESERVED_FLAG,
-	FLAG_ITEM("cflushopt"),
+	FLAG_ITEM("clflushopt"),
 	RESERVED_FLAG,
 	FLAG_ITEM("pt"),
 	FLAG_ITEM("avx512pf"),
