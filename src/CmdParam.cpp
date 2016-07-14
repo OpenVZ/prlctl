@@ -3657,10 +3657,7 @@ CmdParamData cmdParam::get_statistics_param(int argc, char **argv, Action action
 	std::string val;
 
 	CmdParamData param;
-
 	param.action = action;
-	if (action == VmPerfStatsAction)
-		param.id = argv[offset++];
 
 	GetOptLong opt(argc, argv, options, offset);
 	while (1) {
@@ -3676,12 +3673,11 @@ CmdParamData cmdParam::get_statistics_param(int argc, char **argv, Action action
 			param.statistics.filter = val;
 			break;
 		case CMD_LIST_ALL:
-			param.list_all = true ;
+			param.list_all = true;
 			break;
 		case GETOPTUNKNOWN:
-			fprintf(stderr, "Unrecognized option: %s\n",
-					opt.get_next());
-			return invalid_action;
+			param.id = opt.get_next();
+			break;
 		case GETOPTERROR:
 		default:
 			return invalid_action;

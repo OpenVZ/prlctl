@@ -133,6 +133,8 @@ prlctl \fBmount\fR <\fIve_id\fR|\fIve_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | 
 prlctl \fBumount\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
 prlctl \fBmove\fR <\fIve_id\fR|\fIve_name\fR> \fB--dst\fR <\fIpath\fR>
+.PP
+prlctl \fBstatistics\fR {<\fIve_id\fR|\fIve_name\fR>|\fB-a\fR,\fB--all\fR} [\fB--filter\fR <\fIfilter\fR>] [\fB--loop\fR]
 
 .SH DESCRIPTION
 The \fBprlctl\fR utility is used to manage Virtuozzo servers and virtual environments (VEs) residing on them.
@@ -792,6 +794,99 @@ Specifies the bandwidth guarantee of the virtual environment for the specified n
 .IP "\fB--ratebound\fR <\fIyes\fR|\fIno\fR>" 4
 If set to "\fIyes\fR", the bandwidth guarantee is also the limit for the virtual environment.
 If set to "\fIno\fR", the bandwidth limit is defined by the TOTALRATE parameter in the /etc/vz/vz.conf file. 
+.SS Performance statistics
+.IP "\fBstatistics\fR {<\fIve_id\fR|\fIve_name\fR>|\fB-a\fR,\fB--all\fR} [\fB--filter\fR <\fIfilter\fR>] [\fB--loop\fR]" 4
+Print performance statistics for running virtual machines and containers on the server.
+.IP "\fB--filter\fR <\fIfilter\fR>" 4
+Specifies the subset of performance statistics to collect and print. If omitted, all available statistics are shown.
+Asterisks ("\fB*\fR") can be used as wildcards for any number of arbitrary characters.
+The available filters are listed below ("\fB#\fR" is the device or filesystem index).
+.RS
+.IP "\fBStorage device statistics\fR" 4
+.br
+devices.ide#.read_requests - Total count of read requests to IDE controller
+.br
+devices.ide#.read_total - Total count of bytes read through IDE controller
+.br
+devices.ide#.write_requests - Total count of write requests to IDE controller
+.br
+devices.ide#.write_total - Total count of bytes written through IDE controller
+.br
+devices.scsi#.read_requests - Total count of read requests to SCSI controller
+.br
+devices.scsi#.read_total - Total count of bytes read through SCSI controller
+.br
+devices.scsi#.write_requests - Total count of write requests to SCSI controller
+.br
+devices.scsi#.write_total - Total count of bytes written through SCSI controller
+.br
+devices.sata#.read_requests - Total count of read requests to SATA controller
+.br
+devices.sata#.read_total - Total count of bytes read through SATA controller
+.br
+devices.sata#.write_requests - Total count of write requests to SATA controller
+.br
+devices.sata#.write_total - Total count of bytes written through SATA controller
+.IP "\fBNetwork statistics\fR" 4
+.br
+net.nic#.pkts_in - Total number of packets incoming through network adapter
+.br
+net.nic#.pkts_out - Total number of packets outgoing through network adapter
+.br
+net.nic#.bytes_in - Total number of bytes incoming through network adapter
+.br
+net.nic#.bytes_out - Total number of bytes outgoing through network adapter
+.IP "\fBClassful network statistics\fR" 4
+Result is provided in 5 columns:
+.br
+\fIClass\fR \fIInput(bytes)\fR \fIInput(packets)\fR \fIOutput(bytes)\fR \fIOutput(packets)\fR
+
+.br
+net.classful.traffic - Total counters for IPv4 and IPv6 traffic
+.br
+net.classful.traffic.ipv4 - Counters for IPv4 traffic
+.br
+net.classful.traffic.ipv6 - Counters for IPv6 traffic
+.IP "\fBCPU statistics\fR" 4
+.br
+guest.cpu.usage - Guest OS CPU usage, in percent
+.br
+guest.cpu.time - Sum of guest CPU time differences since the last query for each vCPU averaged by the number of host CPUs, in microseconds
+.br
+host.cpu.time - Sum of host CPU time differences since the last query for each CPU averaged by the number of host CPUs, in microseconds
+.br
+guest.vcpu#.time - per-vCPU statistics, in nanoseconds
+.IP "\fBRAM statistics\fR" 4
+.br
+guest.ram.usage - Guest OS used RAM, in MiB
+.br
+guest.ram.cached - Guest OS cached RAM, in MiB
+.br
+guest.ram.total - Guest OS total RAM, in MiB
+.br
+guest.ram.swap_in - Guest OS virtual memory stats, in counts
+.br
+guest.ram.swap_out - Guest OS virtual memory stats, in counts
+.br
+guest.ram.minor_fault - Guest OS minor page fault count
+.br
+guest.ram.major_fault - Guest OS major page fault count
+.br
+guest.ram.balloon_actual - Guest OS balloon size, in MiB
+.IP "\fBMounted filesystems statistics\fR" 4
+.br
+guest.fs#.name - Device name for the filesystem as seen from inside guest
+.br
+guest.fs#.total - Total size of the filesystem, in KiB
+.br
+guest.fs#.free - Amount of free space on the filesystem, in KiB
+.br
+guest.fs#.disk.# - Disk indices
+.RE
+.IP "\fB--loop\fR" 4
+Print statistics every second until the program is terminated.
+.IP "\fB--all\fR" 4
+Print statistics for all running virtual machines and containers on the server.
 .SH DIAGNOSTICS
 \fBprlctl\fR returns 0 upon successful command execution. If a command fails, it returns the appropriate error code.
 .SH EXAMPLES

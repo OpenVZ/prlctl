@@ -40,6 +40,7 @@
 #define strdup _strdup
 #endif
 
+enum {UUID_LEN = 36, NORMALIZED_UUID_LEN = UUID_LEN + 2};
 #define JOB_WAIT_TIMEOUT 600 * 1000//Custom job wait timeout for specific operations
 //Global default wait job operation completion timeout
 extern PRL_UINT32 g_nJobTimeout;

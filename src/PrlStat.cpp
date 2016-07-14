@@ -51,12 +51,20 @@ static PRL_RESULT print_perfstats(PRL_HANDLE handle, const CmdParamData &param)
 		return prl_err(ret, "PrlEvent_GetParamsCount returned the following error: %s",
 				get_error_str(ret).c_str());
 
-	time_t t = time(NULL);
-	tm* lt = localtime(&t);
 	if (!param_count)
 		return PRL_ERR_SUCCESS;
 
-	printf( "%.2u:%.2u:%.2u\n", lt->tm_hour, lt->tm_min, lt->tm_sec );
+	// Print VM uuid if necessary
+	if (param.list_all) {
+		char uuid[NORMALIZED_UUID_LEN + 1] = {0};
+		PRL_UINT32 size = sizeof(uuid);
+		PRL_HANDLE hVm;
+		if (PRL_SUCCEEDED(PrlEvent_GetVm(handle, &hVm))) {
+			PrlVmCfg_GetUuid(hVm, uuid, &size);
+			PrlHandle_Free(hVm);
+		}
+		printf("%s\n", uuid);
+	}
 	for (unsigned int ndx = 0; ndx < param_count; ++ndx) {
 		PrlHandle hPrm;
 		ret = PrlEvent_GetParam(handle, ndx, hPrm.get_ptr());
