@@ -748,6 +748,7 @@ static void usage_vm(const char * argv0)
 "  move <vm_id|vm_name> --dst <path>\n"
 "  problem-report <ID | NAME> <-d,--dump|-s,--send [--proxy [user[:password]@proxyhost[:port]]]> "
 	"[--no-proxy] [--name <your name>] [--email <your E-mail>] [--description <problem description>]\n"
+"  statistics {<ID | NAME> | <-a,--all>} [--filter <filter>] [--loop]\n"
 "  set <ID | NAME>\n"
 "    [--memguarantee <auto|value>] [--mem-hotplug <on|off>]\n"
 "    [--applyconfig <conf>] [--tools-autoupdate <yes|no>]\n"
