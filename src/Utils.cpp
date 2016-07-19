@@ -2043,12 +2043,14 @@ str_list_t StorageUrl::split() const
 struct RegisterDescriptionItem {
 	const char *name;
 	int size;
+	const char *alias;
 };
 
-#define FLAG_ITEM(name) { name, 1 }
-#define TERMINATOR_ITEM { NULL, 0 }
-#define RESERVED_FLAG { NULL, 1 }
-#define RESERVED_AREA(min, max) { NULL, (max) - (min) + 1}
+#define FLAG_ITEM(name) { name, 1, NULL }
+#define FLAG_ITEM_ALIAS(name, alias) { name, 1, alias }
+#define TERMINATOR_ITEM { NULL, 0, NULL }
+#define RESERVED_FLAG { NULL, 1, NULL }
+#define RESERVED_AREA(min, max) { NULL, (max) - (min) + 1, NULL}
 
 static const RegisterDescriptionItem s_cpuid_00000001_ECX_items[] = {
 	FLAG_ITEM("pni"),
@@ -2243,7 +2245,7 @@ static const RegisterDescriptionItem s_cpuid_00000007_EBX_items[] = {
 	FLAG_ITEM("smap"),
 	RESERVED_FLAG,
 	RESERVED_FLAG,
-	FLAG_ITEM("clflushopt"),
+	FLAG_ITEM_ALIAS("cflushopt", "clflushopt"),
 	RESERVED_FLAG,
 	FLAG_ITEM("pt"),
 	FLAG_ITEM("avx512pf"),
@@ -2319,9 +2321,10 @@ private:
 };
 
 struct FeatureDescription {
-	explicit FeatureDescription(const char *a_name, PRL_CPU_FEATURES_EX a_reg,
+	explicit FeatureDescription(const char *a_name, const char *a_alias, PRL_CPU_FEATURES_EX a_reg,
 			unsigned int a_begin, unsigned int a_size) :
 		name(a_name),
+		alias(a_alias),
 		reg(a_reg),
 		begin(a_begin),
 		size(a_size)
@@ -2339,10 +2342,10 @@ struct FeatureDescription {
 	}
 
 	const char *name;
+	const char *alias;
 	PRL_CPU_FEATURES_EX reg;
 	unsigned int begin;
 	unsigned int size;
-
 };
 
 class PlainFeaturesPrinter {
@@ -2431,7 +2434,8 @@ public:
 
 	bool operator()(const FeatureDescription &f) const
 	{
-		return f.name && strcmp(f.name, m_name) == 0;
+		return (f.name && strcmp(f.name, m_name) == 0) ||
+		 (f.alias && strcmp(f.alias, m_name) == 0);
 	}
 private:
 	const char *m_name;
@@ -2449,7 +2453,7 @@ public:
 			while (it->size) {
 				m_descriptions.push_back(
 					FeatureDescription(
-						it->name, (PRL_CPU_FEATURES_EX)i,
+						it->name, it->alias, (PRL_CPU_FEATURES_EX)i,
 						b, it->size));
 				b += it->size;
 				++it;
