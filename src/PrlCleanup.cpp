@@ -29,6 +29,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <stdlib.h>
+#include <pthread.h>
+#include <unistd.h>
 
 #include <PrlTypes.h>
 
@@ -39,6 +41,9 @@
 
 static PrlCleanup g_cleanup_ctx;
 hookList *PrlCleanup::m_hooks = 0;
+pthread_t PrlCleanup::m_th = 0;
+pthread_mutex_t PrlCleanup::m_mutex = PTHREAD_MUTEX_INITIALIZER;
+int PrlCleanup::m_fd[2] = {-1, -1};
 PrlSig *PrlCleanup::m_sig = 0;
 
 PrlCleanup &get_cleanup_ctx()
@@ -48,16 +53,23 @@ PrlCleanup &get_cleanup_ctx()
 
 const PrlHook *PrlCleanup::register_hook(hook_fn fn, void *data)
 {
+	pthread_mutex_lock(&m_mutex);
+
 	if (!m_hooks)
 		m_hooks = new hookList;
 	m_hooks->push_back(PrlHook(fn, data));
 	const PrlHook *h = &m_hooks->back();
+
+	pthread_mutex_unlock(&m_mutex);
+
 	prl_log(L_DEBUG, "PrlCleanup::register_hook: %x", h);
 	return h;
 }
 
 void PrlCleanup::unregister_hook(const PrlHook *h)
 {
+	pthread_mutex_lock(&m_mutex);
+
 	hookList::iterator it = m_hooks->begin(),
 		eit = m_hooks->end();
         for (; it != eit; ++it) {
@@ -67,6 +79,8 @@ void PrlCleanup::unregister_hook(const PrlHook *h)
 			break;
 		}
 	}
+
+	pthread_mutex_unlock(&m_mutex);
 }
 
 void PrlCleanup::register_cancel(PRL_HANDLE h)
@@ -77,36 +91,78 @@ void PrlCleanup::register_cancel(PRL_HANDLE h)
 void PrlCleanup::unregister_last()
 {
 	prl_log(L_DEBUG, "PrlCleanup::unregister_last");
+
+	pthread_mutex_lock(&m_mutex);
+
 	if (!m_hooks->empty())
 		m_hooks->pop_back();
+
+	pthread_mutex_unlock(&m_mutex);
 }
 
-#ifdef _WIN_
-BOOL WINAPI PrlCleanup::run(DWORD sig)
-#else
-void PrlCleanup::run(int sig)
-#endif
+void PrlCleanup::do_cleanup()
 {
-	prl_log(L_INFO, "Call the cleanup on the %d signal.", sig);
+	pthread_mutex_lock(&m_mutex);
+
 	if (m_hooks) {
 		hookList::reverse_iterator it = m_hooks->rbegin(),
 			eit = m_hooks->rend();
 		for (; it != eit; ++it)
 			it->fn(it->data);
-		m_hooks->clear();
 	}
-#ifdef _WIN_
-	// mark signal as processed, so runtime will not terminate us in default handler
-	return TRUE;
-#endif
+
+	pthread_mutex_unlock(&m_mutex);
+}
+void *PrlCleanup::monitor(void *data)
+{
+	int fd = *(int *) data;
+	int n;
+
+	while (read(fd, &n, sizeof(n)) > 0) {
+		prl_log(L_INFO, "Call the cleanup on %d signal", n);
+		do_cleanup();
+	}
+
+	return NULL;
 }
 
-void PrlCleanup::set_cleanup_handler()
+void PrlCleanup::join()
+{
+	if (m_fd[0] != -1) {
+		close(m_fd[0]);
+		m_fd[0] = -1;
+	}
+	if (m_fd[1] != -1) {
+		close(m_fd[1]);
+		m_fd[1] = -1;
+	}
+	if (m_th) {
+		void *res;
+		pthread_join(m_th, &res);
+		m_th = 0;
+	}
+}
+
+void PrlCleanup::run(int sig)
+{
+	if (write(m_fd[1], &sig, sizeof(sig)) == -1)
+		prl_err(1, "write(fd=%d): %m", m_fd[0]);
+}
+
+int PrlCleanup::set_cleanup_handler()
 {
 	if (!m_sig) {
 		m_sig = new PrlSig;
 		m_sig->set_cleanup_handler(run);
 	}
+
+	if (pipe(m_fd) < 0)
+		return prl_err(1, "socketpair :%m");
+
+	if (pthread_create(&PrlCleanup::m_th, NULL, PrlCleanup::monitor, &m_fd[0]))
+		return prl_err(1, "pthread_create: %m");
+
+	return 0;
 }
 
 void cancel_job(void *data)
