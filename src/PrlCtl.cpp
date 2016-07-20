@@ -54,6 +54,8 @@ int main(int argc, char **argv)
 		ret = srv->run_action(param);
 	}
 
+	PrlCleanup::join();
+
 	ret = get_error(param.action, ret);
 	delete srv;
 

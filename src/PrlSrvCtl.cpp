@@ -48,6 +48,8 @@ int main(int argc, char **argv)
 		ret = srv->run_disp_action(param);
 	}
 
+	PrlCleanup::join();
+
 	delete srv;
 
 	deinit_sdk_lib();

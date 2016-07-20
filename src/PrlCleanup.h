@@ -51,28 +51,20 @@ class PrlCleanup
 private:
 	static PrlSig *m_sig;
 	static hookList *m_hooks;
-
+	static pthread_t m_th;
+	static pthread_mutex_t m_mutex;
+	static int m_fd[2];
 public:
 	PrlCleanup() {}
 	const PrlHook *register_hook(hook_fn fn, void *data);
 	static void unregister_hook(const PrlHook *h);
 	static void register_cancel(PRL_HANDLE h);
 	static void unregister_last();
-#ifdef _WIN_
-	static BOOL WINAPI run(DWORD sig);
-#else
+	static void *monitor(void *);
+	static void do_cleanup();
+	static void join();
 	static void run(int sig);
-#endif
-	static void set_cleanup_handler();
-	~PrlCleanup()
-	{
-		if (m_hooks)
-			delete m_hooks;
-		m_hooks = 0;
-		if (m_sig)
-			delete m_sig;
-		m_sig = 0;
-	}
+	static int set_cleanup_handler();
 };
 
 void cancel_job(void *data);
