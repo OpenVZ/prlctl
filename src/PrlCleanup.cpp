@@ -118,7 +118,7 @@ void *PrlCleanup::monitor(void *data)
 	int fd = *(int *) data;
 	int n;
 
-	while (read(fd, &n, sizeof(n)) != sizeof(n)) {
+	while (read(fd, &n, sizeof(n)) == sizeof(n)) {
 		prl_log(L_INFO, "Call the cleanup on %d signal", n);
 		do_cleanup();
 	}
