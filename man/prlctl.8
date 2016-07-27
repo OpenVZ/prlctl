@@ -33,7 +33,7 @@ prlctl \fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR]
 [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR] 
 .PP
 prlctl \fBmigrate\fR <[\fBsrc_node/\fR]\fBID\fR> <\fBdst_node\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>]
-[\fB--changesid\fR] [\fB--keep-src\fR|\fB--remove-src\fR] [\fB--no-compression\fR] [\fB--no-tunnel\fR] [\fB--ssh\fR <\fIoptions\fR>]
+[\fB--changesid\fR] [\fB--clone\fR|\fB--remove-src\fR] [\fB--no-compression\fR] [\fB--no-tunnel\fR] [\fB--ssh\fR <\fIoptions\fR>]
 .PP
 prlctl \fBpause\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
@@ -730,7 +730,7 @@ The following options can be used to migrate a virtual environment from the sour
 If the virtual environment is running, the migration is performed as follows.
 First, virtual environment data is copied to the destination server, then the virtual environment is suspended, and, finally, the remaining data is migrated.
 After the virtual environment has been successfully migrated, it is removed from the source server.
-.IP "\fBmigrate\fR <[\fBsrc/\fR]\fBID\fR> <\fBdst\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--keep-src\fR|\fB--remove-src\fR] [\fB--no-compression\fR] [\fB--ssh\fR <\fIoptions\fR>]" 4
+.IP "\fBmigrate\fR <[\fBsrc/\fR]\fBID\fR> <\fBdst\fR[\fB/NAME\fR]> [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--clone\fR|\fB--remove-src\fR] [\fB--no-compression\fR] [\fB--ssh\fR <\fIoptions\fR>]" 4
 Migrates the specified virtual environment from the source server \fBsrc\fR to the destination server \fBdst\fR. The source and
 destination servers must be specified in this format: [user[:password]@]server_IP_address_or_hostname[:port].
 If the source server is omitted, the local server is assumed.
@@ -739,7 +739,7 @@ If the source server is omitted, the local server is assumed.
 This option is used to change the current Windows security identifier (SID) of a Windows-based virtual machine template.
 It requires Virtuozzo Guest Tools to be installed in the virtual machine template.
 .TP
-\fB--keep-src\fR
+\fB--clone\fR
 If this option is provided, the original virtual environment will be
 cloned to destination and left intact on the source server. The clone will have
 a different UUID, MAC address, and SID (Windows-based virtual machines only; if
@@ -749,7 +749,7 @@ after migration.
 .TP
 \fB--remove-src\fR
 If this option is provided, the source bundle will be removed after migration.
-Cannot be used together with \fB--keep-src\fR.
+Cannot be used together with \fB--clone\fR.
 This option is enabled for virtual machines by default.
 .TP
 \fB--no-compression\fR

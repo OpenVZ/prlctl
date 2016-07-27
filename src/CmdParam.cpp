@@ -558,7 +558,7 @@ static Option migrate_options[] = {
 	{"location", '\0', OptRequireArg, CMD_LOCATION},
 	{"dst", '\0', OptRequireArg, CMD_LOCATION},
 	{"sessionid", 's', OptRequireArg, CMD_SESSIONID},
-	{"keep-src", '\0', OptNoArg, CMD_CLONE_MODE},
+	{"clone", '\0', OptNoArg, CMD_CLONE_MODE},
 	{"remove-src", '\0', OptNoArg, CMD_REMOVE_BUNDLE},
 	{"switch-template", '\0', OptNoArg, CMD_SWITCH_TEMPLATE},
 	{"changesid", '\0', OptNoArg, CMD_CHANGE_SID},
@@ -723,7 +723,7 @@ static void usage_vm(const char * argv0)
 "  exec <ID | NAME> [--without-shell] <command> [arg ...]\n"
 "  list [-a,--all] [-t,--template] [--vmtype ct|vm|all] [-L] [-o,--output name[,name...]] [-s,--sort name]\n"
 "  list -i,--info [-f,--full] [-j, --json] [<ID | NAME>] [--vmtype ct|vm|all]\n"
-"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--keep-src|--remove-src] [--no-compression] [--no-tunnel] [--ssh <options>]\n"
+"  migrate <[src_node/]ID> <dst_node[/NAME]> [--dst <path>] [--changesid] [--clone|--remove-src] [--no-compression] [--no-tunnel] [--ssh <options>]\n"
 "  pause <ID | NAME>\n"
 "  register <PATH> [--preserve-uuid | --uuid <UUID>] [--regenerate-src-uuid] [--force]\n"
 "  reset <ID | NAME>\n"
@@ -3385,13 +3385,13 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 	}
 
 	if ((param.migrate.flags & (PVMT_CHANGE_SID | PVMT_CLONE_MODE)) == PVMT_CHANGE_SID) {
-		fprintf(stderr, "The --changesid option can be used with --keep-src only\n");
+		fprintf(stderr, "The --changesid option can be used with --clone only\n");
 		return invalid_action;
 	}
 
 	if ((param.migrate.flags & PVMT_REMOVE_SOURCE_BUNDLE)
 			&& (param.migrate.flags & PVMT_CLONE_MODE)) {
-		fprintf(stderr, "The --remove-src option cannot be used with --keep-src\n");
+		fprintf(stderr, "The --remove-src option cannot be used with --clone\n");
 		return invalid_action;
 	}
 
