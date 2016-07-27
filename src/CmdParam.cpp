@@ -1142,13 +1142,13 @@ static int read_passwd(const char *fname, std::string &passwd)
 static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 {
 	char proto[11];
-	char srcip[11];
+	char srcip[32];
 	char srcport[11];
-	char dstip[11];
+	char dstip[32];
 	char dstport[11];
 
 	// proto srcip port dstip port"
-	int res = sscanf(str, "%10s %10s %10s %10s %10s",
+	int res = sscanf(str, "%10s %31s %10s %31s %10s",
 		proto, srcip, srcport, dstip, dstport);
 
 	if (res != 5) {
@@ -1168,6 +1168,11 @@ static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 		rule.dst_ip = dstip;
 	if (strcmp(dstport, "*") != 0)
 		rule.dst_port = atoi(dstport);
+	if (rule.proto[0] == '\0' &&
+		(rule.src_port != 0 || rule.dst_port != 0)) {
+		fprintf(stderr, "Port number may only be specified for protocol 'tcp' or 'udp'\n");
+		return -1;
+	}
 
 	return 0;
 }
