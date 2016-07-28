@@ -190,6 +190,36 @@ PrlDev *PrlVm::new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx)
 	return dev;
 }
 
+static int start_event_handler(PRL_HANDLE hEvent, void *)
+{
+	PrlHandle h(hEvent);
+	PRL_HANDLE_TYPE type;
+	int ret;
+
+	if ((ret = PrlHandle_GetType(h.get_handle(), &type))) {
+		prl_log(L_DEBUG, "PrlHandle_GetType: %s",
+				get_error_str(ret).c_str());
+		return ret;
+	}
+
+	if (type == PHT_EVENT) {
+		PRL_EVENT_TYPE evt_type;
+
+		if ((ret = PrlEvent_GetType(h.get_handle(), &evt_type))) {
+			prl_log(L_DEBUG, "PrlEvent_GetType: %s",
+					get_error_str(ret).c_str());
+			return ret;
+		}
+		prl_log(L_DEBUG, "EVENT type=%d", evt_type);
+		if (evt_type == PET_DSP_EVT_ERROR_MESSAGE) {
+			std::string m;
+			get_result_error_string(h.get_handle(), m);
+			prl_log(L_ERR, m.c_str());
+		}
+	}
+	return 0;
+}
+
 int PrlVm::start(int flags)
 {
 	PRL_RESULT ret;
@@ -198,6 +228,7 @@ int PrlVm::start(int flags)
 
 	std::string err;
 
+	m_srv.reg_event_callback(start_event_handler);
 	PrlHandle hJob(PrlVm_StartEx(m_hVm, PSM_VM_START, flags));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		prl_err(ret, "Failed to start the %s: %s",
@@ -205,6 +236,7 @@ int PrlVm::start(int flags)
 	else
 		prl_log(0, "The %s has been successfully started.",
 				 get_vm_type_str());
+	m_srv.unreg_event_callback(start_event_handler);
 
 	return ret;
 }
