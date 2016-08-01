@@ -559,6 +559,7 @@ static Option migrate_options[] = {
 	{"dst", '\0', OptRequireArg, CMD_LOCATION},
 	{"sessionid", 's', OptRequireArg, CMD_SESSIONID},
 	{"clone", '\0', OptNoArg, CMD_CLONE_MODE},
+	{"keep-src", '\0', OptNoArg, CMD_CLONE_MODE},
 	{"remove-src", '\0', OptNoArg, CMD_REMOVE_BUNDLE},
 	{"switch-template", '\0', OptNoArg, CMD_SWITCH_TEMPLATE},
 	{"changesid", '\0', OptNoArg, CMD_CHANGE_SID},
