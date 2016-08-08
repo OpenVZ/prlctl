@@ -790,10 +790,6 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 		if ((spec & INFO_SHOW_SIZE) &&
 				!PrlVmDevHd_GetDiskSize(m_hDev, &size) && size)
 			f.add("size", size, "Mb", true, true);
-
-		len = sizeof(buf);
-		if (PrlVmDevHd_GetMountPoint(m_hDev, buf, &len) == 0 && len > 1)
-			f.add("mnt", buf, true);
 	} else {
 		unsigned int count = 0;
 		std::string out;
@@ -816,6 +812,11 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 		if (count)
 			f.add("device", tmp, true);
 	}
+
+	len = sizeof(buf);
+	if (PrlVmDevHd_GetMountPoint(m_hDev, buf, &len) == 0 && len > 1)
+		f.add("mnt", buf, true);
+
 	if (!is_connected())
 		f.add("state", "disconnected", true);
 
