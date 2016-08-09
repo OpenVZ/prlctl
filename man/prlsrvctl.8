@@ -1,7 +1,6 @@
-.TH prlsrvctl 8 "22 November 2010" "Parallels Server"
-." .TH prlsrvctl 8 "22 November 2010" "Parallels Desktop"
+.TH prlsrvctl 8 "22 November 2010" "Virtuozzo"
 .SH NAME
-prlsrvctl \- utility for managing Parallels Server.
+prlsrvctl \- utility for managing Virtuozzo Server.
 .SH SYNOPSIS
 prlsrvctl \fBinfo\fR [\fB-j, --json\fR] [\fB--license\fR] [\fB-f, --full\fR]
 .PP
@@ -74,22 +73,22 @@ prlsrvctl \fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--stora
 prlsrvctl \fBtc\fR \fBrestart\fR
 .PP
 .SH DESCRIPTION
-The \fBprlsrvctl\fR utility is used to manage Parallels Server.
+The \fBprlsrvctl\fR utility is used to manage Virtuozzo Server.
 .SH OPTIONS
 .SS Flags
 The following flags can be used with the majority of \fBprlsrvctl\fR commands.
 .IP "\fR-l,--login user[[:passwd]@server\fR" 4
-Connect to the remote Parallels server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlsrvctl\fR assumes that the command is run on the local server. 
+Connect to the remote Virtuozzo server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlsrvctl\fR assumes that the command is run on the local server. 
 .IP "\fB--timeout <sec>\fR" 4
 Specify custom operation timeout in seconds (by default any operation has infinit timeout).
-.SS Configuring Parallels Server parameters
+.SS Configuring Virtuozzo Server parameters
 .IP "\fBset\fR [\fBSET_OPTIONS\fR]" 4
 This command is used to set and configure various VM parameters.
 .br
 The following options can be used with the \fBset\fR command:
 .TP
 \fB--mem-limit\fR <\fIauto\fR|\fIsize\fR>
-Set the total memory allocated to Parallels Server and its virtual machines.
+Set the total memory allocated to Virtuozzo Server and its virtual machines.
 .br
 \fIauto\fR - optimize the memory usage.
 .br
@@ -132,37 +131,37 @@ Changes host's global CPU features mask. NOTE: All virtual machines and Containe
 .TP
 \fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>
 Specifies whether the CPU limit affects all virtual machine threads including service (\fIfull\fR), or guest threads only (\fIguest\fR).
-.SS Managing Parallels server
+.SS Managing Virtuozzo server
 .IP "\fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>]" 4
-Install Parallels license.
+Install Virtuozzo license.
 .IP "\fBupdate-license\fR" 4
-Update current Parallels license.
+Update current Virtuozzo license.
 .IP "\fBshutdown\fR  \fB--suspend-vm-to-pram\fR" 4
-Shut down the Parallels server. If the \fB--suspend-vm-to-pram\fR option is specified,
+Shut down the Virtuozzo server. If the \fB--suspend-vm-to-pram\fR option is specified,
 all running VM will be suspended to PRAM.
 .IP "\fBinfo\fR" 4
-Show detailed information about the Parallels server configuration. If the
+Show detailed information about the Virtuozzo server configuration. If the
 \fB--license\fR option is specified, only the license info is displayed. You can use the \fB--json\fR option to produce machine-readable output in JSON format.
 .IP "\fBproblem-report\fR <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR <\fIuser[:password]@proxyhost[:port]\fR> | \fB--no-proxy\fR]> [\fB--stand-alone\fR]" 4
 Generate a problem report. If the \fB-s,--send\fR option is specified, the report will be
 sent to the report server. The \fB--stand-alone\fR option allows you to generate a report when the
-Parallels Server service is not running.
-.SS Listing Parallels server users
+Virtuozzo Server service is not running.
+.SS Listing Virtuozzo server users
 .IP "\fBuser\fR \fBlist\fR" 4
-Lists the Parallels server users.
+Lists the Virtuozzo server users.
 .SS Configuring user settings
 .IP "\fBuser\fR \fBset\fR" 4
 This command is used to manage the settings of the user currently logged in to
-the Parallels server.
+the Virtuozzo server.
 .TP
 You can use the following option with the command:
 .TP
 \fB--def-vm-home\fR <\fIpath\fR>
-Set the default location on the Parallels server for storing virtual machines of
+Set the default location on the Virtuozzo server for storing virtual machines of
 the current user.
-.SS Configuring Parallels Server Virtual Networks
+.SS Configuring Virtuozzo Server Virtual Networks
 .IP "\fBnet\fR [\fBNET_OPTIONS\fR]" 4
-This command is used to manage Virtual Networks on the Parallels server.
+This command is used to manage Virtual Networks on the Virtuozzo server.
 \fIvnetwork_id\fR denotes the Virtual Network you want to configure.
 .br
 The following actions can be used with the \fBnet\fR command:
@@ -175,18 +174,18 @@ The following actions can be used with the \fBnet\fR command:
 .br
 \fBinfo\fR Show detailed information about the specified Virtual Network.
 .br
-\fBlist\fR List the available Virtual Networks on the Parallels server.
+\fBlist\fR List the available Virtual Networks on the Virtuozzo server.
 .TP
 The following options can be used with the \fBnet\fR actions:
 .TP
 \fB-i,--ifname\fR <\fIif\fR>
-Set the name of the network card on the Parallels server to which the Virtual
+Set the name of the network card on the Virtuozzo server to which the Virtual
 Network will be bound.
 .TP
 \fB-m,--mac\fR <\fImac\fR>
-Set the MAC address of the network card on the Parallels server to which the
+Set the MAC address of the network card on the Virtuozzo server to which the
 Virtual Network will be bound. The network card with the specified MAC
-address must exist on the Parallels server.
+address must exist on the Virtuozzo server.
 .TP
 \fB-t,--type\fR <\fIbridged\fR|\fIhost-only\fR>
 Specifies the type of the Virtual Network.
@@ -197,20 +196,20 @@ independent computer on the network.
 .br
 \fIhost-only\fR
 A virtual machine connected to this type of Virtual Network can access
-only the Parallels server and the virtual machines connected to the same
+only the Virtuozzo server and the virtual machines connected to the same
 Virtual Network.
 .TP
 \fB-d,--description\fR <\fIdescription\fR>
 Set the Virtual Network description.
 .TP
 \fB--ip\fR <\fIip[/mask]\fR>
-Set an IPv4 address and subnet mask for the Parallels virtual adapter.
+Set an IPv4 address and subnet mask for the Virtuozzo virtual adapter.
 .TP
 \fB--dhcp-server\fR <\fIon\fR|\fIoff\fR>
-Enable or disable the Parallels virtual DHCPv4 server.
+Enable or disable the Virtuozzo virtual DHCPv4 server.
 .TP
 \fB--dhcp-ip\fR <\fIip\fR>
-Set an IPv4 address for the Parallels virtual DHCPv4 server.
+Set an IPv4 address for the Virtuozzo virtual DHCPv4 server.
 .TP
 \fB--ip-scope-start\fR <\fIip\fR>
 Set a start IPv4 address for the pool of IPv4 addresses.
@@ -219,22 +218,22 @@ Set a start IPv4 address for the pool of IPv4 addresses.
 Set an end IPv4 address for the pool of IPv4 addresses.
 .TP
 \fB--ip6\fR <\fIip[/mask]\fR>
-Set an IPv6 address and subnet mask for the Parallels virtual adapter.
+Set an IPv6 address and subnet mask for the Virtuozzo virtual adapter.
 .TP
 \fB--dhcp6-server\fR <\fIon\fR|\fIoff\fR>
-Enable or disable the Parallels virtual DHCPv6 server.
+Enable or disable the Virtuozzo virtual DHCPv6 server.
 .TP
 \fB--dhcp-ip6\fR <\fIip\fR>
-Set an IPv6 address for the Parallels virtual DHCPv6 server.
+Set an IPv6 address for the Virtuozzo virtual DHCPv6 server.
 .TP
 \fB--ip6-scope-start\fR <\fIip\fR>
 Set a start IPv6 address for the pool of IPv6 addresses.
 .TP
 \fB--ip6-scope-end\fR <\fIip\fR>
 Set an end IPv6 address for the pool of IPv6 addresses.
-.SS Configuring Parallels Server IP private networks
+.SS Configuring Virtuozzo Server IP private networks
 .IP "\fBprivnet\fR [\fBPRIVNET_OPTIONS\fR]" 4
-This command is used to manage IP private networks on the Parallels server.
+This command is used to manage IP private networks on the Virtuozzo server.
 \fIprivate_network_id\fR denotes the IP private network you want to configure.
 .br
 The following actions can be used with the \fBprivnet\fR command:
@@ -245,7 +244,7 @@ The following actions can be used with the \fBprivnet\fR command:
 .br
 \fBdel\fR Remove the specified IP private network.
 .br
-\fBlist\fR List the available IP private networks on the Parallels server.
+\fBlist\fR List the available IP private networks on the Virtuozzo server.
 .TP
 The following options can be used with the \fBprivnet\fR command:
 .TP
@@ -267,20 +266,20 @@ List the USB devices installed on the server together with the information on th
 .IP "\fBusb set\fR <\fIusb_dev_id\fR> <\fIvm_uuid\fR | \fIvm_name\fR>" 4
 Assign the USB device with ID <\fIusb_dev_id\fR> to the virtual machine <\fIvm_uuid\fR>.
 This USB device will be connected to the specified virtual machine when you
-start the virtual machine or attach the device to the Parallels server.
+start the virtual machine or attach the device to the Virtuozzo server.
 .IP "\fBusb del\fR <\fIusb_dev_id\fR>" 4
 Remove the assignment for the USB device with ID <\fIusb_dev_id\fR>.
 .SS Configuring templates for Containers
 .IP "\fBcttemplate\fR \fBlist\fR" 4
-List the OS and application templates installed on the Parallels server.
+List the OS and application templates installed on the Virtuozzo server.
 .IP "\fBcttemplate\fR \fBremove\fR <\fIname\fR> [<\fIos_template_name\fR>]" 4
-Remove the specified OS or application template from the Parallels server.
+Remove the specified OS or application template from the Virtuozzo server.
 To delete an application template, you need to additionally indicate the
 \fIos_template_name\fR parameter.
 .IP "\fBplugin\fR \fBlist\fR" 4
-List all installed Parallels plugins.
+List all installed Virtuozzo plugins.
 .IP "\fBplugin\fR \fBrefresh\fR" 4
-Refresh installed Parallels plugins.
+Refresh installed Virtuozzo plugins.
 .SS Backup management
 .IP "\fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]" 4
 Back up all virtual environments on the node.
