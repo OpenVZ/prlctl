@@ -715,7 +715,6 @@ static void usage_vm(const char * argv0)
 "    [-n,--name <new_name>] [--dst <path>]\n"
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
-"  convert <PATH> [--dst <path>] [--force]\n"
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
 "                [--dst <path>] [--changesid] [--no-hdd]\n"
 "  delete <ID | NAME>\n"

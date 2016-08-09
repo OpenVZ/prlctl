@@ -15,8 +15,6 @@ prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,
 .PP
 prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
 .PP
-prlctl \fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]
-.PP
 prlctl \fBdelete\fR <\fIve_id\fR|\fIve_name\fR> [\fB--force\fR]
 .PP
 prlctl \fBexec\fR <\fIve_id\fR|\fIve_name\fR> [\fB--without-shell\fR] <\fBcommand\fR>
@@ -167,10 +165,6 @@ Use the \fB--dst\fR option to set the path to the directory on the Virtuozzo ser
 Use the \fB--no-hdd\fR option to create virtual environment without hard disk drives.
 
 After the virtual environment has been successfully created, you should install the corresponding operating system inside it.
-.IP "\fBconvert\fR <\fIpath\fR> [\fB--dst\fR <\fIpath\fR>] [\fB--force\fR]"
-Convert the specified third party virtual machine.
-
-You can use the \fB--dst\fR option to set the path on the Virtuozzo server where to store the virtual machine configuration files and the \fB--force\fR option to continue with the conversion even if the guest OS of the virtual machine could not be identified.
 .IP "\fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>]" 4
 Make a copy of a virtual environment and name it <\fInew_name\fR>. The difference between the original and the clone is that the clone is assigned a new MAC address.
 
