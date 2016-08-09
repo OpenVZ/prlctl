@@ -832,7 +832,7 @@ static void usage_vm(const char * argv0)
 "	--device-add pci --device <name>\n"
 "Startup and shutdown options are:\n"
 "    [--autostart <on|off|auto>] [--autostart-delay <n>]\n"
-"    [--autostop <stop|suspend|shutdown>]\n"
+"    [--autostop <stop|suspend>]\n"
 "Optimization options are:\n"
 "    [--faster-vm <on|off>] [--adaptive-hypervisor <on|off>]\n"
 "    [--nested-virt <on|off>] [--pmu-virt <on|off>]\n"
