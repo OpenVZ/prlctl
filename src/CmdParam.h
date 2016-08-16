@@ -256,6 +256,7 @@ public:
 	int autocompact;
 	bool offline;
 	std::string storage_url;
+	std::string enc_keyid;
 
 public:
 	DevInfo() :
@@ -1435,6 +1436,7 @@ enum cmdOptions {
 	CMD_EXEC_NO_SHELL,
 
 	CMD_NO_TUNNEL,
+	CMD_ENC_KEYID,
 };
 
 #endif // __CMDPARAM_H__

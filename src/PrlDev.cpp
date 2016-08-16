@@ -519,6 +519,13 @@ int PrlDevHdd::create_image(const DevInfo &param)
 			return prl_err(ret, "PrlVmDevHd_SetBlockSize: %s",
 					get_error_str(ret).c_str());
 	}
+
+	if (!param.enc_keyid.empty()) {
+		ret = set_encryption_keyid(param.enc_keyid);
+		if (ret)
+			return ret;
+	}
+
 	PrlVmDevHd_SetDiskSize(m_hDev, size);
 
 	if (m_vm.get_vm_type() == PVT_VM) {
@@ -562,6 +569,29 @@ int PrlDevHdd::resize_image(const DevInfo &param)
 		prl_err(ret, "Failed to resize: %s", err.c_str());
 	PrlCleanup::unregister_last();
 	return ret;
+}
+
+int PrlDevHdd::set_encryption_keyid(const std::string &keyid)
+{
+	PrlHandle hEncryption;
+
+	int ret = PrlVmDevHd_GetEncryption(m_hDev, hEncryption.get_ptr());
+	if (ret)
+		return prl_err(ret, "PrlVmDevHd_GetEncryption: %s",
+				get_error_str(ret).c_str());
+
+	ret = PrlVmDevHdEncryption_SetKeyId(hEncryption, keyid.c_str());
+	if (ret)
+		return prl_err(ret, "PrlVmDevHdEncryption_SetKeyId: %s",
+				get_error_str(ret).c_str());
+
+	ret = PrlVmDevHd_SetEncryption(m_hDev, hEncryption);
+	if (ret)
+		return prl_err(ret, "PrlVmDevHd_SetEncryption: %s",
+				get_error_str(ret).c_str());
+
+
+	return 0;
 }
 
 int PrlDevHdd::set_device(const DevInfo &param)

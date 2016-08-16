@@ -119,6 +119,7 @@ static Option create_options[] = {
 	{"hdd-block-size", '\0', OptRequireArg, CMD_HDD_BLOCK_SIZE},
 	{"lion-recovery", '\0', OptNoArg, CMD_LION_RECOVERY},
 	{"uuid", '\0', OptRequireArg, CMD_UUID},
+	{"encryption-keyid", '\0', OptRequireArg, CMD_ENC_KEYID},
 	OPTION_END
 };
 
@@ -188,6 +189,7 @@ static Option set_options[] = {
 	{"disable", '\0', OptNoArg, CMD_DISABLE},
 	{"connect", 'c', OptNoArg, CMD_CONNECT},
 	{"disconnect", '\0', OptNoArg, CMD_DISCONNECT},
+	{"encryption-keyid", '\0', OptRequireArg, CMD_ENC_KEYID},
 
 	{"hdd-block-size", '\0', OptRequireArg, CMD_HDD_BLOCK_SIZE},
 
@@ -2156,6 +2158,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		case CMD_DEVICE_DISCONNECT:
 			param.dev.name = val;
 			param.dev.cmd = Disconnect;
+			break;
+		case CMD_ENC_KEYID:
+			param.dev.enc_keyid = val;
 			break;
 		case CMD_DEVICE_DEL:
 #ifdef _LIN_
