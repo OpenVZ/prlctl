@@ -299,6 +299,7 @@ private:
 			if (*it == ':') ++it;
 			*it = 'F';
 		}
+		if (*it == ':') ++it;
 
 		if (it == ip6_mask.end())
 			return;
