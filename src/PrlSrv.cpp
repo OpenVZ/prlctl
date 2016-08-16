@@ -672,6 +672,27 @@ static void clear_device(PrlVm &vm, DevType type)
 		d->remove();
 }
 
+static int update_disk(PrlVm &vm, const CmdParamData &param)
+{
+	int ret;
+
+	if (!param.dev.enc_keyid.empty()) {
+		vm.get_dev_info();
+		PrlDevList list = vm.get_devs();
+		for (PrlDevList::const_iterator dev = list.begin(),
+					end = list.end(); dev != end; ++dev)
+		{
+			if ((*dev)->get_type() != DEV_HDD)
+				continue;
+			PrlDevHdd *hdd = (PrlDevHdd *) *dev;
+			ret = hdd->set_encryption_keyid(param.dev.enc_keyid);
+			if (ret)
+				return ret;
+		}
+	}
+	return 0;
+}
+
 int PrlSrv::create_ct(const CmdParamData &param)
 {
 	PRL_RESULT ret;
@@ -719,6 +740,8 @@ int PrlSrv::create_ct(const CmdParamData &param)
 				get_error_str(ret).c_str());
 	if (param.nohdd)
 		clear_device(*vm, DEV_HDD);
+	else
+		update_disk(*vm, param);
 
 	if ((ret = vm->reg(param.vm_location)))
 		return prl_err(ret, "Failed to create the virtual machine.");
