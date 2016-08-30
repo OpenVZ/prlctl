@@ -570,31 +570,36 @@ PRL_RESULT get_result_error_string(PRL_HANDLE hResult, std::string &err)
 std::string get_details(PRL_HANDLE hJob)
 {
 	PRL_RESULT ret;
+	std::string err;
 
 	PrlHandle hErr;
 	if (PRL_FAILED((ret = PrlJob_GetError(hJob, hErr.get_ptr()))))
-		return std::string("");
+		return err;
 
 	PrlHandle hParam;
 	ret = PrlEvent_GetParamByName(hErr.get_handle(), "Details", hParam.get_ptr());
 	if (PRL_SUCCEEDED(ret)) {
-		char buf[2048] = "";
-		PRL_UINT32 len(sizeof(buf));
-		ret = PrlEvtPrm_ToString(hParam.get_handle(), buf, &len);
-		return std::string(PRL_FAILED(ret)? "": buf);
+		PRL_UINT32 len = 0;
+
+		if (PRL_FAILED(PrlEvtPrm_ToString(hParam.get_handle(), NULL, &len)))
+			return err;
+
+		err.resize(len);
+		PrlEvtPrm_ToString(hParam.get_handle(), &err[0], &len);
+
+		return err;
 	}
 
 	ret = PrlEvent_GetParamByName(hErr.get_handle(), "internal_event", hParam.get_ptr());
 	if (PRL_SUCCEEDED(ret)) {
 		PrlHandle e;
-		std::string err;
-		if (PRL_FAILED((ret = PrlEvtPrm_ToHandle(hParam.get_handle(), e.get_ptr()))))
+		if (PRL_FAILED(PrlEvtPrm_ToHandle(hParam.get_handle(), e.get_ptr())))
 			return err;
 		get_result_error_string(e.get_handle(), err);
 		return err;
 	}
 
-	return std::string("");
+	return err;
 }
 
 void handle_job_err(PRL_HANDLE hJob, PRL_RESULT ret)
