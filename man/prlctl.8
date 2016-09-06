@@ -13,6 +13,8 @@ prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\
 prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR]
 .PP
+prlctl \fBcapture\fR <\fIve_id\fR|\fIve_name\fR> [\fB--file\fR <\fIpath\fR>]
+.PP
 prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
 .PP
 prlctl \fBdelete\fR <\fIve_id\fR|\fIve_name\fR> [\fB--force\fR]
@@ -190,6 +192,8 @@ Log in to the virtual environment. For virtual machines, it requires Virtuozzo G
 Attach to the Container's console. To exit from the console, press "Esc" then "."
 (Note: This sequence is only recognized after Enter).
 Note that you can even attach to a console if a Container is not yet running.
+.IP "\fBcapture\fR <\fIve_id\fR|\fIve_name\fR> [\fB--file\fR <\fIpath\fR>]" 4
+Take a screenshot of a current virtual environment console in PNG format. If the \fB--file\fR option is specified, a screenshot is stored to the path \fIpath\fR; otherwise, it is dumped to stdout.
 .IP "\fBpause\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Pause the specified virtual environment.
 .IP "\fBproblem-report\fR <\fIve_id\fR|\fIve_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]" 4

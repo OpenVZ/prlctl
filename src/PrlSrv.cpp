@@ -584,6 +584,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return print_statistics(param, vm);
 	case VmProblemReportAction:
 		return vm->problem_report(param);
+	case VmCaptureAction:
+		return vm->screenshot(param);
 	case VmConsoleAction:
 		return vm->console();
 	case VmEnterAction:
