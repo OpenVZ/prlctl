@@ -591,6 +591,7 @@ static Option backup_options[] = {
 	{"description", '\0',	OptRequireArg, CMD_DESC},
 	{"uncompressed", 'u',	OptNoArg, CMD_UNCOMPRESSED},
 	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
+	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 	OPTION_END
 };
 
@@ -605,7 +606,8 @@ static Option restore_options[] = {
 	{"full",	'f',	OptNoArg, CMD_BACKUP_LIST_FULL},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
 	{"location", '\0', OptRequireArg, CMD_LOCATION},
-		{"dst", '\0', OptRequireArg, CMD_LOCATION},
+	{"dst", '\0', OptRequireArg, CMD_LOCATION},
+	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 
 	OPTION_END
 };
@@ -709,12 +711,12 @@ static void usage_vm(const char * argv0)
 "Usage: %s ACTION <ID | NAME> [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
 "  backup <ID | NAME> [-s,--storage <user[[:passwd]@server[:port]>] [--description <desc>]\n"
-"    [-f,--full | -i,--incremental] [--no-compression]\n"
+"    [-f,--full | -i,--incremental] [--no-compression] [--no-tunnel]\n"
 "  backup-list [ID | NAME] [-f,--full] [--vmtype ct|vm|all] [--localvms]\n"
 "    [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  backup-delete {<ID> | -t,--tag <backupid>} [--keep-chain] [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  restore {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
-"    [-n,--name <new_name>] [--dst <path>]\n"
+"    [-n,--name <new_name>] [--dst <path>] [--no-tunnel]\n"
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
@@ -3498,6 +3500,9 @@ CmdParamData cmdParam::get_restore_param(int argc, char **argv, Action action,
 			}
 			param.backup.vm_location = val;
 			break;
+		case CMD_NO_TUNNEL:
+			param.backup.flags |= PBT_DIRECT_DATA_CONNECTION;
+			break;
 		case GETOPTUNKNOWN:
 		{
 			const char *p = opt.get_next();
@@ -4429,6 +4434,9 @@ CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
 			break;
 		case CMD_UNCOMPRESSED:
 			param.backup.flags |= PBT_UNCOMPRESSED;
+			break;
+		case CMD_NO_TUNNEL:
+			param.backup.flags |= PBT_DIRECT_DATA_CONNECTION;
 			break;
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
