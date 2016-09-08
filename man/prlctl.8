@@ -4,14 +4,14 @@ prlctl \- utility for managing Virtuozzo servers and virtual environments residi
 .SH SYNOPSIS
 prlctl \fBcreate\fR <\fIve_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
-prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR]
+prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR] [\fB--no-tunnel\fR]
 .PP
 prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
 prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
 prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
-[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]
+[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR]
 .PP
 prlctl \fBclone\fR <\fIve_id\fR|\fIve_name\fR> \fB--name\fR <\fInew_name\fR> [\fB--template\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--linked\fR] [\fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR>] [\fBOPTIONS\fR]
 .PP
@@ -690,7 +690,7 @@ NOTE: To detach a single backup disk, use the \fB--device-del\fR command.
 The following command and options can be used to back up and restore a virtual environment.
 The \fB--storage\fR option allows you to specify the backup server.
 If this option is omitted, the local server is used.
-.IP "\fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB--no-compression\fR]" 4
+.IP "\fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB--no-compression\fR] [\fB--no-tunnel\fR]" 4
 Backs up the specified virtual environment.
 .TP
 \fB-f,--full\fB
@@ -702,12 +702,15 @@ An incremental backup contains only the files changed since the previous full or
 .TP
 \fB--no-compression\fR
 Do not compress backup image.
+.TP
+\fB--no-tunnel\fR
+Do not use connection tunneling for backup. Connection tunneling is enabled for backup by default to provide secure data transmission.
 .IP "\fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--vmtype ct|vm|all\fR] [\fR--localvms\fB] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]" 4
 Lists the existing backups.
 If the \fB--localvms\fR option is specified, list only backups that were created on the local server.
 .IP "\fBrestore\fR {<\fBve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} \
 [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] \
-[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>]" 4
+[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR]" 4
 Restore the specified virtual environment. Only stopped virtual environments can be restored.
 If \fBbackup_ID\fR is not specified, the latest backup version is restored.
 .TP
@@ -716,6 +719,9 @@ Restore the virtual environment and assign the name \fBnew_name\fR to it.
 .TP
 \fB--dst\fR <\fBpath\fR>
 Restore the virtual environment data to the specified directory on the Virtuozzo server.
+.TP
+\fB--no-tunnel\fR
+Do not use connection tunneling for restore. Connection tunneling is enabled for restore by default to provide secure data transmission.
 .IP "\fBbackup-delete\fR {<\fIve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR]" 4
 Delete the backup for specified virtual environment.
 If \fB--keep-chain\fR is specified, the rest of the backup chain is preserved.
