@@ -594,6 +594,22 @@ int PrlDevHdd::set_encryption_keyid(const std::string &keyid)
 	return 0;
 }
 
+std::string PrlDevHdd::get_encryption_keyid()
+{
+	PrlHandle hEncryption;
+	std::string out;
+	PRL_UINT32 len = 0;
+
+	if (PrlVmDevHd_GetEncryption(m_hDev, hEncryption.get_ptr()) == 0 &&
+		PrlVmDevHdEncryption_GetKeyId(hEncryption, NULL, &len) == 0)
+	{
+		out.resize(len);
+		PrlVmDevHdEncryption_GetKeyId(hEncryption, &out[0], &len);
+	}
+
+	return out;
+}
+
 int PrlDevHdd::set_device(const DevInfo &param)
 {
 	PRL_RESULT ret;
@@ -878,6 +894,10 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 		if (PrlVmDevHd_GetSerialNumber(m_hDev, buf, &len) == 0 && len > 1)
 			f.add("serial", buf, true);
 	}
+
+	std::string key = get_encryption_keyid();
+	if (!key.empty())
+		f.add("keyid", key, true, true);
 
 	f.close(true);
 };
