@@ -319,15 +319,10 @@ void PrlOutFormatterPlain::add(const char *key, const char *value,
 };
 
 void PrlOutFormatterPlain::add(const char *key, std::string value,
-							bool is_inline, bool use_quotes, bool hide_key)
+		bool is_inline, bool use_quotes, bool hide_key)
 {
-	open_key(key, is_inline, hide_key);
-	if (use_quotes)
-		out << '\'' << value << '\'';
-	else
-		out << value;
-	close_key(is_inline);
-};
+	add(key, value.c_str(), is_inline, use_quotes, hide_key);
+}
 
 void PrlOutFormatterPlain::add(const char *key, int value, const char *suffix,
 								bool is_inline, bool hide_key)
