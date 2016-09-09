@@ -130,6 +130,7 @@ public:
 	void append_info(PrlOutFormatter &f);
 	void get_storage_url(StorageUrl& url) const;
 	int set_encryption_keyid(const std::string &keyid);
+	std::string get_encryption_keyid();
 
 	virtual ~PrlDevHdd()
 	{}
