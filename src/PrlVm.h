@@ -107,6 +107,7 @@ public:
 	int snapshot_get_tree(std::string &out);
 	int snapshot_list(const CmdParamData &param);
 	int problem_report(const CmdParamData &param);
+	int screenshot(const CmdParamData &param);
 	int console();
 	int enter();
 	int exec(const CmdParamData &param);

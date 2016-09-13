@@ -49,6 +49,8 @@
 #include <PrlApiNet.h>
 #include <PrlOses.h>
 #include <boost/foreach.hpp>
+#include <boost/archive/iterators/binary_from_base64.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
 
 #include "EventSyncObject.h"
 //#include "Interfaces/ParallelsDomModel.h"
@@ -807,6 +809,47 @@ int PrlVm::problem_report(const CmdParamData &param)
 		ret = send_problem_report_on_stdout(hProblemReport);
 
 	return ret;
+}
+
+int PrlVm::screenshot(const CmdParamData &param)
+{
+	PRL_RESULT ret;
+	PRL_UINT32 resultCount = 0;
+	PrlHandle hResult;
+	std::string err;
+
+	PrlHandle hJob(PrlVm_CaptureScreen(m_hVm, 0, 0, 0));
+	ret = get_job_result(hJob.get_handle(), hResult.get_ptr(), &resultCount);
+	if (PRL_FAILED(ret) || !resultCount) {
+		return prl_err(-1, "Failed to capture a screenshot: %s",
+				get_error_str(ret).c_str());
+	}
+
+	std::string s;
+	if ((ret = get_result_as_string(hResult.get_handle(), s, false)) != 0) {
+		return prl_err(-1, "Failed to get data from result: %s",
+			get_error_str(ret).c_str());
+	}
+	std::ostream* o = &std::cout;
+	std::ofstream of;
+	if (!param.file.empty()) {
+		of.open(param.file.c_str(), std::ios_base::binary);
+		if (!of) {
+			return prl_err(-1, "Failed to write data to the file %s!",
+				param.file.c_str());
+		}
+		o = &of;
+	}
+
+	// decode from base64
+	typedef boost::archive::iterators::transform_width<
+			boost::archive::iterators::binary_from_base64<
+				std::string::const_iterator>, 8, 6 > it_binary_t;
+	std::copy(it_binary_t(s.begin()), it_binary_t(s.end()), std::ostream_iterator<char>(*o));
+	
+	if (!param.file.empty())
+		prl_log(0, "The screenshot has been saved.");
+	return 0;
 }
 
 static int run_vzctl(const std::string &ctid, const char *command)

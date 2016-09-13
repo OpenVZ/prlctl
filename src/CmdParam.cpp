@@ -717,6 +717,7 @@ static void usage_vm(const char * argv0)
 "  backup-delete {<ID> | -t,--tag <backupid>} [--keep-chain] [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  restore {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "    [-n,--name <new_name>] [--dst <path>] [--no-tunnel]\n"
+"  capture <ID | NAME> [--file <path>]\n"
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
@@ -3841,7 +3842,7 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 		return get_param(argc, argv, VmRestartAction, no_options, 2);
 	} else if (!strcmp(argv[1], "installtools")) {
 		return get_param(argc, argv, VmInstallToolsAction, no_options, 2);
-	} else if (!strcmp(argv[1], "capture")) {
+	} else if (!strcmp(argv[1], "capture") || !strcmp(argv[1], "screenshot")) {
 		return get_param(argc, argv, VmCaptureAction, capture_options, 2);
 	} else if (!strcmp(argv[1], "snapshot")) {
 		return get_param(argc, argv, VmSnapshot_Create,
