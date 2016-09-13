@@ -120,8 +120,7 @@ void PrlOutFormatterJSON::add(const char *key, const char *value,
 void PrlOutFormatterJSON::add(const char *key, std::string value,
 							  bool, bool, bool)
 {
-	add_key(key);
-	out << '\"' << value << '\"';
+	add(key, value.c_str());
 }
 
 void PrlOutFormatterJSON::add(const char *key, int value,
