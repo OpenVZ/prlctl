@@ -177,6 +177,8 @@ public:
 	std::string get_autostop_info() const;
 	int set_startup_view(const std::string &mode);
 	std::string get_startup_view_info() const;
+	int set_on_crash(const std::string &mode);
+	std::string get_on_crash_info() const;
 	int set_on_shutdown(const std::string &mode);
 	std::string get_on_shutdown_info() const;
 	int set_on_window_close(const std::string &mode);

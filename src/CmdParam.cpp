@@ -241,6 +241,7 @@ static Option set_options[] = {
 		{"onboot", '\0', OptRequireArg, CMD_AUTOSTART},
 	{"autostart-delay", '\0', OptRequireArg, CMD_AUTOSTART_DELAY},
 	{"autostop", '\0', OptRequireArg, CMD_AUTOSTOP},
+	{"on-crash", '\0', OptRequireArg, CMD_ON_CRASH},
 	{"startup-view",	'\0', OptRequireArg, CMD_STARTUP_VIEW},
 	{"on-shutdown",		'\0', OptRequireArg, CMD_ON_SHUTDOWN},
 	{"on-window-close",	'\0', OptRequireArg, CMD_ON_WINDOW_CLOSE},
@@ -771,6 +772,7 @@ static void usage_vm(const char * argv0)
 "    [--ha-enable <yes|no>] [--ha-prio <priority>]\n"
 "    [--password-to-edit]\n"
 "    [--template <yes|no>]\n"
+"    [--on-crash <pause|restart>[:no-report]]\n"
 "    [General options]\n"
 "    [Container management options]\n"
 "    [Boot order management options]\n"
@@ -2255,6 +2257,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
+			break;
+		case CMD_ON_CRASH:
+			param.on_crash = val;
 			break;
 		case CMD_STARTUP_VIEW:
 			param.startup_view = val;

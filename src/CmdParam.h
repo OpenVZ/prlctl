@@ -835,6 +835,7 @@ public:
 	std::string autostop;
 	std::string file;
 	std::string startup_view;
+	std::string on_crash;
 	std::string on_shutdown;
 	std::string on_window_close;
 	std::string name;
@@ -1196,6 +1197,7 @@ enum cmdOptions {
 	CMD_AUTOSTART_DELAY,
 	CMD_AUTOSTOP,
 	CMD_STARTUP_VIEW,
+	CMD_ON_CRASH,
 	CMD_ON_SHUTDOWN,
 	CMD_ON_WINDOW_CLOSE,
 	CMD_UNDO_DISKS,
