@@ -131,6 +131,7 @@ public:
 	void get_storage_url(StorageUrl& url) const;
 	int set_encryption_keyid(const std::string &keyid);
 	std::string get_encryption_keyid();
+	int set_serial_number(const std::string &serial);
 
 	virtual ~PrlDevHdd()
 	{}

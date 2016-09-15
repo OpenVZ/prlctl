@@ -190,6 +190,7 @@ static Option set_options[] = {
 	{"connect", 'c', OptNoArg, CMD_CONNECT},
 	{"disconnect", '\0', OptNoArg, CMD_DISCONNECT},
 	{"encryption-keyid", '\0', OptRequireArg, CMD_ENC_KEYID},
+	{"serial", '\0', OptRequireArg, CMD_SERIAL_NUMBER},
 
 	{"hdd-block-size", '\0', OptRequireArg, CMD_HDD_BLOCK_SIZE},
 
@@ -2228,6 +2229,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_DISCONNECT:
 			param.dev.disconnect = true;
+			break;
+		case CMD_SERIAL_NUMBER:
+			param.dev.serial_number = val;
 			break;
 		case CMD_AUTOSTART:
 			if (param.set_autostart(val)) {

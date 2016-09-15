@@ -257,6 +257,7 @@ public:
 	bool offline;
 	std::string storage_url;
 	std::string enc_keyid;
+	std::string serial_number;
 
 public:
 	DevInfo() :
@@ -301,7 +302,8 @@ public:
 			!socket.empty() ||
 			!mixer.empty() ||
 			autocompact != -1 ||
-			!storage_url.empty())
+			!storage_url.empty() ||
+			!serial_number.empty())
 			return true;
 
 		return false;
@@ -1437,6 +1439,7 @@ enum cmdOptions {
 
 	CMD_NO_TUNNEL,
 	CMD_ENC_KEYID,
+	CMD_SERIAL_NUMBER,
 };
 
 #endif // __CMDPARAM_H__
