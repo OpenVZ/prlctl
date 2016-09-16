@@ -820,16 +820,16 @@ int PrlVm::screenshot(const CmdParamData &param)
 
 	PrlHandle hJob(PrlVm_CaptureScreen(m_hVm, 0, 0, 0));
 	ret = get_job_result(hJob.get_handle(), hResult.get_ptr(), &resultCount);
-	if (PRL_FAILED(ret) || !resultCount) {
+	if (PRL_FAILED(ret))
+		return ret;
+	if (!resultCount) {
 		return prl_err(-1, "Failed to capture a screenshot: %s",
-				get_error_str(ret).c_str());
+				get_error_str(PRL_ERR_NO_DATA).c_str());
 	}
 
 	std::string s;
-	if ((ret = get_result_as_string(hResult.get_handle(), s, false)) != 0) {
-		return prl_err(-1, "Failed to get data from result: %s",
-			get_error_str(ret).c_str());
-	}
+	if ((ret = get_result_as_string(hResult.get_handle(), s, false)) != 0)
+		return ret;
 	std::ostream* o = &std::cout;
 	std::ofstream of;
 	if (!param.file.empty()) {
