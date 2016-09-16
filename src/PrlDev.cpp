@@ -604,7 +604,7 @@ std::string PrlDevHdd::get_encryption_keyid()
 		PrlVmDevHdEncryption_GetKeyId(hEncryption, NULL, &len) == 0 &&
 		len > 1)
 	{
-		out.resize(len);
+		out.resize(--len);
 		PrlVmDevHdEncryption_GetKeyId(hEncryption, &out[0], &len);
 	}
 

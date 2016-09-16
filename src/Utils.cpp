@@ -581,9 +581,11 @@ std::string get_details(PRL_HANDLE hJob)
 	if (PRL_SUCCEEDED(ret)) {
 		PRL_UINT32 len = 0;
 
-		if (PRL_FAILED(PrlEvtPrm_ToString(hParam.get_handle(), NULL, &len)))
+		if (PRL_FAILED(PrlEvtPrm_ToString(hParam.get_handle(), NULL, &len))
+			|| len < 2)
 			return err;
 
+		len--; // sdk appends '\0', which we don't need in std::string
 		err.resize(len);
 		PrlEvtPrm_ToString(hParam.get_handle(), &err[0], &len);
 
