@@ -68,6 +68,8 @@ prlsrvctl \fBcttemplate\fR \fBlist\fR [\fB-j, --json\fR]
 .PP
 prlsrvctl \fBcttemplate\fR \fBremove\fR <\fIname\fR> [<\fIos_template_name\fR>]
 .PP
+prlsrvctl \fBcttemplate\fR \fBcopy\fR <\fIdst_node\fR> <\fIname\fR> [<\fIos_template_name\fR>] [\fB-f,--force\fR]
+.PP
 prlsrvctl \fBbackup\fR [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fIuser[:password]@server[:port]\fR>] [\fB--description\fR <\fIdesc\fR>] [\fB-u,--uncompressed\fR]
 .PP
 prlsrvctl \fBtc\fR \fBrestart\fR
@@ -276,6 +278,14 @@ List the OS and application templates installed on the Virtuozzo server.
 Remove the specified OS or application template from the Virtuozzo server.
 To delete an application template, you need to additionally indicate the
 \fIos_template_name\fR parameter.
+.IP "\fBcttemplate\fR \fBcopy\fR <\fIdst_node\fR> <\fIname\fR> [<\fIos_template_name\fR>] [\fB-f,--force\fR]" 4
+Copies the specified OS or application template from the
+local server to the destination server \fBdst_node\fR.
+To copy an application template, you need to additionally indicate the
+\fIos_template_name\fR parameter.
+The destination server must be specified in this format:
+[user[:password]@]server_IP_address_or_hostname[:port].
+If the \fB--force\fR option is specified, all validation checks will be skipped.
 .IP "\fBplugin\fR \fBlist\fR" 4
 List all installed Virtuozzo plugins.
 .IP "\fBplugin\fR \fBrefresh\fR" 4
