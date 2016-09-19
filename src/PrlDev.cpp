@@ -620,6 +620,38 @@ int PrlDevHdd::set_serial_number(const std::string &serial)
 	return 0;
 }
 
+PRL_RESULT PrlDevHdd::apply_encryption(const DevInfo &param)
+{
+	std::string old_keyid = get_encryption_keyid();
+	std::string keyid = param.enc_keyid;
+
+	if (param.cmd == Set) {
+		switch (param.enc_action) {
+		case ENC_SET:
+			if (old_keyid.empty())
+				return prl_err(PRL_ERR_INVALID_ARG, "The disk is not encrypted. "
+					"To encrypt the disk, specify the --encrypt option.");
+			break;
+
+		case ENC_ENCRYPT:
+			if (!old_keyid.empty())
+				return prl_err(PRL_ERR_INVALID_ARG, "The disk is already encrypted.");
+			break;
+
+		case ENC_DECRYPT:
+			if (old_keyid.empty())
+				return prl_err(PRL_ERR_INVALID_ARG, "The disk is not encrypted.");
+			keyid.clear();
+			break;
+
+		default:
+			return PRL_ERR_INVALID_ARG;
+		}
+	}
+
+	return set_encryption_keyid(keyid);
+}
+
 int PrlDevHdd::set_device(const DevInfo &param)
 {
 	PRL_RESULT ret;
@@ -669,6 +701,8 @@ int PrlDevHdd::set_device(const DevInfo &param)
 		if ((ret = resize_image(param)))
 			return ret;
 		return 0;
+	} else if (param.enc_action != ENC_NONE) {
+		return apply_encryption(param);
 	} else {
 		/* Skip to create new image on the set action */
 		if (param.cmd == Set)

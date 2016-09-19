@@ -148,6 +148,7 @@ private:
 	int create_image(const DevInfo &param);
 	int resize_image(const DevInfo &param);
 	int set_device(const DevInfo &param);
+	PRL_RESULT apply_encryption(const DevInfo &param);
 };
 
 class PrlDevCdrom : public PrlDev {

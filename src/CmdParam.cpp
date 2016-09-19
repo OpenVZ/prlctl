@@ -189,8 +189,12 @@ static Option set_options[] = {
 	{"disable", '\0', OptNoArg, CMD_DISABLE},
 	{"connect", 'c', OptNoArg, CMD_CONNECT},
 	{"disconnect", '\0', OptNoArg, CMD_DISCONNECT},
-	{"encryption-keyid", '\0', OptRequireArg, CMD_ENC_KEYID},
 	{"serial", '\0', OptRequireArg, CMD_SERIAL_NUMBER},
+	{"encryption-keyid", '\0', OptRequireArg, CMD_ENC_KEYID},
+	{"encrypt", '\0', OptNoArg, CMD_ENC_ENCRYPT},
+	{"decrypt", '\0', OptNoArg, CMD_ENC_DECRYPT},
+	{"reencrypt", '\0', OptNoArg, CMD_ENC_REENCRYPT},
+	{"no-wipe", '\0', OptNoArg, CMD_ENC_NOWIPE},
 
 	{"hdd-block-size", '\0', OptRequireArg, CMD_HDD_BLOCK_SIZE},
 
@@ -1872,6 +1876,23 @@ bool CmdParamData::is_valid()
 		return false;
 	}
 
+	if (dev.cmd != Set && dev.enc_flags != 0) {
+		fprintf(stderr, "Disk encryption options can only be used with "
+			"the --device-set command.\n");
+		return false;
+	}
+
+	if (dev.enc_flags != 0 && dev.enc_action == ENC_NONE) {
+		fprintf(stderr, "Disk encryption options --reencrypt and --no-wipe can only be used with "
+			"the --encrypt, --decrypt or --encryption-keyid commands.\n");
+	}
+
+	if (dev.enc_action == ENC_ENCRYPT && dev.enc_keyid.empty()) {
+		fprintf(stderr, "The --encryption-keyid option must be specified "
+			"with the --encrypt option.\n");
+		return false;
+	}
+
 	return true;
 }
 
@@ -2165,6 +2186,22 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_ENC_KEYID:
 			param.dev.enc_keyid = val;
+			break;
+		case CMD_ENC_ENCRYPT:
+		case CMD_ENC_DECRYPT:
+			if (param.dev.enc_action != ENC_NONE) {
+				fprintf(stderr, "Only one of the options, --encrypt "
+					"or --decrypt, can be specified per command.\n");
+				return invalid_action;
+			}
+			param.dev.enc_action = (id == CMD_ENC_ENCRYPT)
+				? ENC_ENCRYPT : ENC_DECRYPT;
+			break;
+		case CMD_ENC_REENCRYPT:
+			param.dev.enc_flags |= PCEF_CHANGE_MASTER_KEY;
+			break;
+		case CMD_ENC_NOWIPE:
+			param.dev.enc_flags |= PCEF_DONT_SHRED_PLAIN_DATA;
 			break;
 		case CMD_DEVICE_DEL:
 #ifdef _LIN_
@@ -3271,6 +3308,10 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		param.dev.type = DEV_HDD;
 		param.dev.cmd = Set;
 	}
+
+	if (!param.dev.enc_keyid.empty() && param.dev.enc_action == ENC_NONE)
+		param.dev.enc_action = ENC_SET;
+
 	if (!param.set_net_param(net))
 		 return invalid_action;
 	if (!param.is_valid())

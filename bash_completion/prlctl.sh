@@ -87,7 +87,8 @@ _prlctl()
 		--autostart --autstart-delay --autostop \
 		--vnc-mode --vnc-port --vnc-passwd --ioprio \
 		--ha-enable --ha-prio'
-	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr'
+	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr \
+		--encrypt --decrypt --encryption-keyid --reencrypt --nowipe'
 	local set_device_cdrom_flags='--device --image --iface --position --passthr'
 	local set_device_net_flags='--type --mac --iface'
 	local set_device_fdd_flags='--device --image --recreate'
