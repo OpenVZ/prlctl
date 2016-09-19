@@ -611,6 +611,15 @@ std::string PrlDevHdd::get_encryption_keyid()
 	return out;
 }
 
+int PrlDevHdd::set_serial_number(const std::string &serial)
+{	
+	int ret = PrlVmDevHd_SetSerialNumber(m_hDev, serial.c_str());
+	if (ret)
+		return prl_err(ret, "PrlVmDevHd_SetSerialNumber: %s",
+				get_error_str(ret).c_str());
+	return 0;
+}
+
 int PrlDevHdd::set_device(const DevInfo &param)
 {
 	PRL_RESULT ret;
@@ -766,6 +775,11 @@ int PrlDevHdd::configure(const DevInfo &param)
 			return prl_err(ret, "PrlVmDevHd_SetAutoCompressEnabled: %s",
 					get_error_str(ret).c_str());
 		set_updated();
+	}
+
+	if (!param.serial_number.empty()) {
+		if ((ret = set_serial_number(param.serial_number)))
+			return ret;
 	}
 
 	if ((ret = set_device(param)))
