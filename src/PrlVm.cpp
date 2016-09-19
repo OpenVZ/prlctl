@@ -845,7 +845,12 @@ int PrlVm::screenshot(const CmdParamData &param)
 	typedef boost::archive::iterators::transform_width<
 			boost::archive::iterators::binary_from_base64<
 				std::string::const_iterator>, 8, 6 > it_binary_t;
-	std::copy(it_binary_t(s.begin()), it_binary_t(s.end()), std::ostream_iterator<char>(*o));
+	try {
+		std::copy(it_binary_t(s.begin()), it_binary_t(s.end()),
+			std::ostream_iterator<char>(*o));
+	} catch (...) {
+		return prl_err(-1, "Failed to decode data from base64!");
+	}
 	
 	if (!param.file.empty())
 		prl_log(0, "The screenshot has been saved.");
