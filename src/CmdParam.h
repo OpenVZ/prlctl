@@ -219,6 +219,13 @@ enum {
 	AM_VM		= PGS_CONNECTED_TO_VM,
 };
 
+enum EncryptionAction {
+	ENC_NONE,
+	ENC_SET,
+	ENC_ENCRYPT,
+	ENC_DECRYPT,
+};
+
 class DevInfo {
 public:
 	Command cmd;
@@ -256,8 +263,10 @@ public:
 	int autocompact;
 	bool offline;
 	std::string storage_url;
-	std::string enc_keyid;
 	std::string serial_number;
+	std::string enc_keyid;
+	unsigned int enc_flags;
+	EncryptionAction enc_action;
 
 public:
 	DevInfo() :
@@ -279,7 +288,9 @@ public:
 		hdd_block_size(0),
 		no_fs_resize(0),
 		autocompact(-1),
-		offline(false)
+		offline(false),
+		enc_flags(0),
+		enc_action(ENC_NONE)
 	{}
 
 	bool is_updated() const
@@ -1438,8 +1449,13 @@ enum cmdOptions {
 	CMD_EXEC_NO_SHELL,
 
 	CMD_NO_TUNNEL,
-	CMD_ENC_KEYID,
 	CMD_SERIAL_NUMBER,
+
+	CMD_ENC_KEYID,
+	CMD_ENC_ENCRYPT,
+	CMD_ENC_DECRYPT,
+	CMD_ENC_REENCRYPT,
+	CMD_ENC_NOWIPE,
 };
 
 #endif // __CMDPARAM_H__

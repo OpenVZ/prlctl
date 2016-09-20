@@ -3904,7 +3904,12 @@ int PrlVm::set(const CmdParamData &param)
 	}
 
 	if (is_updated()) {
-		if ((ret = commit_configuration(param)))
+		if (param.dev.cmd == Set && param.dev.enc_action != ENC_NONE) {
+			ret = commit_encryption(param);
+		} else {
+			ret = commit_configuration(param);
+		}
+		if (ret)
 			return ret;
 
 		load_config();
@@ -4888,3 +4893,12 @@ int PrlVm::detach_backup_disks(const std::string& id)
 	return 0;
 }
 
+int PrlVm::commit_encryption(const CmdParamData &param)
+{
+	std::string err;
+	PrlHandle job(PrlVm_CommitEncryption(m_hVm, param.dev.enc_flags, 0, 0));
+	PRL_RESULT ret = get_job_retcode(job.get_handle(), err);
+	if (ret)
+		prl_err(ret, "PrlVm_CommitEncryption failed: %s", err.c_str());
+	return ret;
+}

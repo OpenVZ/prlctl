@@ -271,6 +271,7 @@ private:
 	int attach_backup_disks(const CmdParamData& param);
 	int detach_backup_disks(const std::string& id);
 	void search_attached_backups(std::list<PrlDevHdd *>& disks);
+	int commit_encryption(const CmdParamData &param);
 };
 
 #endif // __PRLVM_H__

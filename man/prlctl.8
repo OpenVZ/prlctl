@@ -522,6 +522,30 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fBmnt\fR: the mount point to automount virtual hard disk inside the guest OS
 
+.br
+\fBManaging virtual hard disk drives encryption\fR
+.br
+
+\fB--device-add\fR \fIhdd\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fBother HDD options\fR]
+.br
+\fB--device-set\fR \fIhdd\fR \fB--encrypt\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--nowipe\fR]
+.br
+\fB--device-set\fR \fIhdd\fR \fB--decrypt\fR [\fB--nowipe\fR]
+.br
+\fB--device-set\fR \fIhdd\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--nowipe\fR] [\fB--reencrypt\fR]
+
+.br
+\fBencrypt\fR: encrypt the hard disk drive contents with an encryption key given in the \fB--encryption-keyid\fR option
+.br
+\fBdecrypt\fR: decrypt the encrypted hard disk drive
+.br
+\fBencryption-keyid\fR: the identifier of a key used to encrypt the hard disk drive. When this option is used along with the \fB--encrypt\fR option, the provided key identifier is used to encrypt the non-encrypted virtual disk drive. When this option is used with the \fB--device-set\fR command, the already existing encryption key is changed to the provided one.
+.br
+\fBreencrypt\fR: re-encrypt the entire disk contents when changing the encryption key identifier. When the \fB--device-set\fR command is called with the \fB--encryption-keyid\fR option, only a small amount of encrypted data (i.e. LUKS header) is changed in the virtual disk drive. When the \fB--reencrypt\fR option is added to the command above, the entire disk contents are re-encrypted.
+.br
+\fBnowipe\fR: remove the original virtual hard disk after it had been encrypted without securely erasing its data from the host disk drive. Without this option, after a virtual disk had been successfully encrypted, the original unencrypted data is securely erased from the host hard disk drive.
+.br
+
 \fBConnecting physical hard disks to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>]
