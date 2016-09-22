@@ -528,11 +528,11 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 
 \fB--device-add\fR \fIhdd\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fBother HDD options\fR]
 .br
-\fB--device-set\fR \fIhdd\fR \fB--encrypt\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--nowipe\fR]
+\fB--device-set\fR \fIhdd\fR \fB--encrypt\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--no-wipe\fR]
 .br
-\fB--device-set\fR \fIhdd\fR \fB--decrypt\fR [\fB--nowipe\fR]
+\fB--device-set\fR \fIhdd\fR \fB--decrypt\fR [\fB--no-wipe\fR]
 .br
-\fB--device-set\fR \fIhdd\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--nowipe\fR] [\fB--reencrypt\fR]
+\fB--device-set\fR \fIhdd\fR \fB--encryption-keyid\fR <\fIkey_id\fR> [\fB--no-wipe\fR] [\fB--reencrypt\fR]
 
 .br
 \fBencrypt\fR: encrypt the hard disk drive contents with an encryption key given in the \fB--encryption-keyid\fR option
@@ -543,7 +543,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fBreencrypt\fR: re-encrypt the entire disk contents when changing the encryption key identifier. When the \fB--device-set\fR command is called with the \fB--encryption-keyid\fR option, only a small amount of encrypted data (i.e. LUKS header) is changed in the virtual disk drive. When the \fB--reencrypt\fR option is added to the command above, the entire disk contents are re-encrypted.
 .br
-\fBnowipe\fR: remove the original virtual hard disk after it had been encrypted without securely erasing its data from the host disk drive. Without this option, after a virtual disk had been successfully encrypted, the original unencrypted data is securely erased from the host hard disk drive.
+\fBno-wipe\fR: remove the original virtual hard disk after it had been encrypted without securely erasing its data from the host disk drive. Without this option, after a virtual disk had been successfully encrypted, the original unencrypted data is securely erased from the host hard disk drive.
 .br
 
 \fBConnecting physical hard disks to VE\fR
