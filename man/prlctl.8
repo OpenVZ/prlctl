@@ -500,7 +500,7 @@ Only one option can be specified at a time.
 \fBAdding virtual hard disk drives to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--recreate\fR] [\fB--size\fR <\fIn\fR>]
-[\fB--split\fR] [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
+[\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
 
 \fBimage_name\fR: the image file to be used to emulate the VE virtual hard disk.
 To use an existing image file, specify its name and path.
@@ -509,8 +509,6 @@ To create a new image file, omit the \fB--image\fR option
 .br
 \fBsize\fR: the size of the hard disk drive, in megabytes.
 If the \fB--no-fs-resize\fR option is specified, the last partition on the hard disk is not resized.
-.br
-\fBsplit\fR: splits the hard disk drive into 2 Gb pieces.
 .br
 \fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR or \fIvirtio\fR.
 .br
