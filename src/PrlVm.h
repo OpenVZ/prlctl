@@ -244,6 +244,7 @@ public:
 	int load_config();
 	const char *get_vm_type_str() const;
 	int set_template_sign(int template_sign);
+	int set_nested_virt(int enabled);
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);

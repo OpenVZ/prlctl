@@ -3863,12 +3863,8 @@ int PrlVm::set(const CmdParamData &param)
 		set_updated();
 	}
 	if (param.nested_virt != -1) {
-		PRL_BOOL enable = param.nested_virt;
-		ret = PrlVmCfg_SetNestedVirtualizationEnabled(m_hVm, enable);
-		if (ret)
-			return prl_err(ret, "PrlVmCfg_SetNestedVirtualizationEnabled: %s",
-					get_error_str(ret).c_str());
-		set_updated();
+		if ((ret = set_nested_virt(param.nested_virt)))
+			return ret;
 	}
 	if (param.pmu_virt != -1) {
 		PRL_BOOL enable = param.pmu_virt;
@@ -4901,4 +4897,18 @@ int PrlVm::commit_encryption(const CmdParamData &param)
 	if (ret)
 		prl_err(ret, "PrlVm_CommitEncryption failed: %s", err.c_str());
 	return ret;
+}
+
+int PrlVm::set_nested_virt(int enabled)
+{
+	int ret;
+	PRL_BOOL bEnabled = enabled;
+	ret = PrlVmCfg_SetNestedVirtualizationEnabled(m_hVm, bEnabled);
+	if (ret)
+		return prl_err(ret, "PrlVmCfg_SetNestedVirtualizationEnabled: %s",
+				get_error_str(ret).c_str());
+	if (bEnabled)
+		validate_config(PVC_CPU);
+	set_updated();
+	return 0;
 }
