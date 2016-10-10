@@ -1727,6 +1727,7 @@ VncParam PrlVm::get_vnc_param()
 
 	PrlVmCfg_GetVNCMode(m_hVm, (PRL_VM_REMOTE_DISPLAY_MODE_PTR) &vnc.mode);
 	PrlVmCfg_GetVNCPort(m_hVm, &vnc.port);
+	PrlVmCfg_GetVNCWebSocketPort(m_hVm, &vnc.ws_port);
 	len = sizeof(buf);
 	if (PrlVmCfg_GetVNCHostName(m_hVm, buf, &len) == 0)
 		vnc.address = buf;
@@ -4757,6 +4758,9 @@ void VncParam::append_info(PrlOutFormatter &f) const
 
 	if (port > 0)
 		f.add("port", port, "", true);
+	
+	if (ws_port > 0)
+		f.add("websocket", ws_port, "", true);
 
 	if (!address.empty())
 		f.add("address", address, true);
