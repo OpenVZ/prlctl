@@ -726,7 +726,7 @@ static void usage_vm(const char * argv0)
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
-"                [--dst <path>] [--changesid] [--no-hdd]\n"
+"                [--dst <path>] [--changesid] [--no-hdd] [--encryption-keyid <keyid>]\n"
 "  delete <ID | NAME>\n"
 //"  installtools <ID | NAME>\n"
 "  enter <ID | NAME>\n"
@@ -809,6 +809,9 @@ static void usage_vm(const char * argv0)
 #ifdef _DEBUG
 "	--device-set hddN --size <n> [--offline]\n"
 #endif
+"	--device-set hdd --encrypt --encryption-keyid <keyid> [--no-wipe]\n"
+"	--device-set hdd --decrypt [--no-wipe]\n"
+"	--device-set hdd --encryption-keyid <keyid> [--no-wipe] [--reencrypt]\n"
 "	--device-add <hdd | cdrom | net | fdd | serial | usb | pci>\n"
 "		[Device options] [--enable|--disable] [--connect|--disconnect]\n"
 "	--device-add hdd [--image <image>] [--recreate]\n"
@@ -816,6 +819,7 @@ static void usage_vm(const char * argv0)
 "		[--mnt <path>]\n"
 "	--device-add hdd --device <real_name>\n"
 "		[--iface <ide|scsi|virtio>] [--passthr] [--position <n>]\n"
+"		[--encryption-keyid <keyid>]\n"
 "	--backup-add <ID> [--disk <disk_name>]\n"
 "	--backup-del <ID|all>\n"
 "	--device-add cdrom {--device <name> | --image <image>}\n"
