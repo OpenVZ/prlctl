@@ -786,7 +786,6 @@ static void usage_vm(const char * argv0)
 "General options are:\n"
 "    [--name <name>] [--cpus <N>] [--memsize <n>]\n"
 "    [--description <desc>]\n"
-"    [--template <on | off>]\n"
 "    [--rename-ext-disks]\n"
 "Container management options are:\n"
 "    [--swappages P[:P]] [--swap N] [--quotaugidlimit <n>]\n"
