@@ -1067,6 +1067,7 @@ public:
 
 private:
 	bool is_dev_valid() const;
+	bool validate_encryption() const;
 };
 
 struct Option;

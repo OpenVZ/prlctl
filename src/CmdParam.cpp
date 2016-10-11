@@ -1776,6 +1776,87 @@ bool CmdParamData::get_realpath(std::string &path, bool check)
 	return true;
 }
 
+bool CmdParamData::validate_encryption() const
+{
+	// filter encryption options:
+	// --encryption-keyid, --encrypt, --decrypt, --no-wipe, --reencrypt
+	if (dev.enc_action == ENC_NONE && dev.enc_flags == 0 && dev.enc_keyid.empty())
+		return true;
+
+	switch (action) {
+	case VmCreateAction:
+		// 'create' options already handled
+		return true;
+	case VmSetAction:
+		break;
+	default:
+		fprintf(stderr, "Disk encryption options can only be used with "
+			"'create' or 'set' commands.\n");
+		return false;
+	}
+
+	switch (dev.cmd) {
+	case Add:
+		// "set CT --device-add hdd --encryption-keyid <keyid>"
+		if (dev.enc_flags || dev.enc_action != ENC_SET) {
+			fprintf(stderr, "Only the --encryption-keyid option can be "
+				"used with the --device-add hdd command.\n");
+			return false;
+		}
+		break;
+	case Set:
+		break;
+	default:
+		fprintf(stderr, "Encryption options can only be used with the "
+			"--device-add and --device-set commands.\n");
+		return false;
+	}
+
+
+	switch (dev.enc_action) {
+	case ENC_SET:
+		// "set CT --device-set hdd --encryption-keyid <keyid> [--no-wipe] [--reencrypt]"
+		if (dev.enc_keyid.empty()) {
+			fprintf(stderr, "The --encryption-keyid option is required "
+				"to change the encryption key.\n");
+			return false;
+		}
+		break;
+	case ENC_ENCRYPT:
+		// "set CT --device-set hdd --encrypt --encryption-keyid <keyid> [--no-wipe]"
+		if (dev.enc_keyid.empty()) {
+			fprintf(stderr, "The --encrypt option must be used together "
+				"with the --encryption-keyid option.\n");
+			return false;
+		}
+		if (dev.enc_flags & PCEF_CHANGE_MASTER_KEY) {
+			fprintf(stderr, "The --reencrypt option must be used together "
+				"with the --encryption-keyid option.\n");
+			return false;
+		}
+		break;
+	case ENC_DECRYPT:
+		// set CT --device-set hdd --decrypt [--no-wipe]
+		if (!dev.enc_keyid.empty()) {
+			fprintf(stderr, "The --encryption-keyid option cannot be used "
+				"with the --decrypt option.\n");
+			return false;
+		}
+		if (dev.enc_flags & PCEF_CHANGE_MASTER_KEY) {
+			fprintf(stderr, "The --reencrypt option must be used together "
+				"with the --encryption-keyid option.\n");
+			return false;
+		}
+		break;
+	case ENC_NONE:
+		fprintf(stderr, "Disk encryption options --reencrypt and --no-wipe can only"
+			"be used with the --encrypt, --decrypt or --encryption-keyid commands.\n");
+		return false;
+	}
+
+	return true;
+}
+
 bool CmdParamData::is_valid()
 {
 	const char* error_descr = "Unable to simultaneously use";
@@ -1878,24 +1959,7 @@ bool CmdParamData::is_valid()
 		return false;
 	}
 
-	if (dev.cmd != Set && dev.enc_flags != 0) {
-		fprintf(stderr, "Disk encryption options can only be used with "
-			"the --device-set command.\n");
-		return false;
-	}
-
-	if (dev.enc_flags != 0 && dev.enc_action == ENC_NONE) {
-		fprintf(stderr, "Disk encryption options --reencrypt and --no-wipe can only be used with "
-			"the --encrypt, --decrypt or --encryption-keyid commands.\n");
-	}
-
-	if (dev.enc_action == ENC_ENCRYPT && dev.enc_keyid.empty()) {
-		fprintf(stderr, "The --encryption-keyid option must be specified "
-			"with the --encrypt option.\n");
-		return false;
-	}
-
-	return true;
+	return validate_encryption();
 }
 
 bool CmdParamData::is_dev_valid() const
