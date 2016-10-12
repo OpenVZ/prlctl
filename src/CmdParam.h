@@ -545,11 +545,12 @@ class PrlOutFormatter;
 struct VncParam {
 	int		mode;
 	PRL_UINT32	port;
+	PRL_UINT32	ws_port; // read-only
 	std::string	address;
 	std::string	passwd;
 	int		nopasswd;
 
-	VncParam() : mode(-1), port(0), nopasswd(0) {}
+	VncParam() : mode(-1), port(0), ws_port(0), nopasswd(0) {}
 	std::string get_info() const;
 	void append_info(PrlOutFormatter &f) const;
 	int set_mode(const std::string &str);
