@@ -495,7 +495,9 @@ int PrlSrv::run_action(const CmdParamData &param)
 	else if (param.action == VmConvertAction)
 		return convert_vm(param);
 	else if (param.action == VmCreateAction)
-		if (param.vmtype == PVTF_CT)
+		if (param.dist_list.print)
+			return print_dist_info(param);
+		else if (param.vmtype == PVTF_CT)
 			return create_ct(param);
 		else
 			return create_vm(param);
@@ -901,6 +903,90 @@ int PrlSrv::get_hw_info(ResType type)
 			"unhandled device type: %d", type);
 	}
 	return ret;
+}
+
+void PrlSrv::print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE type)
+{
+	int i = 0;
+	for (DistList::const_iterator it = info.begin(); it != info.end(); ++it)
+	{
+		if ((*it).first != type)
+			continue;
+		printf("%-16s%s", get_dist_by_id((*it).second), (i+1)%4 ? "\t" : "\n");
+		++i;
+	}
+	if (i%4)
+		printf("\n");
+}
+
+int PrlSrv::print_dist_info(const CmdParamData &param)
+{
+	DistList info;
+	PRL_RESULT ret;
+	if ((ret = get_supported_os_info(info)))
+		return ret;
+	printf("The following values are allowed:\n");
+	print_dist_list(info, PGS_OS_SUPPORTED);
+	printf("Experimental support:\n");
+	print_dist_list(info, PGS_OS_EXPERIMENTAL);
+	return param.dist_list.error ? 1 : 0;
+}
+
+int PrlSrv::get_supported_os_info(DistList& info)
+{
+	PRL_HANDLE hOsesMatrix;
+	PRL_HANDLE hOsesTypesList;
+	PRL_RESULT ret;
+
+	if ((ret = PrlSrv_GetSupportedOses(m_hSrv, &hOsesMatrix)))
+		return prl_err(ret, "PrlSrv_GetSupportedOses: %s",
+				get_error_str(ret).c_str());
+	if ((ret = PrlOsesMatrix_GetSupportedOsesTypes(hOsesMatrix, &hOsesTypesList)))
+		return prl_err(ret, "PrlOsesMatrix_GetSupportedOsesTypes: %s",
+				get_error_str(ret).c_str());
+	PRL_UINT32 nCount;
+	if ((ret = PrlOpTypeList_GetItemsCount(hOsesTypesList, &nCount)))
+		return prl_err(ret, "PrlOpTypeList_GetItemsCount: %s",
+				get_error_str(ret).c_str());
+
+	for(PRL_UINT32 i = 0; i < nCount; i++)
+	{
+		PRL_UINT8 nOsType;
+		if ((ret = PrlOpTypeList_GetItem(hOsesTypesList, i, &nOsType)))
+			return prl_err(ret, "PrlOpTypeList_GetItem: %s",
+					get_error_str(ret).c_str());
+		if ((ret = get_os_type_info(hOsesMatrix, nOsType, info)))
+			return ret;
+	}
+	return 0;
+}
+
+int PrlSrv::get_os_type_info(PRL_HANDLE hOsesMatrix, PRL_UINT8 nOsType, DistList& info)
+{
+	PRL_HANDLE hOsesVersList;
+	PRL_RESULT ret;
+
+	if ((ret = PrlOsesMatrix_GetSupportedOsesVersions(hOsesMatrix, nOsType, &hOsesVersList)))
+		return prl_err(ret, "PrlOsesMatrix_GetSupportedOsesVersions: %s",
+				get_error_str(ret).c_str());
+	PRL_UINT32 nCount;
+	if ((ret = PrlOpTypeList_GetItemsCount(hOsesVersList, &nCount)))
+		return prl_err(ret, "PrlOpTypeList_GetItemsCount: %s",
+				get_error_str(ret).c_str());
+
+	for(PRL_UINT32 i = 0; i < nCount; i++)
+	{
+		PRL_UINT16 nOsVersion;
+		if ((ret = PrlOpTypeList_GetItem(hOsesVersList, i, &nOsVersion)))
+			return prl_err(ret, "PrlOpTypeList_GetItem: %s",
+					get_error_str(ret).c_str());
+		PRL_GUEST_OS_SUPPORT_TYPE nSupportType;
+		if ((ret = PrlOsesMatrix_GetSupportType(hOsesMatrix, nOsType, nOsVersion, &nSupportType)))
+			return prl_err(ret, "PrlOsesMatrix_GetSupportType: %s",
+				get_error_str(ret).c_str());
+		info.push_back(std::make_pair(nSupportType, nOsVersion));
+	}
+	return 0;
 }
 
 PRL_HANDLE PrlSrv::get_srv_config_handle()

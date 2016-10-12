@@ -145,7 +145,7 @@ public:
 	int set_cpulimit(PRL_CONST_CPULIMIT_DATA_PTR cpulimit);
 	int get_cpulimit(PRL_CPULIMIT_DATA_PTR cpulimit);
 	int get_cpulimitmode(unsigned int *limittype);
-	int set_distribution(PRL_UINT32 nOsVersion);
+	int set_distribution(const OsDistribution *dist);
 	int set_ioprio(unsigned int ioprio);
 	int get_ioprio(unsigned int *ioprio);
 	int set_iolimit(unsigned int iolimit);

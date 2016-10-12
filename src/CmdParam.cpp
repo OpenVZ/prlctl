@@ -2138,15 +2138,13 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			}
 			break;
 		case CMD_DIST:
-			if (!(param.dist = get_dist(val))) {
-				if (val != "list")
-					fprintf(stderr, "An incorrect value for"
-						" --distribution is specified: %s\n", val.c_str());
-				fprintf(stdout, "The following values are allowed: ");
-				print_dist(false);
-				if (val == "list")
-					exit(0);
-				return invalid_action;
+			if (val == "list")
+				param.dist_list.print = true;
+			else if (!(param.dist = get_dist(val))) {
+				fprintf(stderr, "An incorrect value for"
+					" --distribution is specified: %s\n", val.c_str());
+				param.dist_list.print = true;
+				param.dist_list.error = true;
 			}
 			break;
 		case CMD_OSTEMPLATE:
