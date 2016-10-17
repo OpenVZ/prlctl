@@ -701,12 +701,13 @@ int PrlDevHdd::set_device(const DevInfo &param)
 		if ((ret = resize_image(param)))
 			return ret;
 		return 0;
-	} else if (param.enc_action != ENC_NONE) {
-		return apply_encryption(param);
 	} else {
 		/* Skip to create new image on the set action */
-		if (param.cmd == Set)
+		if (param.cmd == Set) {
+			 if (param.enc_action != ENC_NONE)
+				return apply_encryption(param);
 			return 0;
+		}
 
 		type = PDT_USE_IMAGE_FILE;
 		/* generate hdd image name */
