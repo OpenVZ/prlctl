@@ -760,6 +760,15 @@ public:
 	{}
 };
 
+struct DistListParam {
+	bool print;
+	bool error;
+
+public:
+	DistListParam() : print(false), error(false)
+	{}
+};
+
 class CmdParamData {
 public:
 	std::string id;
@@ -954,6 +963,7 @@ public:
 	std::string backup_disk;
 
 	bool exec_in_shell;
+	DistListParam dist_list;
 
 public:
 	CmdParamData() :

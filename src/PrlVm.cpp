@@ -1176,7 +1176,7 @@ int PrlVm::load_def_configuration(const OsDistribution *dist)
 	if (!dist)
 		return prl_err(-1, "The distribution is not specified.");
 	prl_log(0, "Generate the %s configuration for %s.",
-			get_vm_type_str(), get_dist_by_id(dist->ver));
+			get_vm_type_str(), dist->name);
 
 	PrlHandle hSrvConf(m_srv.get_srv_config_handle());
 
@@ -2113,12 +2113,12 @@ int PrlVm::set_cpu_count(unsigned int num)
 	return 0;
 }
 
-int PrlVm::set_distribution(PRL_UINT32 nOsVersion)
+int PrlVm::set_distribution(const OsDistribution *dist)
 {
     PRL_RESULT ret;
 
-    prl_log(0, "set distribution: %s", get_dist_by_id(nOsVersion));
-    if ((ret = PrlVmCfg_SetOsVersion(m_hVm, nOsVersion)))
+    prl_log(0, "set distribution: %s", dist->name);
+    if ((ret = PrlVmCfg_SetOsVersion(m_hVm, dist->ver)))
 	return prl_err(ret, ":PrlVmCfg_SetOsVersion %s",
 		       get_error_str(ret).c_str());
     set_updated();
@@ -3488,7 +3488,7 @@ int PrlVm::set(const CmdParamData &param)
 
 	/* VM configuration */
 	if (param.dist) {
-	    if ((ret = set_distribution(param.dist->ver)))
+	    if ((ret = set_distribution(param.dist)))
 		return ret;
 	}
 	if (param.cpus_present) {

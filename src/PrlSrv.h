@@ -128,6 +128,7 @@ public:
 
 typedef PrlList<PrlVm *> PrlVmList ;
 typedef PrlList<PrlDevSrv *> PrlDevSrvList;
+typedef std::list<std::pair<PRL_GUEST_OS_SUPPORT_TYPE, PRL_UINT16> > DistList;
 
 class PrlSrv
 {
@@ -265,6 +266,10 @@ private:
 	int fill_ct_templates_list(PrlCtTemplateList &list) const;
 	int convert_handle_to_event(PRL_HANDLE h, PRL_HANDLE* phEvent);
 	int restart_shaping();
+	int get_supported_os_info(DistList& info);
+	int get_os_type_info(PRL_HANDLE hOsesMatrix, PRL_UINT8 nOsType, DistList& info);
+	int print_dist_info(const CmdParamData &param);
+	void print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE type);
 };
 
 #endif // __PRLSRV_H__
