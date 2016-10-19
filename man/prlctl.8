@@ -73,6 +73,8 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--tools-autoupdate\fR <\fIon\fR|\fIoff\fR>]
 .br
+	[\fB--on-crash\fR <\fIpause\fR|\fIrestart\fR>[:\fIno-report\fR]]
+.br
 	[\fB--vnc-mode\fR <\fIauto\fR|\fImanual\fR|\fIoff\fR>] [\fB--vnc-port\fR <\fIport\fR>] [{\fB--vnc-passwd\fR <\fIpasswd\fR | \fI-\fR> | \fB--vnc-nopasswd\fR}] [\fB--vnc-address\fR <\fIaddress\fR>]
 .br
 	[\fB--name\fR <\fIname\fR>] [\fB--rename-ext-disks\fR] [\fB--userpasswd\fR <\fIuser:passwd\fR> [\fB--host-admin\fR <\fIname\fR>]]
@@ -474,6 +476,9 @@ system. If this option is set to on, Virtuozzo Guest Tools updates will be perfo
 automatically every time an update is available for Virtuozzo software. If
 this option is set to off, no automatic Virtuozzo Guest Tools updates will be
 performed, so that you can do it manually at a convenient time.
+.TP
+\fB--on-crash\fR <\fIpause\fR|\fIrestart\fR>[:\fIno-report\fR]
+Specifies what to do with the virtual environment if it crashes: \fBpause\fR or \fBrestart\fR. The problem report is sent by default. To omit, specify \fBno-report\fR.
 .TP
 \fB--userpasswd\fR <\fIuser:passwd\fR>
 Sets the password for the specified user in the virtual environment. If the user account does not exist, it is created.

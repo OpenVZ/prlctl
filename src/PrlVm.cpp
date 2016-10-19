@@ -2643,6 +2643,71 @@ int PrlVm::set_autostop(const std::string &mode)
 	return 0;
 }
 
+int PrlVm::set_on_crash(const std::string &mode)
+{
+	PRL_VM_ON_CRASH_ACTION a;
+	PRL_UINT32 o;
+	PRL_RESULT ret;
+
+	std::string action, options;
+	//expected string: action[:option]
+	parse_userpw(mode, action, options);
+
+	if (action == "pause")
+		a = POCA_PAUSE;
+	else if (action == "restart")
+		a = POCA_RESTART;
+	else
+		return prl_err(-1, "The specified on-crash action is not"
+			" supported: %s.", mode.c_str());
+	if (options == "no-report")
+		o = 0;
+	else if (options.empty())
+		o = POCO_FULL;
+	else
+		return prl_err(-1, "The specified on-crash action is not"
+			" supported: %s.", mode.c_str());
+
+	if ((ret = PrlVmCfg_SetActionOnGuestCrash(m_hVm, a)))
+		return prl_err(ret, "PrlVmCfg_SetOnCrashAction: %s",
+			get_error_str(ret).c_str());
+
+	if ((ret = PrlVmCfg_SetOptionsOnGuestCrash(m_hVm, o)))
+		return prl_err(ret, "PrlVmCfg_SetOnCrashOptions: %s",
+			get_error_str(ret).c_str());
+	set_updated();
+
+	return 0;
+}
+
+std::string PrlVm::get_on_crash_info() const
+{
+	PRL_VM_ON_CRASH_ACTION a;
+	PRL_UINT32 o;
+	PRL_RESULT ret;
+	std::string result;
+
+	if ((ret = PrlVmCfg_GetActionOnGuestCrash(m_hVm, &a))) {
+		prl_err(ret, "PrlVmCfg_GetOnCrashAction: %s",
+			get_error_str(ret).c_str());
+		return "";
+	}
+	if ((ret = PrlVmCfg_GetOptionsOnGuestCrash(m_hVm, &o))) {
+		prl_err(ret, "PrlVmCfg_GetOnCrashOptions: %s",
+			get_error_str(ret).c_str());
+		return "";
+	}
+	if (a == POCA_RESTART)
+		result = "restart";
+	else if (a == POCA_PAUSE)
+		result = "pause";
+
+	if (o == 0)
+		result += ":no-report";
+
+	return result;
+}
+
 int PrlVm::set_autocompact(int enabled)
 {
 	int ret;
@@ -3582,6 +3647,10 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_startup_view(param.startup_view)))
 			return ret;
 	}
+	if (!param.on_crash.empty()) {
+		if ((ret = set_on_crash(param.on_crash)))
+			return ret;
+	}
 	if (!param.on_shutdown.empty()) {
 		if ((ret = set_on_shutdown(param.on_shutdown)))
 			return ret;
@@ -4485,6 +4554,8 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.add("EFI boot", (m_efi_boot ? "on" : "off"));
 	f.add("Allow select boot device", (m_select_boot_dev ? "on" : "off"));
 	f.add("External boot device", m_ext_boot_dev);
+	if (get_vm_type() == PVT_VM)
+		f.add("On guest crash", get_on_crash_info());
 	get_vnc_info(f);
 	f.add("Remote display state", (m_is_vnc_server_started ? "running" : "stopped"));
 
