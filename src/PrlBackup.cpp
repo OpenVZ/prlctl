@@ -247,7 +247,9 @@ int PrlSrv::backup_node(const CmdParamData& param)
 		CmdParamData p(param);
 		p.id = u;
 
-		do_vm_backup(*vm, p, storage);
+		ret = do_vm_backup(*vm, p, storage);
+		if (ret == PRL_ERR_OPERATION_WAS_CANCELED)
+			return ret;
 	}
 	return 0;
 }
