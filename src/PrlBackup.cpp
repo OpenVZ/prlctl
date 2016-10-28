@@ -109,7 +109,8 @@ static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 	return 0;
 }
 
-int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param)
+int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
+		const PrlSrv &storage)
 {
 	PRL_RESULT ret;
 	const BackupParam& bparam = param.backup;
@@ -117,13 +118,10 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param)
 	const char *server = "";
 	int port = 0;
 	unsigned int security_level;
-	PrlSrv storage;
 	char vm_uuid[256];
 
 	security_level = get_min_security_level();
 	if (!bparam.storage.server.empty()) {
-		if ((ret = storage.login(bparam.storage)))
-			return ret;
 		sessionid = storage.get_sessionid();
 		port = bparam.storage.port;
 		server = bparam.storage.server.c_str();
@@ -209,14 +207,24 @@ int PrlSrv::backup_vm(const CmdParamData& param)
 	}
 
 	std::auto_ptr<PrlVm> vm(v);
-	return do_vm_backup(*vm, param);
-}
 
+	PrlSrv storage;
+	if (!param.backup.storage.server.empty() &&
+			(ret = storage.login(param.backup.storage)))
+		return ret;
+
+	return do_vm_backup(*vm, param, storage);
+}
 
 int PrlSrv::backup_node(const CmdParamData& param)
 {
 	int ret;
 	if ((ret = update_vm_list(param.vmtype, 0)))
+		return ret;
+
+	PrlSrv storage;
+	if (!param.backup.storage.server.empty() &&
+			(ret = storage.login(param.backup.storage)))
 		return ret;
 
 	for (PrlVmList::const_iterator i = m_VmList.begin();
@@ -239,7 +247,9 @@ int PrlSrv::backup_node(const CmdParamData& param)
 		CmdParamData p(param);
 		p.id = u;
 
-		do_vm_backup(*vm, p);
+		ret = do_vm_backup(*vm, p, storage);
+		if (ret == PRL_ERR_OPERATION_WAS_CANCELED)
+			return ret;
 	}
 	return 0;
 }
