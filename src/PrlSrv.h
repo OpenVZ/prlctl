@@ -175,7 +175,7 @@ public:
 	unsigned int get_cpu_count();
 	PRL_HANDLE get_handle() const { return m_hSrv; }
 	const char *get_sessionid() const { return m_sessionid.c_str(); }
-	unsigned int get_min_security_level();
+	unsigned int get_min_security_level() const;
 	PRL_HANDLE get_srv_config_handle();
 	void append_info(PrlOutFormatter &f);
 	int install_license(const std::string &key, const std::string &name,
@@ -226,7 +226,8 @@ private:
 	int create_ct(const CmdParamData &param);
 	int register_vm(const CmdParamData &param);
 	int convert_vm(const CmdParamData &param);
-	int do_vm_backup(const PrlVm& vm, const CmdParamData& param);
+	int do_vm_backup(const PrlVm& vm, const CmdParamData& param,
+			const PrlSrv &storage);
 	int backup_vm(const CmdParamData& param);
 	int backup_node(const CmdParamData &param);
 	int restore_vm(const CmdParamData &param);

@@ -3487,7 +3487,7 @@ int PrlSrv::set_user(const CmdParamData &param) {
 	return 0;
 }
 
-unsigned int PrlSrv::get_min_security_level()
+unsigned int PrlSrv::get_min_security_level() const
 {
 	if (m_disp == NULL || m_disp->update_info() != 0)
 		return 0;
