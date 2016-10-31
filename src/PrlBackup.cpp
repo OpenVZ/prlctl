@@ -148,7 +148,7 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 		0,
 		PRL_TRUE);
 
-	strcpy(vm_uuid, vm.get_id().c_str());
+	snprintf(vm_uuid, sizeof(vm_uuid), "%s", vm.get_id().c_str());
 	reg_event_callback(backup_event_handler, vm_uuid);
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hBackup);
 	std::string err;
