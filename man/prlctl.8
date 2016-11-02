@@ -99,10 +99,7 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--mems
 .br
 	[\fB--applyconfig\fR <\fIconf\fR>] [\fBOPTIONS\fR]
 .br
-	[\fB--faster-vm\fR <\fIon\fR|\fIoff\fR>] [\fB--adaptive-hypervisor\fR <\fIon\fR|\fIoff\fR>]
-.br
-.br
-	[\fB--nested-virt\fR <\fIon\fR|\fIoff\fR>] [\fB--pmu-virt\fR <\fIon\fR|\fIoff\fR>]
+	[\fB--nested-virt\fR <\fIon\fR|\fIoff\fR>]
 .br
 	[\fB--efi-boot\fR <\fIon\fR|\fIoff\fR>] [\fB--select-boot-device\fR <\fIon\fR|\fIoff\fR>] [\fB--external-boot-device\fR <\fIname\fR>]
 .br
@@ -338,7 +335,7 @@ By default each VE has \fIpriority\fR of \fB4\fR.
 .TP
 \fB--iolimit\fR \fIlimit\fR[\fBB\fR|\fBK\fR|\fBM\fR|\fBG\fR]
 Sets the I/O limit for the virtual environment. If no suffix is specified, the parameter is set
-in bytes per second. The possible suffixes are listed below:
+in megabytes per second. The possible suffixes are listed below:
 .br
 \fBb\fR, \fBB\fR -- bytes
 .br
@@ -420,20 +417,8 @@ Sets the virtual environment priority in the High Availability Cluster. Virtual 
 .TP
 \fBOptimization parameters\fR
 .TP
-\fB--faster-vm\fR <\fIon\fR|\fIoff\fR>
-Set the performance mode: faster virtual environment or faster host.
-.TP
-\fB--adaptive-hypervisor\fR <\fIon\fR|\fIoff\fR>
-Disable or enable adaptive hypervisor.
-.TP
-\fB--auto-compress\fR <\fIon\fR|\fIoff\fR>
-Disable or enable auto compress virtual disks mech.
-.TP
 \fB--nested-virt\fR <\fIon\fR|\fIoff\fR>
 Disable or enable nested virtualization.
-.TP
-\fB--pmu-virt\fR <\fIon\fR|\fIoff\fR>
-Disable or enable PMU virtualization.
 .TP
 \fBMiscellaneous parameters\fR
 .TP
