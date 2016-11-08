@@ -154,7 +154,7 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 	std::string err;
 	if ((ret = get_job_retcode(hBackup, err))) {
 		handle_job_err(hBackup, ret);
-		prl_err(ret, "Failed to backed up the %s: %s",
+		prl_err(ret, "Failed to backup the %s: %s",
 				 vm.get_vm_type_str(), err.c_str());
 	} else {
 		PrlHandle hResult;
