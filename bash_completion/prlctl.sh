@@ -84,7 +84,7 @@ _prlctl()
 		--onboot --name --device-add --device-del --device-set \
 		--device-connect --device-disconnect --applyconfig \
 		--netfilter --swappages --swap --quotaugidlimit \
-		--autostart --autstart-delay --autostop \
+		--autostart --autostart-delay --autostop \
 		--vnc-mode --vnc-port --vnc-passwd --ioprio \
 		--ha-enable --ha-prio'
 	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr \
