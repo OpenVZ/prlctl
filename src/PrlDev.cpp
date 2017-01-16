@@ -1078,9 +1078,6 @@ int PrlDevCdrom::configure(const DevInfo &param)
 	if (param.disconnect)
 		set_connect(false);
 
-	if (!param.iface.empty())
-		if ((ret = set_iface(param.iface)))
-			return ret;
 	if (!param.subtype.empty())
 		if ((ret = set_subtype(param.subtype)))
 			return ret;
@@ -1177,78 +1174,6 @@ int PrlDevNet::set_mac(const std::string &mac)
 
 }
 
-int PrlDevNet::set_iface(const std::string &iface)
-{
-	PRL_RESULT ret;
-	unsigned int idx = (unsigned int)-1; /* default network adapter */
-	PRL_NET_ADAPTER_EMULATED_TYPE emu_type = (PRL_NET_ADAPTER_EMULATED_TYPE )get_emu_type();
-
-	if (emu_type != PNA_BRIDGED_ETHERNET && emu_type != PNA_HOST_ONLY)
-		return prl_err(-1,
-				"The --iface parameter can be specified for the bridged and host mode only.");
-
-	if (!iface.empty() && iface != "default") /* Fixme: get name from SDK */
-	{
-		if ( emu_type == PNA_BRIDGED_ETHERNET )
-		{
-			PrlDevSrv *dev = m_vm.find_srv_dev(DEV_NET, iface);
-			if (!dev)
-				return prl_err(-1, "Unknown interface: %s",
-					iface.c_str());
-			if ((ret = PrlVmDevNet_SetBoundAdapterName(m_hDev,
-							dev->get_name().c_str())))
-				return prl_err(ret, "VmDevNet_SetBoundAdapterName: %s",
-					get_error_str(ret).c_str());
-			idx = dev->get_idx();
-		}
-
-		if ( emu_type == PNA_HOST_ONLY )
-		{
-			PrlVNetList vnets;
-			ret = m_vm.get_srv().fill_vnetworks_list(vnets);
-			if (ret)
-				return ret;
-
-			PrlVNetList::const_iterator it;
-			for(it = vnets.begin(); it != vnets.end(); ++it)
-			{
-				PRL_NET_VIRTUAL_NETWORK_TYPE type;
-				if ((ret = PrlVirtNet_GetNetworkType( (*it)->get_handle(), &type )))
-					return prl_err(ret, "PrlVirtNet_GetNetworkType: %s",
-						get_error_str(ret).c_str());
-
-				if (type != PVN_HOST_ONLY)
-					continue;
-
-				char buf[128];
-				PRL_UINT32 len = sizeof(buf);
-				if ((ret = PrlVirtNet_GetNetworkId( (*it)->get_handle(), buf, &len )))
-					return prl_err(ret, "PrlVirtNet_GetNetworkId: %s",
-						get_error_str(ret).c_str());
-
-				if (iface != buf)
-					continue;
-
-				if ((ret = PrlVirtNet_GetAdapterIndex( (*it)->get_handle(), &idx )))
-					return prl_err(ret, "PrlVirtNet_GetAdapterIndex: %s",
-						get_error_str(ret).c_str());
-				break;
-			}
-
-			if (it == vnets.end())
-				return prl_err(PRL_ERR_INVALID_ARG,
-					"Host only network interface '%s' was not found !",
-						iface.c_str());
-		}
-	}
-
-	if ((ret = PrlVmDevNet_SetBoundAdapterIndex(m_hDev, idx)))
-		return prl_err(ret, "PrlVmDevNet_SetBoundAdapterIndex: %s",
-				get_error_str(ret).c_str());
-	set_updated();
-	return 0;
-}
-
 int PrlDevNet::find_vnet(const std::string &network_id)
 {
 	int ret;
@@ -1343,10 +1268,6 @@ int PrlDevNet::set_device(DevMode mode, const std::string &iface,
 					" use the --network option instead of --type.");
 		}
 		if ((ret = set_emu_type((PRL_VM_DEV_EMULATION_TYPE)type)))
-			return ret;
-	}
-	if (!iface.empty() && mode != DEV_TYPE_NET_DEVICE) {
-		if ((ret = set_iface(iface)))
 			return ret;
 	}
 	if (!mac.empty()) {

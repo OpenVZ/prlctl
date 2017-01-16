@@ -191,7 +191,6 @@ public:
 
 private:
 	int set_mac(const std::string &mac);
-	int set_iface(const std::string &iface);
 	int find_vnet(const std::string &network_id);
 	int set_vnet(const std::string &vnet);
 	int set_device(DevMode mode, const std::string &iface,

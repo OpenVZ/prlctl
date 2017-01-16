@@ -826,7 +826,6 @@ static void usage_vm(const char * argv0)
 "	--device-add cdrom {--device <name> | --image <image>}\n"
 "		[--iface <ide|scsi>] [--passthr] [--position <n>]\n"
 "	--device-add net {--type routed | --network <network_id>}\n"
-"       [--iface <name>]\n"
 "		[--mac <addr|auto>] [--ipadd <addr[/mask]> | --ipdel <addr[/mask]> |\n"
 "		--dhcp <yes|no> | --dhcp6 <yes|no>] [--gw <gw>] [--gw6 <gw>]\n"
 "		[--nameserver <addr>] [--searchdomain <addr>] [--configure <yes|no>]\n"
