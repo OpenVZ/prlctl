@@ -39,6 +39,8 @@ prlctl \fBpause\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
 prlctl \fBproblem-report\fR <\fIve_id\fR|\fIve_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]
 .PP
+prlctl \fBreinstall\fR <\fIve_id\fR|\fIve_name\fR> [\fB--no-backup\fR] [\fB--resetpwdb\fR] [\fB--ostemplates\fR <\fIname\fR>]
+.PP
 prlctl \fBregister\fR <\fIpath\fR> [\fB--preserve-uuid\fR | \fB--uuid\fR <\fIUUID\fR>] [\fB--regenerate-src-uuid\fR] [\fB--force\fR] [\fBOPTIONS\fR]
 .PP
 prlctl \fBreset\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
@@ -204,6 +206,11 @@ If the \fB--uuid\fR option is specified, the provided \fIUUID\fR will be used fo
 otherwise, it will be regenerated.
 If the \fB--regenerate-src-uuid\fR option is specified, the virtual environment source ID will be regenerated (SMBIOS product id will be changed as well).
 If the \fB--force\fR option is specified, all validation checks will be skipped.
+.IP "\fBreinstall\fR <\fIve_id\fR|\fIve_name\fR> [\fB--no-backup\fR] [\fB--resetpwdb\fR] [\fB--ostemplates\fR <\fIname\fR>]" 4
+Recreates container's root virtual disk, installs all applications previously
+installed from application templates, copies credentials from the old
+container (unless \fB--resetpwdb\fR is specified), and renames the old root
+directory '/' to '/old' (unless \fB--no-backup\fR is specified).
 .IP "\fBreset\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Reset the specified virtual environment.
 .IP "\fBstart\fR <\fIve_id\fR|\fIve_name\fR>" 4 

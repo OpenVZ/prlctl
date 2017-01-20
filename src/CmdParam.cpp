@@ -696,6 +696,16 @@ static Option exec_options[] = {
 	OPTION_END
 };
 
+static Option reinstall_options[] = {
+	OPTION_GLOBAL
+	{"ostemplate", 't', OptRequireArg, CMD_OSTEMPLATE},
+	{"no-backup", '\0', OptNoArg, CMD_SKIP_BACKIP},
+	{"no-scripts", '\0', OptNoArg, CMD_SKIP_SCRIPTS},
+	{"resetpwdb", '\0', OptNoArg, CMD_RESET_PWDB},
+
+	OPTION_END
+};
+
 static const char *version()
 {
 	return VER_PRODUCTVERSION_STR;
@@ -2160,6 +2170,15 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_OSTEMPLATE:
 			param.ostemplate = val;
+			break;
+		case CMD_SKIP_BACKIP:
+			param.reinstall_opts |= REINSTALL_SKIP_BACKUP;
+			break;
+		case CMD_SKIP_SCRIPTS:
+			param.reinstall_opts |= REINSTALL_SKIP_SCRIPTS;
+			break;
+		case CMD_RESET_PWDB:
+			param.reinstall_opts |= REINSTALL_RESET_PWDB;
 			break;
 		case CMD_VMTYPE:
 			if (val == "ct" || val == "c") {
@@ -4009,6 +4028,9 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 		return get_param(argc, argv, VmAuthAction, auth_options, 2);
 	} else if (!strcmp(argv[1], "status")) {
 		return get_param(argc, argv, VmStatusAction, no_options, 2);
+	} else if (!strcmp(argv[1], "reinstall")) {
+		return get_param(argc, argv, VmReinstallAction,
+                                    reinstall_options, 2);
 	} else if (!strcmp(argv[i], "server")) {
 		// sergeyt@:  very strange code
 		++i;

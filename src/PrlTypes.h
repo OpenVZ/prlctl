@@ -37,8 +37,7 @@
 #include <PrlTypes.h>
 #include <PrlEnums.h>
 #include <PrlErrors.h>
-#include <PrlApiCore.h>
-#include <PrlApiVm.h>
+#include <PrlApi.h>
 #define VENET0_STR	"venet0"
 #define VENET0_ID	"net4294967295"
 
