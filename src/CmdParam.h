@@ -433,6 +433,7 @@ public:
 	std::string vnc_public_key;
 	std::string vnc_private_key;
 	int vm_cpulimit_type;
+	std::string vcmmd_policy;
 
 public:
 	DispParam() :
@@ -1470,6 +1471,8 @@ enum cmdOptions {
 	CMD_ENC_DECRYPT,
 	CMD_ENC_REENCRYPT,
 	CMD_ENC_NOWIPE,
+
+	CMD_VCMMD_POLICY,
 };
 
 #endif // __CMDPARAM_H__

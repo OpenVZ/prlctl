@@ -404,6 +404,7 @@ static Option disp_set_options[] = {
 	{"vnc-public-key", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
 	{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
 	{"vm-cpulimit-type", '\0', OptRequireArg, CMD_VM_CPULIMIT_TYPE},
+	{"vcmmd-policy", '\0', OptRequireArg, CMD_VCMMD_POLICY},
 	OPTION_END
 };
 
@@ -869,6 +870,7 @@ static void usage_disp(const char * argv0)
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
 "   [--vm-cpulimit-type <full|guest>]\n"
+"	[--vcmmd-policy <density|performance>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
 "  shutdown [-f,--force] [--suspend-vm-to-pram]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
@@ -1386,6 +1388,15 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
+			break;
+		case CMD_VCMMD_POLICY:
+			if (val != "density" && val != "performance") {
+				fprintf(stderr, "An incorrect value for"
+					" --vcmmd-policy is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
+			param.disp.vcmmd_policy = val;
 			break;
 		case CMD_USER_MNG_SETTINGS:
 			if (val == "allow")

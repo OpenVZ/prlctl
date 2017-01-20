@@ -336,6 +336,16 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 
 	f.add("VM home", m_home);
 
+	f.open("Vcmmd policy", true);
+	{
+		std::string p;
+		get_vcmmd_policy(p, VCMMD_COMMAND_RUNTIME);
+		f.add("runtime", p, true, false, true);
+		get_vcmmd_policy(p);
+		f.add("config", p, true);
+	}
+	f.close(true);
+
 	f.open("Memory limit", true);
 	if (m_mem_limit_auto) {
 		f.add("mode", "auto", true, false, true);
@@ -512,6 +522,73 @@ int PrlDisp::set_mem_limit(unsigned int limit)
 			get_error_str(ret).c_str());
 	set_updated();
 
+	return 0;
+}
+
+int PrlDisp::set_vcmmd_policy(const std::string &name)
+{
+	std::string err;
+	PRL_RESULT ret;
+
+	PrlHandle hGetJob(PrlSrv_GetVcmmdConfig(m_srv.get_handle(), 0));
+
+	PRL_UINT32 resultCount = 0;
+	PrlHandle hResult;
+	if ((ret = get_job_result(hGetJob.get_handle(), hResult.get_ptr(), &resultCount)))
+	{
+		return prl_err(ret, "PrlSrv_GetVcmmdConfig: %s",
+				get_error_str(ret).c_str());
+	}
+
+	PrlHandle hVcmmd;
+	if ((ret = PrlResult_GetParam(hResult.get_handle(), hVcmmd.get_ptr())))
+	{
+		return prl_err(ret, "PrlSrv_GetVcmmdConfig PrlResult_GetParam: %s",
+				get_error_str(ret).c_str());
+	}
+
+	if ((ret = PrlVcmmdConfig_SetPolicy(hVcmmd.get_handle(), name.c_str())))
+	{
+		return prl_err(ret, "PrlVcmmdConfig_SetPolicy: %s",
+				get_error_str(ret).c_str());
+	}
+
+	PrlHandle hSetJob(PrlSrv_SetVcmmdConfig(m_srv.get_handle(), hVcmmd.get_handle(), 0));
+	if ((ret = get_job_retcode(hSetJob.get_handle(), err)))
+		return prl_err(ret, "Failed to set vcmmd config: %s", err.c_str());
+
+	return 0;
+}
+
+int PrlDisp::get_vcmmd_policy(std::string &policy, int nFlags) const
+{
+	std::string err;
+	PRL_RESULT ret;
+	PrlHandle hJob(PrlSrv_GetVcmmdConfig(m_srv.get_handle(), nFlags));
+
+	PRL_UINT32 resultCount = 0;
+	PrlHandle hResult;
+	if ((ret = get_job_result(hJob.get_handle(), hResult.get_ptr(), &resultCount)))
+	{
+		return prl_err(ret, "PrlSrv_GetVcmmdConfig: %s",
+				get_error_str(ret).c_str());
+	}
+
+	PrlHandle hVcmmd;
+	if ((ret = PrlResult_GetParam(hResult.get_handle(), hVcmmd.get_ptr())))
+	{
+		return prl_err(ret, "PrlSrv_GetVcmmdConfig PrlResult_GetParam: %s",
+				get_error_str(ret).c_str());
+	}
+
+	char config[256];
+	PRL_UINT32 size = sizeof(config);
+	if ((ret = PrlVcmmdConfig_GetPolicy(hVcmmd.get_handle(), config, &size)))
+	{
+		return prl_err(ret, "PrlVcmmdConfig_GetPolicy: %s",
+				get_error_str(ret).c_str());
+	}
+	policy = std::string(config);
 	return 0;
 }
 
@@ -1284,6 +1361,10 @@ int PrlDisp::set(const DispParam &param)
 
 	if (param.mem_limit) {
 		if ((ret = set_mem_limit(param.mem_limit)))
+			return ret;
+	}
+	if (!param.vcmmd_policy.empty()) {
+		if ((ret = set_vcmmd_policy(param.vcmmd_policy)))
 			return ret;
 	}
 	if (param.allow_mng_settings != -1) {

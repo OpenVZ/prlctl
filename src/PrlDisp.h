@@ -73,6 +73,7 @@ public:
 	int list(const DispParam &param);
 	int usbassign(const UsbParam &param, bool use_json);
 	int set_mem_limit(unsigned int limit);
+	int set_vcmmd_policy(const std::string &name);
 	int set_dev_assign_mode(const std::string &name, int mode);
 	int get_security_level(PRL_SECURITY_LEVEL level,
 		std::string &out) const;
@@ -122,6 +123,7 @@ private:
 	std::string get_cpu_model();
 	int set_vnc_encryption(const std::string &public_key, const std::string &private_key);
 	int set_vm_cpulimit_type(int vm_cpulimit_type);
+	int get_vcmmd_policy(std::string &policy, int nFlags = 0) const;
 
 	void clear();
 };
