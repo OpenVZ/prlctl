@@ -595,6 +595,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return vm->exec(param);
 	case VmBackupAction:
 		return backup_vm(param);
+	case VmReinstallAction:
+		return vm->reinstall(param);
 	case VmInternalCmd:
 		return vm->internal_cmd(param.argv);
 	default:

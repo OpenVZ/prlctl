@@ -4987,3 +4987,20 @@ int PrlVm::set_nested_virt(int enabled)
 	set_updated();
 	return 0;
 }
+
+int PrlVm::reinstall(const CmdParamData &param)
+{
+	int ret;
+	std::string err;
+
+	PrlHandle hJob(PrlCt_Reinstall(m_hVm, param.ostemplate.c_str(),
+						param.reinstall_opts));
+	if ((ret = get_job_retcode(hJob.get_handle(), err)))
+		prl_err(ret, "Failed to reinstall the %s: %s",
+				get_vm_type_str(), err.c_str());
+	else
+		prl_log(0, "The %s has been successfully reinstalled.",
+				 get_vm_type_str());
+
+	return ret;
+}

@@ -110,6 +110,7 @@ enum Action {
 	VmInternalCmd,
 
 	VmConvertAction,
+	VmReinstallAction,
 
 	InvalidAction
 };
@@ -786,6 +787,7 @@ public:
 	std::string vm_location;
 	const OsDistribution *dist;
 	std::string ostemplate;
+	unsigned int reinstall_opts;
 	bool nohdd;
 	unsigned int hdd_block_size;
 	bool lion_recovery;
@@ -976,6 +978,7 @@ public:
 		force(false),
 		noforce(false),
 		dist(0),
+		reinstall_opts(0),
 		nohdd(false),
 		hdd_block_size(0),
 		lion_recovery(false),
@@ -1473,6 +1476,9 @@ enum cmdOptions {
 	CMD_ENC_NOWIPE,
 
 	CMD_VCMMD_POLICY,
+	CMD_SKIP_BACKIP,
+	CMD_SKIP_SCRIPTS,
+	CMD_RESET_PWDB,
 };
 
 #endif // __CMDPARAM_H__
