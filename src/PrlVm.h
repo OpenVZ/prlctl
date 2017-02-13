@@ -168,7 +168,7 @@ public:
 	int set_memguarantee(const CmdParamData &param);
 	int set_desc(const std::string &desc);
 	std::string get_desc() const;
-	bool is_tools_auto_update_enabled() const;
+	bool is_tools_autoupdate_enabled() const;
 	int set_autostart(const std::string &mode);
 	std::string get_autostart_info() const;
 	int set_autostart_delay(unsigned int delay);
