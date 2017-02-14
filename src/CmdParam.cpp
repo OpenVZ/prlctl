@@ -740,7 +740,7 @@ static void usage_vm(const char * argv0)
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
 "                [--dst <path>] [--changesid] [--no-hdd] [--encryption-keyid <keyid>]\n"
 "  delete <ID | NAME>\n"
-//"  installtools <ID | NAME>\n"
+"  installtools <ID | NAME>\n"
 "  enter <ID | NAME>\n"
 "  exec <ID | NAME> [--without-shell] <command> [arg ...]\n"
 "  list [-a,--all] [-t,--template] [--vmtype ct|vm|all] [-L] [-o,--output name[,name...]] [-s,--sort name]\n"

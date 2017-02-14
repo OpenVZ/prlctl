@@ -2549,6 +2549,18 @@ std::string PrlVm::get_desc() const
 	return std::string(buf);
 }
 
+bool PrlVm::is_tools_autoupdate_enabled() const
+{
+	int ret;
+	PRL_BOOL enabled;
+
+	if ((ret = PrlVmCfg_IsToolsAutoUpdateEnabled(m_hVm, &enabled)))
+		return prl_err(ret, "PrlVmCfg_IsToolsAutoUpdateEnabled: %s",
+				get_error_str(ret).c_str());
+
+	return !!enabled;
+}
+
 int PrlVm::set_autostart(const std::string &mode)
 {
 	PRL_RESULT ret;
@@ -4547,6 +4559,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 
 	f.add("Owner", m_owner);
 	get_tools_info(f);
+	f.add("GuestTools autoupdate", (is_tools_autoupdate_enabled() ? "on" : "off"));
 	f.add("Autostart", get_autostart_info());
 	f.add("Autostop", get_autostop_info());
 	f.add("Autocompact", (get_autocompact() ? "on" : "off"));

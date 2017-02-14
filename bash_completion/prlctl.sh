@@ -59,7 +59,7 @@ _prlctl()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-	local actions_on_vmid="capture clone delete enter migrate \
+	local actions_on_vmid="capture clone delete installtools enter migrate \
 		pause reset resume start stop snapshot snapshot-delete \
 		snapshot-list snapshot-switch suspend statistics unregister \
 		set backup restore backup-list backup-delete reset-uptime \
@@ -298,6 +298,9 @@ _prlctl()
 				[ $COMP_CWORD == 3 ] && opts="${create_flags} ${global_flags}"
 				;;
 			delete)
+				opts="${global_flags}"
+				;;
+			installtools)
 				opts="${global_flags}"
 				;;
 			enter)
