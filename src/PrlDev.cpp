@@ -1079,6 +1079,9 @@ int PrlDevCdrom::configure(const DevInfo &param)
 	if (param.disconnect)
 		set_connect(false);
 
+	if (!param.iface.empty())
+		if ((ret = set_iface(param.iface)))
+			return ret;
 	if (!param.subtype.empty())
 		if ((ret = set_subtype(param.subtype)))
 			return ret;
