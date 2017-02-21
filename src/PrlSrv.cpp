@@ -711,7 +711,7 @@ int PrlSrv::create_ct(const CmdParamData &param)
 	if (m_VmList.find(param.id))
 		return prl_err(-1, "The %s VM already exists.",
 			param.id.c_str());
-	prl_log(0, "Creating the Virtuozzo Container...");
+	prl_log(0, "Creating the Container...");
 
 	PrlHandle hVm;
 	PrlHandle hCreateParam;
