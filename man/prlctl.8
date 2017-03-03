@@ -1,6 +1,6 @@
-.TH prlctl 8 "14 April 2011" "Virtuozzo"
+.TH prlctl 8 "14 April 2011" "@PRODUCT_NAME_SHORT@"
 .SH NAME
-prlctl \- utility for managing Virtuozzo servers and virtual environments residing on them.
+prlctl \- utility for managing @PRODUCT_NAME_SHORT@ servers and virtual environments residing on them.
 .SH SYNOPSIS
 prlctl \fBcreate\fR <\fIve_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
@@ -140,15 +140,15 @@ prlctl \fBmove\fR <\fIve_id\fR|\fIve_name\fR> \fB--dst\fR <\fIpath\fR>
 prlctl \fBstatistics\fR {<\fIve_id\fR|\fIve_name\fR>|\fB-a\fR,\fB--all\fR} [\fB--filter\fR <\fIfilter\fR>] [\fB--loop\fR]
 
 .SH DESCRIPTION
-The \fBprlctl\fR utility is used to manage Virtuozzo servers and virtual environments (VEs) residing on them.
+The \fBprlctl\fR utility is used to manage @PRODUCT_NAME_SHORT@ servers and virtual environments (VEs) residing on them.
 A virtual environment can be referred to by its ID or name assigned to the VE during its creation.
 .SH OPTIONS
 .SS Flags
 The following flags can be used with the majority of \fBprlctl\fR commands.
 .IP "\fB-l,--login user[[:passwd]@server\fR" 4
-Connect to the remote Virtuozzo server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlctl\fR assumes that the command is run on the local server. 
+Connect to the remote @PRODUCT_NAME_SHORT@ server using the IP address or hostname of \fBserver\fR and the specified credentials (i.e. the \fBuser\fR username and \fBpasswd\fR password). If no connection parameters are specified, \fBprlctl\fR assumes that the command is run on the local server. 
 .IP "\fB-p,--read-passwd\fR <\fIfile\fR>" 4
-Use the password from the \fBfile\fR file to log in to the remote Virtuozzo server whose connection parameters are specified after the \fB--login\fR option.
+Use the password from the \fBfile\fR file to log in to the remote @PRODUCT_NAME_SHORT@ server whose connection parameters are specified after the \fB--login\fR option.
 .IP "\fB-v,--verbose <n>\fR" 4
 Configure the \fBprlctl\fR logging level.
 .IP "\fB--timeout <sec>\fR" 4
@@ -157,7 +157,7 @@ Specify a custom operation timeout in seconds. By default, timeouts for all oper
 .IP "\fBcreate\fR <\fIve_name\fR> \fB--ostemplate\fR <\fIname\fR> [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--changesid\fR]" 4
 Create the virtual environment with the name of \fB<ve_name>\fR on the basis of the specified template. You can get the list of available templates using the \fBprlctl list -t\fR command.
 
-Use the \fB--changesid\fR option to assign the new Windows-based virtual machine a new Windows security identifier (SID). Note: Virtuozzo Guest Tools must be installed in the virtual machine.
+Use the \fB--changesid\fR option to assign the new Windows-based virtual machine a new Windows security identifier (SID). Note: @PRODUCT_NAME_SHORT@ Guest Tools must be installed in the virtual machine.
 
 Use the \fB--uuid\fR option to manually specify the UUID to use.
 .IP "\fBcreate\fR <\fIve_name\fR> [\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
@@ -165,7 +165,7 @@ Create the virtual environment with the name of \fB<ve_name>\fR and optimize it 
 .IP "\fBcreate\fR <\fIve_name\fR> [\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
 Create the virtual environment with the name of \fB<ve_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--distribution\fR option, respectively. You can get the list of available distributions using the \fBprlctl create  ve_name -d list\fR command.
 
-Use the \fB--dst\fR option to set the path to the directory on the Virtuozzo server where all configuration files of the newly created virtual environment will be stored.
+Use the \fB--dst\fR option to set the path to the directory on the @PRODUCT_NAME_SHORT@ server where all configuration files of the newly created virtual environment will be stored.
 
 Use the \fB--no-hdd\fR option to create virtual environment without hard disk drives.
 
@@ -177,22 +177,22 @@ Use the \fB--template\fR option to create a template of a virtual environment.
 
 Use the \fB--dst\fR option to specify the full path to the directory where the clone will be stored. If this option is omitted, the clone will be created in the default directory.
 
-Use the \fB--changesid\fR option to assign the clone a new Windows security identifier (SID). Note: Virtuozzo Guest Tools must be installed in the original Windows-based virtual machine.
+Use the \fB--changesid\fR option to assign the clone a new Windows security identifier (SID). Note: @PRODUCT_NAME_SHORT@ Guest Tools must be installed in the original Windows-based virtual machine.
 
 Use the \fB--linked\fR option is used to create a linked clone of the virtual environment.
 
 Use the \fB--detach-external-hdd\fR <\fIyes\fR|\fIno\fR> option to specify whether to keep or remove hard disks located outside of the original virtual environment. If you specify \fIyes\fR, outside hard disks will be removed from the resulting configuration. If you specify \fIno\fR, outside hard disks will remain in the resulting configuration. Note: In either case, outside hard disks will not be copied to the destination.
  
 .IP "\fBdelete\fR <\fIve_id\fR|\fIve_name\fR>" 4
-Remove the specified virtual environment from the Virtuozzo server by deleting all VE-related files and directories.
+Remove the specified virtual environment from the @PRODUCT_NAME_SHORT@ server by deleting all VE-related files and directories.
 You can use the \fB--force\fR option to forcibly stop the VE.
 .IP "\fBinstalltools\fR <\fIve_id\fR|\fIve_name\fR>" 4
-Connect the Virtuozzo Guest Tools image to the VE using its CD/DVD-ROM device, so that the guest operating system is able to install or update the tools from it.
+Connect the @PRODUCT_NAME_SHORT@ Guest Tools image to the VE using its CD/DVD-ROM device, so that the guest operating system is able to install or update the tools from it.
 .IP "\fBexec\fR <\fIve_id\fR|\fIve_name\fR> <\fBcommand\fR>" 4
-Execute the \fBcommand\fR command in the virtual environment. For virtual machines, it requires Virtuozzo Guest Tools to be installed. Commands in Linux and Windows guests are run via bash -c "command" and cmd /c "command", respectively.
+Execute the \fBcommand\fR command in the virtual environment. For virtual machines, it requires @PRODUCT_NAME_SHORT@ Guest Tools to be installed. Commands in Linux and Windows guests are run via bash -c "command" and cmd /c "command", respectively.
 If the \fB--without-shell\fR option is specified, the command is run directly without bash or cmd shell.
 .IP "\fBenter\fR <\fIve_id\fR|\fIve_name\fR>" 4
-Log in to the virtual environment. For virtual machines, it requires Virtuozzo Guest Tools to be installed.
+Log in to the virtual environment. For virtual machines, it requires @PRODUCT_NAME_SHORT@ Guest Tools to be installed.
 .IP "\fBconsole\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Attach to the Container's console. To exit from the console, press "Esc" then "."
 (Note: This sequence is only recognized after Enter).
@@ -202,7 +202,7 @@ Take a screenshot of a current virtual environment console in PNG format. If the
 .IP "\fBpause\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Pause the specified virtual environment.
 .IP "\fBproblem-report\fR <\fIve_id\fR|\fIve_name\fR> <\fB-d,--dump\fR|\fB-s,--send\fR [\fB--proxy\fR [\fBuser[:password]@proxyhost[:port]]\fR] [\fB--no-proxy\fR]> [\fBOPTIONS\fR]" 4
-Generate a problem report. If the \fB-s,--send\fR option is specified, the report is sent to Virtuozzo development team; otherwise, it is dumped to stdout.
+Generate a problem report. If the \fB-s,--send\fR option is specified, the report is sent to @PRODUCT_NAME_SHORT@ development team; otherwise, it is dumped to stdout.
 .IP "\fBregister\fR <\fIpath\fR> [\fB--preserve-uuid\fR | \fB--uuid\fR <\fIUUID\fR>] [\fB--regenerate-src-uuid\fR] [\fB--force\fR]" 4
 Register the virtual environment whose configuration file has the path of \fIpath\fR.
 If the \fB--preserve-uuid\fR option is specified, the virtual environment ID will not changed.
@@ -270,7 +270,7 @@ Executed before a container unmounted. Can be global or container-specific.
 The environment passed to the \fBmount\fR and \fBumount\fR scripts is the standard environment of the parent (e.g., prlctl) with two additional variables: \fB$VEID\fR and \fB$VE_CONFFILE\fR. The first has the container UUID and the second has the full path to container's configuration file. Other container configuration parameters required for the script (such as \fB$VE_ROOT\fR) can be obtained from the global and per-container configuration files.
 .SS Listing virtual environments
 .IP "\fBlist\fR [\fB-a,--all\fR] [\fB-L\fR] [\fB-o,--output \fIfield\fR[,\fIfield\fR...]] [\fB-s,--sort \fR<\fIfield\fR|-\fIfield\fR>] [\fB-t,--template\fR] [\fB--vmtype \fR<\fIct\fR|\fIvm\fR|\fIall\fR>] [\fB-j,--json\fR]" 4
-List the virtual environments currently existing on the Virtuozzo server. By default, only running VEs are displayed.
+List the virtual environments currently existing on the @PRODUCT_NAME_SHORT@ server. By default, only running VEs are displayed.
 .IP "\fB-o, --output\fR \fIfield\fR[,\fIfield\fR...]" 5
 Display only the specified \fIfield\fR(s).
 .IP "\fB-s,--sort \fR<\fIfield\fR|-\fIfield\fR>" 5
@@ -284,7 +284,7 @@ Include templates in the output.
 .IP "\fB-j,--json\fR" 5
 Produce output in the JSON format.
 .IP "\fBlist\fR -i,--info [\fB-f,--full\fR] [\fIve_id\fR|\fIve_name\fR] [\fB-t,--template\fR] [\fB--vmtype ct|vm|all\fR] [\fB-j, --json\fR]" 4
-Display the information on the VE configuration. By default, the information on all VEs currently existing on the Virtuozzo server is shown.
+Display the information on the VE configuration. By default, the information on all VEs currently existing on the @PRODUCT_NAME_SHORT@ server is shown.
 Use the \fB--full\fR option to display additional information about virtual environments. You can also use the \fB--json\fR option to produce
 machine-readable output in JSON format.
 .SS Configuring VE resource parameters
@@ -479,26 +479,26 @@ Rename bundles of the external disks on vm rename. That is move external disk fr
 \fB--autostart\fR <\fIon\fR|\fIoff\fR|\fIauto\fR>
 Set the virtual environment start-up options:
 .br
-\fIon\fR: The virtual environment is started automatically on the Virtuozzo server boot.
+\fIon\fR: The virtual environment is started automatically on the @PRODUCT_NAME_SHORT@ server boot.
 .br
-\fIoff\fR: The virtual environment is left in the stopped state on the Virtuozzo server boot.
+\fIoff\fR: The virtual environment is left in the stopped state on the @PRODUCT_NAME_SHORT@ server boot.
 .br
-\fIauto\fR: The virtual environment is returned to the state it was in when the Virtuozzo server was turned off.
+\fIauto\fR: The virtual environment is returned to the state it was in when the @PRODUCT_NAME_SHORT@ server was turned off.
 .TP
 \fB--autostart-delay\fR <\fIn\fR>
 Delay some seconds at virtual environment autostart.
 .TP
 \fB--autostop\fR <\fIstop\fR|\fIsuspend\fR>
-Specifies the mode to set the virtual environment on the Virtuozzo Service shutdown.
+Specifies the mode to set the virtual environment on the @PRODUCT_NAME_SHORT@ Service shutdown.
 .TP
 \fB--autocompact\fR <\fIon\fR|\fIoff\fR>
 Turns on/off automatic virtual disk image compact. 
 .TP
 \fB--tools-autoupdate\fR <\fIon\fR|\fIoff\fR>
-Turns on/off automatic updating of Virtuozzo Guest Tools in the guest operating
-system. If this option is set to on, Virtuozzo Guest Tools updates will be performed
-automatically every time an update is available for Virtuozzo software. If
-this option is set to off, no automatic Virtuozzo Guest Tools updates will be
+Turns on/off automatic updating of @PRODUCT_NAME_SHORT@ Guest Tools in the guest operating
+system. If this option is set to on, @PRODUCT_NAME_SHORT@ Guest Tools updates will be performed
+automatically every time an update is available for @PRODUCT_NAME_SHORT@ software. If
+this option is set to off, no automatic @PRODUCT_NAME_SHORT@ Guest Tools updates will be
 performed, so that you can do it manually at a convenient time.
 .TP
 \fB--on-crash\fR <\fIpause\fR|\fIrestart\fR>[:\fIno-report\fR]
@@ -506,7 +506,7 @@ Specifies what to do with the virtual environment if it crashes: \fBpause\fR or 
 .TP
 \fB--userpasswd\fR <\fIuser:passwd\fR>
 Sets the password for the specified user in the virtual environment. If the user account does not exist, it is created.
-Virtuozzo Guest Tools must be installed in the virtual environment for the command to succeed.
+@PRODUCT_NAME_SHORT@ Guest Tools must be installed in the virtual environment for the command to succeed.
 If the \fB--crypted\fR parameter is specified, the system assumes that the
 passwords are encrypted (for Containers only).
 .TP
@@ -574,7 +574,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fB--device-add\fR \fIhdd\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>]
 
-\fBdevice\fR: the name of the physical hard disk on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all physical disks currently existing on the Virtuozzo server.
+\fBdevice\fR: the name of the physical hard disk on the @PRODUCT_NAME_SHORT@ server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all physical disks currently existing on the @PRODUCT_NAME_SHORT@ server.
 .br
 \fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR or \fIvirtio\fR.
 .br
@@ -588,7 +588,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 
-\fBimage\fR: connect the specified image file (either on the Virtuozzo server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
+\fBimage\fR: connect the specified image file (either on the @PRODUCT_NAME_SHORT@ server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
 .br
@@ -602,7 +602,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 .br
 \fB--device-add\fR \fIcdrom\fR \fB--device\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
 
-\fBdevice\fR: the name of the physical DVD/CD-ROM on the Virtuozzo server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all DVD/CD-ROM drives currently existing on the Virtuozzo server.
+\fBdevice\fR: the name of the physical DVD/CD-ROM on the @PRODUCT_NAME_SHORT@ server to be connected to the VE. You can use the \fBserver info\fR command to view the name of all DVD/CD-ROM drives currently existing on the @PRODUCT_NAME_SHORT@ server.
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
 .br
@@ -632,9 +632,9 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 
 \fBtype\fR: the type of the network adapter to create in the virtual environment.
 .br
-\fBnetwork_id\fR: the name of the virtual network on the Virtuozzo server where the VE virtual adapter will be connected.
+\fBnetwork_id\fR: the name of the virtual network on the @PRODUCT_NAME_SHORT@ server where the VE virtual adapter will be connected.
 .br
-\fBmac\fR: the MAC address to be assigned to the virtual network adapter. If you omit this option, the MAC address will be automatically generated by the Virtuozzo software.
+\fBmac\fR: the MAC address to be assigned to the virtual network adapter. If you omit this option, the MAC address will be automatically generated by the @PRODUCT_NAME_SHORT@ software.
 .br
 \fBipadd\fR: the IP address to be assigned to the network adapter in the virtual environment.
 .br
@@ -678,15 +678,15 @@ drop packages not addressed to its virtual environment.
 
 	[\fB--socket-mode\fr <\fIserver\fR|\fIclient\fR>]}
 
-\fBdevice\fR: the number of the serial port on the Virtuozzo server to be used by the VE.
+\fBdevice\fR: the number of the serial port on the @PRODUCT_NAME_SHORT@ server to be used by the VE.
 .br
 \fBoutput\fR: the path to the file where the output of the virtual serial port will be sent.
 .br
-\fBsocket\fR: the name of the physical socket on the Virtuozzo server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
+\fBsocket\fR: the name of the physical socket on the @PRODUCT_NAME_SHORT@ server where the serial port is to be connected. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
 .br
-\fBsocket-tcp\fR: the address of the socket on the Virtuozzo server where the serial port is to be connected. This socket uses TCP protocol. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
+\fBsocket-tcp\fR: the address of the socket on the @PRODUCT_NAME_SHORT@ server where the serial port is to be connected. This socket uses TCP protocol. You can use the \fB--socket-mode\fR option to configure the port to operate in client or server mode. By default, server mode is enabled.
 .br
-\fBsocket-udp\fR: the address of the socket on the Virtuozzo server where the serial port is to be connected. This socket uses UDP protocol and operates in both client and server modes.
+\fBsocket-udp\fR: the address of the socket on the @PRODUCT_NAME_SHORT@ server where the serial port is to be connected. This socket uses UDP protocol and operates in both client and server modes.
 
 \fBEnable USB support\fR
 .br
@@ -770,7 +770,7 @@ If \fBbackup_ID\fR is not specified, the latest backup version is restored.
 Restore the virtual environment and assign the name \fBnew_name\fR to it.
 .TP
 \fB--dst\fR <\fBpath\fR>
-Restore the virtual environment data to the specified directory on the Virtuozzo server.
+Restore the virtual environment data to the specified directory on the @PRODUCT_NAME_SHORT@ server.
 .TP
 \fB--no-tunnel\fR
 Do not use connection tunneling for restore. Connection tunneling is enabled for restore by default to provide secure data transmission.
@@ -789,7 +789,7 @@ If the source server is omitted, the local server is assumed.
 .TP
 \fB--changesid\fR
 This option is used to change the current Windows security identifier (SID) of a Windows-based virtual machine template.
-It requires Virtuozzo Guest Tools to be installed in the virtual machine template.
+It requires @PRODUCT_NAME_SHORT@ Guest Tools to be installed in the virtual machine template.
 .TP
 \fB--clone\fR
 If this option is provided, the original virtual environment will be
@@ -830,13 +830,13 @@ Otherwise they become the children of the deleted snapshot's parent.
 Used to revert to selected snapshot.
 .SS Hostname management
 .IP "\fB--hostname\fR <\fIhostname\fR>" 4
-Sets the hostname for the virtual environment. For virtual machines, Virtuozzo Guest Tools must be installed in the virtual machine.
+Sets the hostname for the virtual environment. For virtual machines, @PRODUCT_NAME_SHORT@ Guest Tools must be installed in the virtual machine.
 .SS Offline management
 .IP "\fB--offline-management\fR <\fIon\fR|\fIoff\fR>" 4
 Enable/disable the offline management feature. This feature defines whether the virtual environment can be managed using the services set by the --offline-management option.
 .IP
 \fB--offline-service\fR <\fIservice_name\fR>
-Defines whether the virtual environment can be managed by means of Virtuozzo Power Panel or Plesk or both.
+Defines whether the virtual environment can be managed by means of @PRODUCT_NAME_SHORT@ Power Panel or Plesk or both.
 Valid only if the OFFLINE_MANAGEMENT parameter is set to "yes". The names of the available services
 can be taken from the file names (excluding the .conf extension) in the /etc/vzredirect.d directory
 on the server.
@@ -954,7 +954,7 @@ To stop the \fBwin2003\fR VE:
 \f(CR	prlctl stop win2003
 \fR
 .P
-To remove the \fBwin2003\fR virtual environment from the Virtuozzo server:
+To remove the \fBwin2003\fR virtual environment from the @PRODUCT_NAME_SHORT@ server:
 .br
 \f(CR	prlctl delete win2003
 \fR
