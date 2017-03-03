@@ -744,12 +744,15 @@ int PrlSrv::create_ct(const CmdParamData &param)
 	if ((ret = PrlVmCfg_SetName(vm->get_handle(), param.id.c_str())))
 		return prl_err(ret, "PrlVmCfg_SetName returned the following error: %s",
 				get_error_str(ret).c_str());
-	if (param.nohdd)
+
+	PRL_UINT32 flags = 0;
+	if (param.nohdd) {
 		clear_device(*vm, DEV_HDD);
-	else
+		flags |= PRNVM_PRESERVE_DISK;
+	} else
 		update_disk(*vm, param);
 
-	if ((ret = vm->reg(param.vm_location)))
+	if ((ret = vm->reg(param.vm_location, flags)))
 		return prl_err(ret, "Failed to create the virtual machine.");
 	prl_log(0, "The Container has been successfully created.");
 	return 0;
