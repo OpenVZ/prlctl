@@ -3421,13 +3421,13 @@ static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 
 		fputs(f.get_buffer().c_str(), stdout);
 		fflush(stdout);
-	} else if (evt_type == PET_DSP_EVT_VM_DELETED) {
+	} else {
 		PrlOutFormatter &f = *(get_formatter(true));
 
 		PrlEvent_GetIssuerId(hEvent, buf, &buflen);
 
 		f.open_object();
-		f.add("event_type", "VM_DELETED");
+		f.add("event_type", evt_type);
 		f.open("vm_info");
 		f.add_uuid("ID", buf);
 		f.close();
@@ -3435,7 +3435,6 @@ static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 
 		fputs(f.get_buffer().c_str(), stdout);
 		fflush(stdout);
-
 	}
 
 	return 0;
