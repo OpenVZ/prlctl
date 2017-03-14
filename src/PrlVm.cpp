@@ -4290,6 +4290,24 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 
 }
 
+int PrlVm::update()
+{
+	PRL_RESULT ret;
+	std::string err;
+
+	prl_log(0, "Updating the %s...", get_vm_type_str());
+	PrlHandle hJob(PrlVm_Migrate(m_hVm, get_srv().get_handle(), "",
+				PVM_UPDATE_MODE, 0, 0));
+	if ((ret = get_job_retcode(hJob.get_handle(), err)))
+		prl_err(ret, "Failed to update the %s: %s",
+				get_vm_type_str(), err.c_str());
+	else
+		prl_log(0, "The %s has been successfully updated.",
+				get_vm_type_str());
+
+	return ret;
+}
+
 int PrlVm::get_uptime(PRL_UINT64 *uptime, std::string &start_date)
 {
 	PRL_RESULT ret;

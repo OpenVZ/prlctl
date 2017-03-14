@@ -71,6 +71,7 @@ enum Action {
 	VmExecAction,
 	VmChangeSidAction,
 	VmResetUptimeAction,
+	VmUpdateVmAction,
 
 	SrvShutdownAction,
 	SrvHwInfoAction,
