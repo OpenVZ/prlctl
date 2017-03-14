@@ -578,6 +578,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return vm->snapshot_list(param);
 	case VmMigrateAction:
 		return vm->migrate(param.migrate);
+	case VmUpdateVmAction:
+		return vm->update();
 	case VmMoveAction:
 		return vm->move(param.vm_location);
 	case VmPerfStatsAction:

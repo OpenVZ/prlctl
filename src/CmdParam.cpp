@@ -3999,6 +3999,8 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 	} else if (!strcmp(argv[1], "migrate")) {
 		return get_migrate_param(argc, argv, VmMigrateAction,
 			migrate_options, 2);
+	} else if (!strcmp(argv[1], "update-qemu")) {
+		return get_param(argc, argv, VmUpdateVmAction, no_options, 2);
 	} else if (!strcmp(argv[1], "move")) {
 		return get_param(argc, argv, VmMoveAction, move_options, 2);
 	} else if (!strcmp(argv[1], "statistics")) {
