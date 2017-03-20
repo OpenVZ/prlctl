@@ -477,17 +477,13 @@ int PrlDevHdd::set_subtype(const std::string &subtype)
 	PRL_CLUSTERED_DEVICE_SUBTYPE type;
 
 	prl_log(L_INFO, "Set the %s subtype.", subtype.c_str());
-	if (subtype == "buslogic")
-		type = PCD_BUSLOGIC;
-	else if (subtype == "lsi-spi")
-		type = PCD_LSI_SPI;
-	else if (subtype == "lsi-sas")
-		type = PCD_LSI_SAS;
-	else if (subtype == "virtio-scsi")
+	if (subtype == "virtio-scsi")
 		type = PCD_VIRTIO_SCSI;
+	else if (subtype == "hyperv")
+		type = PCD_HYPER_V_SCSI;
 	else
 			return prl_err(-1, "Invalid subtype: %s,"
-					" supported one: buslogic, lsi-spi, lsi-sas, virtio-scsi",
+					" supported one: virtio-scsi, hyperv",
 					subtype.c_str());
 	if ((ret = PrlVmDev_SetSubType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetSubType: %s",
@@ -919,14 +915,11 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 	{
 		switch(get_subtype())
 		{
-		case PCD_BUSLOGIC:
-			tmp = "buslogic"; break;
-		case PCD_LSI_SPI:
-			tmp = "lsi-spi"; break;
-		case PCD_LSI_SAS:
-			tmp = "lsi-sas"; break;
 		case PCD_VIRTIO_SCSI:
 			tmp = "virtio-scsi";
+			break;
+		case PCD_HYPER_V_SCSI:
+			tmp = "hyperv";
 			break;
 		default:
 			tmp = "unknown";
@@ -1010,17 +1003,13 @@ int PrlDevCdrom::set_subtype(const std::string &subtype)
 	PRL_CLUSTERED_DEVICE_SUBTYPE type;
 
 	prl_log(L_INFO, "Set the %s subtype.", subtype.c_str());
-	if (subtype == "buslogic")
-		type = PCD_BUSLOGIC;
-	else if (subtype == "lsi-spi")
-		type = PCD_LSI_SPI;
-	else if (subtype == "lsi-sas")
-		type = PCD_LSI_SAS;
-	else if (subtype == "virtio-scsi")
+	if (subtype == "virtio-scsi")
 		type = PCD_VIRTIO_SCSI;
+	else if (subtype == "hyperv")
+		type = PCD_HYPER_V_SCSI;
 	else
 			return prl_err(-1, "Invalid subtype: %s,"
-					" supported one: buslogic, lsi-spi, lsi-sas, virtio-scsi",
+					" supported one: virtio-scsi, hyperv",
 					subtype.c_str());
 	if ((ret = PrlVmDev_SetSubType(m_hDev, type)))
 		return prl_err(ret, "PrlVmDev_SetSubType: %s",
@@ -1132,14 +1121,11 @@ void PrlDevCdrom::append_info(PrlOutFormatter &f)
 	{
 		switch(get_subtype())
 		{
-		case PCD_BUSLOGIC:
-			tmp = "buslogic"; break;
-		case PCD_LSI_SPI:
-			tmp = "lsi-spi"; break;
-		case PCD_LSI_SAS:
-			tmp = "lsi-sas"; break;
 		case PCD_VIRTIO_SCSI:
 			tmp = "virtio-scsi";
+			break;
+		case PCD_HYPER_V_SCSI:
+			tmp = "hyperv";
 			break;
 		default:
 			tmp = "unknown";
