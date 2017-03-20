@@ -526,7 +526,7 @@ Only one option can be specified at a time.
 \fBAdding virtual hard disk drives to VE\fR
 .br
 \fB--device-add\fR \fIhdd\fR [\fB--image\fR <\fIimage_name\fR>] [\fB--recreate\fR] [\fB--size\fR <\fIn\fR>]
-[\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
+[\fB--iface\fR <\fIide\fR|\fIscsi\fR|\fIvirtio\fR>] [\fB--subtype\fR <\fIvirtio-scsi\fR|\fIhyperv\fR>] [\fB--position\fR <\fIn\fR>] [\fB--mnt\fR <\fIpath\fR>]
 
 \fBimage_name\fR: the image file to be used to emulate the VE virtual hard disk.
 To use an existing image file, specify its name and path.
@@ -537,6 +537,8 @@ To create a new image file, omit the \fB--image\fR option
 If the \fB--no-fs-resize\fR option is specified, the last partition on the hard disk is not resized.
 .br
 \fBiface\fR: virtual hard disk interface type: either \fIide\fR or \fIscsi\fR or \fIvirtio\fR.
+.br
+\fBsubtype\fR: SCSI controller subtype: \fIvirtio-scsi\fR (default) or \fIhyperv\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the disk drive. Allowed ranges:
 .br
@@ -586,11 +588,13 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 
 \fBAdding virtual CD/DVD-ROM drives to VE\fR
 .br
-\fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--position\fR <\fIn\fR>]
+\fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--subtype\fR <\fIvirtio-scsi\fR|\fIhyperv\fR>] [\fB--position\fR <\fIn\fR>]
 
 \fBimage\fR: connect the specified image file (either on the @PRODUCT_NAME_SHORT@ server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
 .br
 \fBiface\fR: virtual CD/DVD-ROM interface type: either \fIide\fR or \fIscsi\fR.
+.br
+\fBsubtype\fR: SCSI controller subtype: \fIvirtio-scsi\fR (default) or \fIhyperv\fR.
 .br
 \fBposition\fR: the SCSI or IDE device identifier to be used for the DVD/CD-ROM drive. Allowed ranges:
 .br
