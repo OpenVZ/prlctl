@@ -13,6 +13,7 @@ prlsrvctl \fBset\fR [\fR--mem-limit\fR <\fIauto\fR|\fIsize\fR>] [\fR-s,--min-sec
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
 [\fR--vcmmd-policy\fR <\fIdensity\fR|\fIperformance\fR>]
+[\fR--vnc-ssl-certificate\fR <\fIfname\fR> \fR--vnc-ssl-key\fR <\fIfname\fR>]
 [\fBOPTIONS\fR]
 .PP
 prlsrvctl \fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>] [\fBOPTIONS\fR]
@@ -137,6 +138,10 @@ Specifies whether the CPU limit affects all virtual machine threads including se
 .TP
 \fB--vcmmd-policy\fR <\fIdensity\fR|\fIperformance\fR>
 Sets host's global vcmmd policy. NOTE: Before setting the policy, stop all virtual machines and containers on the host or temporarily migrate them live to another host.
+.TP
+\fB--vnc-ssl-certificate\fR <\fIfname\fR> \fB--vnc-ssl-key\fR <\fIfname\fR>
+Install an SSL certificate and a private key to encrypt all VNC connections on
+node. To disable VNC encryption, specify empty arguments (e.g., '').
 .SS Managing @PRODUCT_NAME_SHORT@ server
 .IP "\fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>]" 4
 Install @PRODUCT_NAME_SHORT@ license.
