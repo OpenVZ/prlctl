@@ -399,8 +399,10 @@ static Option disp_set_options[] = {
 	{"advanced-security-mode", '\0', OptRequireArg, CMD_ADVANCED_SECURITY_MODE},
 
 	{"cpu-features-mask", '\0', OptRequireArg, CMD_CPU_FEATURES_MASK},
-	{"vnc-public-key", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
-	{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
+	{"vnc-ssl-certificate", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
+		{"vnc-public-key", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
+	{"vnc-ssl-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
+		{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
 	{"vm-cpulimit-type", '\0', OptRequireArg, CMD_VM_CPULIMIT_TYPE},
 	{"vcmmd-policy", '\0', OptRequireArg, CMD_VCMMD_POLICY},
 	OPTION_END
@@ -878,9 +880,10 @@ static void usage_disp(const char * argv0)
 "	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
-"   [--vm-cpulimit-type <full|guest>]\n"
+"	[--vm-cpulimit-type <full|guest>]\n"
 "	[--vcmmd-policy <density|performance>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
+"	[--vnc-ssl-certificate <fname> --vnc-ssl-key <fname>]\n"
 "  shutdown [-f,--force] [--suspend-vm-to-pram]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
 "  user set --def-vm-home <path>\n"
