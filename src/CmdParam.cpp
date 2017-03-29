@@ -708,22 +708,20 @@ static Option reinstall_options[] = {
 
 static const char *version()
 {
+#if defined VERSION
+	return VERSION;
+#else
 	return VER_PRODUCTVERSION_STR;
+#endif
 }
 
 static void print_version(const char * argv0)
 {
-	printf("%s version %s"
-#ifndef EXTERNALLY_AVAILABLE_BUILD
-			" internal build"
-#endif
-			"\n", prl_basename(argv0), version());
+	printf("%s version %s\n", prl_basename(argv0), version());
 }
 
 static void usage_vm(const char * argv0)
 {
-	print_version(argv0);
-	printf("\n");
 	printf(
 "Usage: %s ACTION <ID | NAME> [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
@@ -865,8 +863,6 @@ static void usage_vm(const char * argv0)
 
 static void usage_disp(const char * argv0)
 {
-	print_version(argv0);
-	printf("\n");
 	printf(
 "Usage: %s ACTION [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
