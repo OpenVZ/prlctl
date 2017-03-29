@@ -1,8 +1,8 @@
 DEBUG=1
 
-BUILD_VERSION ?= "\"7.0.0\""
-VERSION=$(if $(BUILD_VERSION),-DVER_PRODUCTVERSION_STR=$(BUILD_VERSION))
-CFLAGS += $(if $(DEBUG),-g -O0 -DDEBUG,-O2) $(VERSION) -D_LIN_ -Wall -c \
+VERSION ?= $(shell cat ../Makefile.version)
+CFLAGS += -DVERSION=\"$(VERSION)\"
+CFLAGS += $(if $(DEBUG),-g -O0 -DDEBUG,-O2) -D_LIN_ -Wall -c \
 	-I/usr/include/prlsdk -I/usr/include/prlcommon
 LDFLAGS += $(if $(DEBUG),-g  -rdynamic,) -lprl_sdk -lpthread
 
