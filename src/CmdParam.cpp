@@ -722,6 +722,7 @@ static void print_version(const char * argv0)
 
 static void usage_vm(const char * argv0)
 {
+	print_version(argv0);
 	printf(
 "Usage: %s ACTION <ID | NAME> [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
@@ -863,6 +864,7 @@ static void usage_vm(const char * argv0)
 
 static void usage_disp(const char * argv0)
 {
+	print_version(argv0);
 	printf(
 "Usage: %s ACTION [OPTIONS] [-l user[[:passwd]@server[:port]]\n"
 "Supported actions are:\n"
