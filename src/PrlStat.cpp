@@ -42,6 +42,10 @@ inline int _getch() { return getchar() ; }
 #include <string.h>
 #include <time.h>
 
+#include "EventSyncObject.h"
+
+static CEventSyncObject *s_evt = NULL;
+
 static PRL_RESULT print_perfstats(PRL_HANDLE handle, const CmdParamData &param)
 {
 	(void)param;
@@ -129,17 +133,21 @@ static PRL_RESULT perfstats_callback(PRL_HANDLE handle, void *user_data, PRL_EVE
 		return PRL_ERR_SUCCESS;
 
 	print_perfstats(handle, param);
+
+	if (s_evt)
+		s_evt->Signal();
+
 	return PRL_ERR_SUCCESS;
 }
 
 static PRL_RESULT perfstats_srv_callback(PRL_HANDLE handle, void *user_data)
 {
-	return perfstats_callback(handle, user_data, PET_DSP_EVT_PERFSTATS) ;
+	return perfstats_callback(handle, user_data, PET_DSP_EVT_PERFSTATS);
 }
 
 static PRL_RESULT perfstats_vm_callback(PRL_HANDLE handle, void *user_data)
 {
-	return perfstats_callback(handle, user_data, PET_DSP_EVT_VM_PERFSTATS) ;
+	return perfstats_callback(handle, user_data, PET_DSP_EVT_VM_PERFSTATS); 
 }
 
 int PrlSrv::print_statistics(const CmdParamData &param, PrlVm *vm)
@@ -153,61 +161,55 @@ int PrlSrv::print_statistics(const CmdParamData &param, PrlVm *vm)
 			return ret;
 	}
 
+	if (!param.statistics.loop)
+		s_evt = new CEventSyncObject();
+
 	const PrlHook *hHook = get_cleanup_ctx().register_hook(call_exit, NULL);
 
-	if (!param.statistics.loop) {
-		if (param.action == SrvPerfStatsAction) {
-			PrlHandle hEvent;
-			PrlHandle hJob(PrlSrv_GetPerfStats(get_handle(), param.statistics.filter.c_str()));
-			if (PRL_FAILED(ret = get_job_result_object(hJob.get_handle(), hEvent.get_ptr())))
-				return ret;
-			print_perfstats(hEvent.get_handle(), param);
-		}
+	if (param.action == SrvPerfStatsAction) {
+		ret = PrlSrv_RegEventHandler(get_handle(), &perfstats_srv_callback, (void*)&param);
+		if (PRL_FAILED(ret))
+			return prl_err(ret, "PrlSrv_RegEventHandler returned the following error: %s",
+					get_error_str(ret).c_str());
+		PrlHandle hJob(PrlSrv_SubscribeToPerfStats(get_handle(), param.statistics.filter.c_str()));
+		if (PRL_FAILED(get_job_retcode_predefined(hJob.get_handle(), err)))
+			return prl_err(ret, "PrlSrv_SubscribeToPerfStats returned the following error: %s", err.c_str());
+	}
 
-		if (param.action == VmPerfStatsAction || param.list_all) {
-			for (PrlVmList::iterator it=m_VmList.begin(), end=m_VmList.end(); it!=end; ++it) {
-				if (!param.list_all && (*it)!=vm)
-					continue;
-				PrlHandle hEvent;
-				PrlHandle hJob(PrlVm_GetPerfStats((*it)->get_handle(), param.statistics.filter.c_str()));
-				if (PRL_FAILED(ret = get_job_result_object(hJob.get_handle(), hEvent.get_ptr())))
-					return ret;
-				print_perfstats(hEvent.get_handle(), param);
-			}
-		}
-	} else {
-		if (param.action == SrvPerfStatsAction) {
-			ret = PrlSrv_RegEventHandler(get_handle(), &perfstats_srv_callback, (void*)&param);
+	if (param.action == VmPerfStatsAction || param.list_all) {
+		for (PrlVmList::iterator it = m_VmList.begin(), end = m_VmList.end(); it != end; ++it) {
+			if (!param.list_all && (*it) != vm)
+				continue;
+
+			ret = PrlVm_RegEventHandler((*it)->get_handle(), &perfstats_vm_callback, (void*)&param);
 			if (PRL_FAILED(ret))
-				return prl_err(ret, "PrlSrv_RegEventHandler returned the following error: %s",
+				return prl_err(ret, "PrlVm_RegEventHandler returned the following error: %s",
 						get_error_str(ret).c_str());
-			PrlHandle hJob(PrlSrv_SubscribeToPerfStats(get_handle(), param.statistics.filter.c_str()));
+			PrlHandle hJob(PrlVm_SubscribeToPerfStats((*it)->get_handle(), param.statistics.filter.c_str()));
 			if (PRL_FAILED(get_job_retcode_predefined(hJob.get_handle(), err)))
-				return prl_err(ret, "PrlSrv_SubscribeToPerfStats returned the following error: %s", err.c_str());
-		}
-
-		if (param.action == VmPerfStatsAction || param.list_all) {
-			for (PrlVmList::iterator it = m_VmList.begin(), end = m_VmList.end(); it != end; ++it) {
-				if (!param.list_all && (*it) != vm)
-					continue;
-
-				ret = PrlVm_RegEventHandler((*it)->get_handle(), &perfstats_vm_callback, (void*)&param);
-				if (PRL_FAILED(ret))
-					return prl_err(ret, "PrlVm_RegEventHandler returned the following error: %s",
-							get_error_str(ret).c_str());
-				PrlHandle hJob(PrlVm_SubscribeToPerfStats((*it)->get_handle(), param.statistics.filter.c_str()));
-				if (PRL_FAILED(get_job_retcode_predefined(hJob.get_handle(), err)))
-					return prl_err(ret, "PrlVm_SubscribeToPerfStats returned the following error: %s", err.c_str());
+				return prl_err(ret, "PrlVm_SubscribeToPerfStats returned the following error: %s", err.c_str());
+			if (s_evt) {
+				s_evt->Wait(10000);
+				s_evt->Reset();
+				PrlVm_UnregEventHandler((*it)->get_handle(), &perfstats_vm_callback, (void*)&param);
+				PrlHandle j(PrlVm_UnsubscribeFromPerfStats((*it)->get_handle()));
+				get_job_retcode_predefined(j.get_handle(), err);
 			}
 		}
+	}
 
+	if (param.statistics.loop) {
 		int ch = 0 ;
 		while (ch!=0x0A && ch!=0x0D && ch!=0x03) {
 			ch = _getch();
 		}
 		fprintf(stdout, "\n");
-		get_cleanup_ctx().unregister_hook(hHook);
 	}
+
+	get_cleanup_ctx().unregister_hook(hHook);
+
+	if (param.action == SrvPerfStatsAction)
+		PrlSrv_UnregEventHandler(get_handle(), &perfstats_srv_callback, NULL);
+
 	return 0;
 }
-
