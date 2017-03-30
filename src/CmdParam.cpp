@@ -1689,7 +1689,7 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 		return invalid_action;
 	}
 	if (vnc_public_key != vnc_private_key) {
-		fprintf(stderr, "The --vnc-public-key and --vnc-private-key option have to be"
+		fprintf(stderr, "The --vnc-ssl-certificate and --vnc-ssl-key option have to be"
 			" specified simultaneously.\n");
 		return invalid_action;
 	}
