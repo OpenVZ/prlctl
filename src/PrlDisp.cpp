@@ -359,7 +359,6 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 
 	f.add("Manage settings for new users",
 		  m_allow_mng_settings ? "allow" : "deny");
-	f.add("CEP mechanism", m_cep_mechanism ? "on" : "off");
 	std::string str = get_def_backup_storage();
 	if (!str.empty())
 		f.add("Default backup storage", str);
