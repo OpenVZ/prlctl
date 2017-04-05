@@ -874,7 +874,7 @@ static void usage_disp(const char * argv0)
 "  update-license\n"
 "  set [--mem-limit <auto|size>] [-s,--min-security-level <low|normal|high>]\n"
 "	[--mng-settings <allow|deny>] [{--device <device> --assignment <host|vm>}]\n"
-"	[-c,--cep <on|off>] [--backup-path <path>] [--idle-connection-timeout <timeout>]\n"
+"	[--backup-path <path>] [--idle-connection-timeout <timeout>]\n"
 "	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
