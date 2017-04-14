@@ -3905,8 +3905,9 @@ CmdParamData cmdParam::get_problem_report_param(int argc, char **argv, Action ac
 	}
 
 	if (!action_specified) {
-		fprintf(stderr, "Please, choose an action: send the problem report "
-			"to Parallels (-s, --send) or dump it to stdout (-d, --dump)\n");
+		fprintf(stderr, "Please, choose an action: send the problem"
+		" report (-s, --send) or dump it to stdout (-d, --dump)\n");
+
 		return invalid_action;
 	}
 	return param;

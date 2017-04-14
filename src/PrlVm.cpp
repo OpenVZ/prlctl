@@ -1197,7 +1197,7 @@ static int load_sample(const char *name, std::string &sample)
 		//Fixme: [TARGETDIR]/VM Samples/*.xml
 		fname = "/VM Samples/";
 #elif defined(_LIN_)
-		fname =  "/usr/share/parallels-server-sdk/vmsamples/";
+		fname =  "/usr/share/libprlsdk/vmsamples/";
 #elif defined(_MAC_)
 		fname = PRL_DIRS_PARALLELS_SERVER_FRAMEWORK_DIR;
 		fname += "/Versions/";

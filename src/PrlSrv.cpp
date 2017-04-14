@@ -2352,7 +2352,7 @@ void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet, const std::stri
 
 	if (bEnabled)
 	{
-		f.open("Parallels adapter");
+		f.open("Adapter");
 
 		/* Host IPv4 address */
 		len = sizeof(buf);
