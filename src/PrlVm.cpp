@@ -1197,7 +1197,7 @@ static int load_sample(const char *name, std::string &sample)
 		//Fixme: [TARGETDIR]/VM Samples/*.xml
 		fname = "/VM Samples/";
 #elif defined(_LIN_)
-		fname =  "/usr/share/parallels-server-sdk/vmsamples/";
+		fname =  "/usr/share/libprlsdk/vmsamples/";
 #elif defined(_MAC_)
 		fname = PRL_DIRS_PARALLELS_SERVER_FRAMEWORK_DIR;
 		fname += "/Versions/";
@@ -4403,20 +4403,6 @@ void PrlVm::get_optimization_info(PrlOutFormatter &f)
 	PRL_RESULT ret;
 	PRL_BOOL bVal = PRL_FALSE;
 
-	if ((ret = PrlVmCfg_IsDiskCacheWriteBack(m_hVm, &bVal)))
-	{
-		prl_log(L_INFO, "PrlVmCfg_IsDiskCacheWriteBack: %s",
-			get_error_str(ret).c_str());
-	}
-	f.add("Faster virtual machine", (bVal ? "on" : "off"));
-
-	if ((ret = PrlVmCfg_IsAdaptiveHypervisorEnabled(m_hVm, &bVal)))
-	{
-		prl_log(L_INFO, "PrlVmCfg_IsAdaptiveHypervisorEnabled: %s",
-			get_error_str(ret).c_str());
-	}
-	f.add("Adaptive hypervisor", (bVal ? "on" : "off"));
-
 	if ((ret = PrlVmCfg_IsSwitchOffWindowsLogoEnabled(m_hVm, &bVal)))
 	{
 		prl_log(L_INFO, "PrlVmCfg_IsSwitchOffWindowsLogoEnabled: %s",
@@ -4424,26 +4410,12 @@ void PrlVm::get_optimization_info(PrlOutFormatter &f)
 	}
 	f.add("Disabled Windows logo", (bVal ? "on" : "off"));
 
-	if ((ret = PrlVmCfg_IsAutoCompressEnabled(m_hVm, &bVal)))
-	{
-		prl_log(L_INFO, "PrlVmCfg_IsAutoCompressEnabled: %s",
-			get_error_str(ret).c_str());
-	}
-	f.add("Auto compress virtual disks", (bVal ? "on" : "off"));
-
 	if ((ret = PrlVmCfg_IsNestedVirtualizationEnabled(m_hVm, &bVal)))
 	{
 		prl_log(L_INFO, "PrlVmCfg_IsNestedVirtualizationEnabled: %s",
 			get_error_str(ret).c_str());
 	}
 	f.add("Nested virtualization", (bVal ? "on" : "off"));
-
-	if ((ret = PrlVmCfg_IsPMUVirtualizationEnabled(m_hVm, &bVal)))
-	{
-		prl_log(L_INFO, "PrlVmCfg_IsPMUVirtualizationEnabled: %s",
-			get_error_str(ret).c_str());
-	}
-	f.add("PMU virtualization", (bVal ? "on" : "off"));
 }
 
 int PrlVm::set_confirmations_list(const std::map<std::string , bool >& cmd_list)

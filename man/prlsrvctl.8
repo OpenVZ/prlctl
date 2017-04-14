@@ -5,7 +5,6 @@ prlsrvctl \- utility for managing @PRODUCT_NAME_SHORT@ Server.
 prlsrvctl \fBinfo\fR [\fB-j, --json\fR] [\fB--license\fR] [\fB-f, --full\fR]
 .PP
 prlsrvctl \fBset\fR [\fR--mem-limit\fR <\fIauto\fR|\fIsize\fR>] [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>]
-[\fR-c,--cep\fR <\fIon\fR|\fIoff\fR>]
 [{\fR--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>}]
 [\fR--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR] [\fR--backup-path\fR <\fIpath\fR>]
 [\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
@@ -107,9 +106,6 @@ connect to the server:
 \fInormal\fR - only the most important data is encrypted.
 .br
 \fIhigh\fR - all transmitted data is encrypted.
-.TP
-\fB-c,--cep\fR <\fIon\fR|\fIoff\fR>
-Enables/disables the participation in the Customer Experience Program.
 .TP
 \fB--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>
 Set assignment mode for VTd devices.

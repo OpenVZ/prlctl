@@ -333,7 +333,7 @@ Enable or disable memory (RAM) hot-plugging support in the virtual environment.
 Set the amount of memory (RAM) that will be guaranteed to a virtual machine or container.
 The guaranteed memory is a percentage of total RAM that is set for the virtual machine or
 container with the \fB--memsize\fR option. By default, memory guarantee is set to 'auto'
-(no guarantee for containter and 40% for virtual machine).
+(depends on vcmmd policy for virtual machine and no guarantee for containter).
 .TP
 \fBBoot order parameters\fR
 .TP
@@ -588,7 +588,7 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 
 \fBAdding virtual CD/DVD-ROM drives to VE\fR
 .br
-\fB--device-add\fR \fIcdrom\fR [\fB--image\fR <\fIname\fR>] [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--subtype\fR <\fIvirtio-scsi\fR|\fIhyperv\fR>] [\fB--position\fR <\fIn\fR>]
+\fB--device-add\fR \fIcdrom\fR \fB--image\fR <\fIname\fR> [\fB--iface\fR <\fIide\fR|\fIscsi\fR>] [\fB--subtype\fR <\fIvirtio-scsi\fR|\fIhyperv\fR>] [\fB--position\fR <\fIn\fR>]
 
 \fBimage\fR: connect the specified image file (either on the @PRODUCT_NAME_SHORT@ server or on the client computer where you are running the \fBprlctl\fR utility) to the virtual environment. The following image file formats are supported: .iso, .cue, .ccd, and .dmg.  
 .br
@@ -821,7 +821,7 @@ Options to pass to ssh when it is used to establish a connection to the destinat
 Note: Do not specify the hostname/IP address of the destination server as an option.
 .SS Snapshot management
 .IP "\fBsnapshot\fR <\fIve_id\fR|\fIname\fR> [\fB-n\fR,\fB--name\fR <\fIname\fR>]" 4
-This command is used to create VE snapshot.
+This command is used to create VE snapshot. Note: Taking a snapshot of a running VE saves not only its filesystem state but in-memory state as well.
 .IP "\fBsnapshot-list\fR <\fIve_id\fR|\fIname\fR> [{\fB-t\fR,\fB--tree\fR] | [\fB-i\fR,\fB--id\fR <\fIsnapid\fR>}]" 4
 This command is used to list the virtual environment's snapshots tree. There are three modes of snapshot listing,
 if no option specified the snapshot tree represented in two columns
