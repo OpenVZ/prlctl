@@ -20,13 +20,11 @@ get_snaps_names() {
 get_snaps_ids() {
 	# TODO Add checking of vm existence
 	# TODO Don't work because of '{' :-(
-	prlctl snapshot-list $1 | awk '{if (NR > 1) print substr($0, 41, 38)}'
+	prlctl snapshot-list $1 2>/dev/null | awk '{if (NR > 1) print substr($0, 41, 38)}'
 }
 
 get_backups_ids() {
-	# TODO Add checking of vm existence
-	# TODO Don't work because of '{' :-(
-	prlctl backup-list $1 | awk '{if (NR > 1) print substr($0, 41, 38)}'
+	prlctl backup-list $1 2>/dev/null | awk '{if (NR > 1) print $2}' | tr -d '{}'
 }
 
 get_ostypes() {
@@ -79,6 +77,7 @@ _prlctl()
 	local backup_flags='--description -f --full -i --incremental --no-compression'
 	local backuplist_flags='-f --full --localvms'
 	local backupdelete_flags='-t --tag'
+	local restore_flags='-t --tag'
 	local statistics_flags='--loop --filter'
 	local set_flags='--cpus --memsize --videosize --description \
 		--onboot --name --device-add --device-del --device-set \
@@ -207,10 +206,20 @@ _prlctl()
 			# TODO for hdd: ide|scsi, for net:host|shared|bridget
 			opts=''
 			;;
+		--tag)
+			opts="$(get_backups_ids "${COMP_WORDS[2]}")"
+			;;
 		--id)
-			opts="$(get_snaps_ids "${COMP_WORDS[2]}")"
-			# TODO Fucking '{'
-			[ -z "${cur}" ] && cur='{'
+			local cmd=${COMP_WORDS[1]}
+			case ${cmd} in
+			snapshot-*)
+				opts="$(get_snaps_ids "${COMP_WORDS[2]}")"
+				[ -z "${cur}" ] && cur='{'
+				;;
+			restore)
+				opts="$(get_backups_ids "${COMP_WORDS[2]}")"
+				;;
+			esac
 			;;
 		-o)
 			if [ "${COMP_WORDS[1]}" = 'create' ]; then
@@ -341,6 +350,9 @@ _prlctl()
 				;;
 			resume)
 				opts="${global_flags}"
+				;;
+			restore)
+				opts="${restore_flags}"
 				;;
 			server)
 				if [ $COMP_CWORD == 2 ]; then
