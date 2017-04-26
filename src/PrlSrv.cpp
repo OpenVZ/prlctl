@@ -2225,6 +2225,10 @@ int PrlSrv::find_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet)
 void PrlSrv::append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, bool detailed)
 {
 	std::string vethList;
+
+	if (m_VmList.empty())
+		update_vm_list(PVTF_CT|PVTF_VM);
+
 	for (PrlVmList::iterator vm = m_VmList.begin(), end = m_VmList.end(); vm != end; ++vm) {
 		(*vm)->get_dev_info();
 		const PrlDevNetList& netDevs = (*vm)->get_net_devs();
