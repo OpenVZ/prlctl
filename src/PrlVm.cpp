@@ -2283,7 +2283,7 @@ int PrlVm::set_iolimit(unsigned int iolimit)
 	PRL_RESULT ret;
 	PRL_IOLIMIT_DATA data;
 
-	prl_log(0, "Set up iolimit: %d", iolimit);
+	prl_log(0, "Set up iolimit: %u", iolimit);
 	data.type = PRL_IOLIMIT_BS;
 	data.value = iolimit;
 	if ((ret = PrlVmCfg_SetIoLimit(m_hVm, &data)))

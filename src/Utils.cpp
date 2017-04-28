@@ -1279,6 +1279,11 @@ int parse_ui_x(const char *str, unsigned int *val, bool bDefInMb)
 		if (!bDefInMb)
 			tmp *= 1024 * 1024;
 	}
+	if (tmp > UINT_MAX) {
+		fprintf(stderr, "Valid range is [%u;%u]\n", 0,
+			bDefInMb ? UINT_MAX : UINT_MAX / 1024 / 1024);
+		return 1;
+	}
 	*val = (unsigned int) tmp;
 	return 0;
 }
