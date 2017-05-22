@@ -1471,12 +1471,12 @@ int PrlVm::get_boot_list(PrlList<PrlBootEntry *> &bootlist,
 		if (max_index < index)
 			max_index = index;
 		if ((dev = find_dev(prl_dev_type2type(type), idx))) {
-			prl_log(L_DEBUG, "boot: %s %d",
+			prl_log(L_DEBUG, "boot: %s %u",
 				dev->m_id.c_str(), index);
 			bootlist.add(new PrlBootEntry(index,
 						inuse ? true : false, dev));
 		} else {
-			prl_log(L_DEBUG, "Missed boot: type=%d idx=%d index=%d",
+			prl_log(L_DEBUG, "Missed boot: type=%d idx=%u index=%u",
 				type, idx, index);
 		}
 	}
@@ -1489,7 +1489,7 @@ int PrlVm::add_boot_entry(const PrlBootEntry *entry, unsigned int index) const
 	PrlHandle hBootDev;
 	const PrlDev *dev = entry->m_dev;
 
-	prl_log(L_INFO, "Create a new boot record: %s %d",
+	prl_log(L_INFO, "Create a new boot record: %s %u",
 			dev->m_id.c_str(), index);
 	if ((ret = PrlVmCfg_CreateBootDev(m_hVm, hBootDev.get_ptr())))
 		return prl_err(ret, "PrlVmCfg_CreateBootDev",
@@ -2100,10 +2100,10 @@ int PrlVm::set_cpu_count(unsigned int num)
 	unsigned int total;
 
 	if ((total = m_srv.get_cpu_count()) < num)
-		return prl_err(-1, "An incorrect value for the CPU parameter (%d)"
-			" is specified. The maximal CPU number may equal %d.",
+		return prl_err(-1, "An incorrect value for the CPU parameter (%u)"
+			" is specified. The maximal CPU number may equal %u.",
 			num, total);
-	prl_log(0, "set cpus(%d): %d", total, num);
+	prl_log(0, "set cpus(%u): %u", total, num);
 	if ((ret = PrlVmCfg_SetCpuCount(m_hVm, num)))
                 return prl_err(ret, ":PrlVmCfg_SetCpuCount %s",
                         get_error_str(ret).c_str());
@@ -2127,7 +2127,7 @@ int PrlVm::set_cpuunits(unsigned int cpuunits)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "set cpuunits %d", cpuunits);
+	prl_log(0, "set cpuunits %u", cpuunits);
 	if ((ret = PrlVmCfg_SetCpuUnits(m_hVm, cpuunits)))
 		return prl_err(-1, "PrlVmCfg_SetCpuUnits: %s",
 			get_error_str(ret).c_str());
@@ -2214,7 +2214,7 @@ int PrlVm::set_cpulimit(PRL_CONST_CPULIMIT_DATA_PTR cpulimit)
 	if (cpulimit->type == 0)
 		return 0;
 
-	prl_log(0, "set cpulimit %d%s",
+	prl_log(0, "set cpulimit %u%s",
 			cpulimit->value,
 			cpulimit->type == PRL_CPULIMIT_MHZ ? "Mhz" : "%");
 	if ((ret = PrlVmCfg_SetCpuLimitEx(m_hVm, cpulimit)))
@@ -2253,7 +2253,7 @@ int PrlVm::set_ioprio(unsigned int ioprio)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "set ioprio %d", ioprio);
+	prl_log(0, "set ioprio %u", ioprio);
 	if ((ret = PrlVmCfg_SetIoPriority(m_hVm, ioprio)))
 		return prl_err(-1, "PrlVmCfg_SetIoPriority: %s",
 			get_error_str(ret).c_str());
@@ -2317,7 +2317,7 @@ int PrlVm::set_iopslimit(unsigned int limit)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "set IOPS limit %d", limit);
+	prl_log(0, "set IOPS limit %u", limit);
 	if ((ret = PrlVmCfg_SetIopsLimit(m_hVm, limit)))
 		return prl_err(-1, "PrlVmCfg_SetIopsLimit: %s",
 			get_error_str(ret).c_str());
@@ -2353,7 +2353,7 @@ int PrlVm::set_memsize(unsigned int num)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "Set the memsize parameter to %dMb.", num);
+	prl_log(0, "Set the memsize parameter to %uMb.", num);
 	if ((ret = PrlVmCfg_SetRamSize(m_hVm, num)))
 		return prl_err(ret, "PrlVmCfg_SetRamSize %s",
 			get_error_str(ret).c_str());
@@ -2377,7 +2377,7 @@ int PrlVm::set_videosize(unsigned int num)
 {
 	PRL_RESULT ret;
 
-	prl_log(0, "Set the videosize parameter to %dMb.", num);
+	prl_log(0, "Set the videosize parameter to %uMb.", num);
 	if ((ret = PrlVmCfg_SetVideoRamSize(m_hVm, num)))
 		return prl_err(ret, "PrlVmCfg_SetVideoRamSize: %s",
 			get_error_str(ret).c_str());
@@ -2507,7 +2507,7 @@ int PrlVm::set_memguarantee(const CmdParamData &param)
 		prl_log(0, "set memguarantee: auto");
 		break;
 	case PRL_MEMGUARANTEE_PERCENTS:
-		prl_log(0, "set memguarantee: %d%%", param.memguarantee.value);
+		prl_log(0, "set memguarantee: %u%%", param.memguarantee.value);
 		break;
 	}
 	if ((ret = PrlVmCfg_SetMemGuaranteeSize(m_hVm, &param.memguarantee)))
@@ -3483,7 +3483,7 @@ int PrlVm::commit_configuration(const CmdParamData &param)
 			++resultCount;
 		}
 
-		prl_log(L_DEBUG, "resultCount: %d", resultCount);
+		prl_log(L_DEBUG, "resultCount: %u", resultCount);
 
 		prl_err(retcode, "Unable to commit %s configuration: %s",
 			get_vm_type_str(),
@@ -4219,7 +4219,7 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 		if (security_level < param.security_level)
 			security_level = param.security_level;
 
-		prl_log(L_DEBUG, "security_level=%d", security_level);
+		prl_log(L_DEBUG, "security_level=%u", security_level);
 		hJob = PrlVm_MigrateWithRename(m_hVm,
 					dst.get_handle(),
 					param.dst_id.c_str(), param.vm_location.c_str(),
@@ -4228,7 +4228,7 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 		if (security_level < param.security_level)
 			security_level = param.security_level;
 
-		prl_log(L_DEBUG, "security_level=%d", security_level);
+		prl_log(L_DEBUG, "security_level=%u", security_level);
 		hJob = PrlVm_MigrateWithRenameEx(m_hVm,
 					param.dst.server.c_str(),
 					param.dst.port,
@@ -4261,7 +4261,7 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 			return prl_err(rc, "PrlResult_GetParamsCount  %s [%d]",
 				get_error_str(rc).c_str(), rc);
 
-		prl_log(L_DEBUG, "resultCount: %d", resultCount);
+		prl_log(L_DEBUG, "resultCount: %u", resultCount);
 		for (unsigned int i = 0; i < resultCount; i++) {
 			PrlHandle hEvent;
 			char buf[4096];
