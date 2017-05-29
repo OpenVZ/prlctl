@@ -3388,23 +3388,33 @@ static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 		return ret;
 	}
 
-	if (evt_type == PET_DSP_EVT_VM_STATE_CHANGED ||
-			evt_type == PET_DSP_EVT_VM_CONFIG_CHANGED ||
+	PrlEvent_GetIssuerId(hEvent, buf, &buflen);
+	PrlOutFormatter &f = *(get_formatter(true));
+
+	if (evt_type == PET_DSP_EVT_VM_STATE_CHANGED) {
+		f.open_object();
+		f.add("event_type", "VM_STATE_CHANGED");
+		f.open("vm_info");
+		f.add_uuid("ID", buf);
+
+		int s;
+		PrlHandle hParam;
+
+		if (PrlEvent_GetParamByName(hEvent, EVT_PARAM_VMINFO_VM_STATE, hParam.get_ptr()) == 0 &&
+			PrlEvtPrm_ToInt32(hParam, &s) == 0)
+			f.add("State", vmstate2str((VIRTUAL_MACHINE_STATE)s));
+		f.close();
+		f.close_object();
+	} else if (evt_type == PET_DSP_EVT_VM_CONFIG_CHANGED ||
 			evt_type == PET_DSP_EVT_VM_CREATED ||
 			evt_type == PET_DSP_EVT_VM_ADDED) {
 
 		PrlVm *vm;
-		PrlOutFormatter &f = *(get_formatter(true));
 
-		PrlEvent_GetIssuerId(hEvent, buf, &buflen);
 		srv->get_vm_config(std::string(buf), &vm, false);
-
 		f.open_object();
 
 		switch (evt_type) {
-		case PET_DSP_EVT_VM_STATE_CHANGED:
-			f.add("event_type", "VM_STATE_CHANGED");
-			break;
 		case PET_DSP_EVT_VM_CONFIG_CHANGED:
 			f.add("event_type", "VM_CONFIG_CHANGED");
 			break;
@@ -3422,24 +3432,17 @@ static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 		vm->append_configuration(f);
 		f.close();
 		f.close_object();
-
-		fputs(f.get_buffer().c_str(), stdout);
-		fflush(stdout);
 	} else {
-		PrlOutFormatter &f = *(get_formatter(true));
-
-		PrlEvent_GetIssuerId(hEvent, buf, &buflen);
-
 		f.open_object();
 		f.add("event_type", evt_type);
 		f.open("vm_info");
 		f.add_uuid("ID", buf);
 		f.close();
 		f.close_object();
-
-		fputs(f.get_buffer().c_str(), stdout);
-		fflush(stdout);
 	}
+
+	fputs(f.get_buffer().c_str(), stdout);
+	fflush(stdout);
 
 	return 0;
 }
