@@ -205,6 +205,7 @@ static Option set_options[] = {
 	  --cpus <N> --memsize <N> --videosize <N>
 	*/
 	{"cpus", '\0', OptRequireArg, CMD_CPUS},
+	{"cpu-sockets", '\0', OptRequireArg, CMD_CPU_SOCKETS},
 	{"cpu-hotplug", '\0', OptRequireArg, CMD_CPU_HOTPLUG},
 	{"memsize", '\0', OptRequireArg, CMD_MEMSIZE},
 	{"videosize", '\0', OptRequireArg, CMD_VIDEOSIZE},
@@ -797,7 +798,7 @@ static void usage_vm(const char * argv0)
 "    [Optimization options]\n"
 "    [Shared folder options]\n"
 "General options are:\n"
-"    [--name <name>] [--cpus <N>] [--memsize <n>]\n"
+"    [--name <name>] [--cpus <N>] [--cpu-sockets <N>] [--memsize <n>]\n"
 "    [--description <desc>]\n"
 "    [--rename-ext-disks]\n"
 "Container management options are:\n"
@@ -2473,13 +2474,22 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.dev.mixer = val;
 			break;
 		case CMD_CPUS:
-			if (parse_ui(val.c_str(), &param.cpus))
+			if (parse_ui(val.c_str(), &ui))
 			{
 				fprintf(stderr, "An incorrect value for"
 					" --cpus is specified: %s\n", val.c_str());
 				return invalid_action;
 			}
-			param.cpus_present = true;
+			param.cpu_cores = ui;
+			break;
+		case CMD_CPU_SOCKETS:
+			if (parse_ui(val.c_str(), &ui))
+			{
+				fprintf(stderr, "An incorrect value for"
+					" --cpu-sockets is specified: %s\n", val.c_str());
+				return invalid_action;
+			}
+			param.cpu_sockets = ui;
 			break;
 		case CMD_CPU_HOTPLUG:
 			if (param.set_cpu_hotplug(val)) {

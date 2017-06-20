@@ -36,6 +36,7 @@
 #include "PrlTypes.h"
 #include "GetOpt.h"
 #include <PrlIOStructs.h>
+#include <boost/optional.hpp>
 
 typedef PRL_UINT32 cap_t;
 
@@ -834,8 +835,8 @@ public:
 	std::string list_sort;
 
 	/* VM param */
-	unsigned int cpus;
-	bool cpus_present;
+	boost::optional<unsigned> cpu_cores;
+	boost::optional<unsigned> cpu_sockets;
 	std::string cpu_hotplug;
 	unsigned int cpuunits;
 	PRL_CPULIMIT_DATA cpulimit;
@@ -995,8 +996,6 @@ public:
 		info(false),
 		use_json(false),
 		list_all_fields(false),
-		cpus(0),
-		cpus_present(false),
 		cpuunits(0),
 		ioprio((unsigned int) -1),
 		iolimit((unsigned int) -1),
@@ -1193,6 +1192,7 @@ enum cmdOptions {
 	CMD_PASSTHR,
 	CMD_POSITION,
 	CMD_CPUS,
+	CMD_CPU_SOCKETS,
 	CMD_CPU_HOTPLUG,
 	CMD_CPUUNITS,
 	CMD_CPULIMIT,

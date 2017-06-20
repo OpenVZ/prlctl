@@ -53,7 +53,7 @@ prlctl \fBrestart\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
 prlctl \fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
-prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--memsize\fR <\fIn\fR>] [\fB--videosize\fR <\fIn\fR>]
+prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-sockets\fR <\fIn\fR>] [\fB--memsize\fR <\fIn\fR>] [\fB--videosize\fR <\fIn\fR>]
 .br
 	[\fB--3d-accelerate\fR <\fIoff\fR|\fIhighest\fR|\fIdx9\fR>] [\fB--vertical-sync\fR <\fIon\fR|\fIoff\fR>]
 .br
@@ -296,7 +296,10 @@ The following options can be used with the \fBset\fR command:
 \fBCPU parameters\fR
 .TP
 \fB--cpus\fR <\fInum\fR>
-Set the number of CPUs to be available to the VE.
+Set the number of CPU cores to be available to the VE.
+.TP
+\fB--cpu-sockets\fR <\fInum\fR>
+Set the number of CPU sockets to be available to the VE.
 .TP
 \fB--cpu-hotplug\fR <\fIon\fR|\fIoff\fR>
 Enable or disable CPU hot-plugging support in the virtual environment.

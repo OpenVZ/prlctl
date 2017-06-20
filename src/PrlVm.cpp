@@ -2033,7 +2033,7 @@ int PrlVm::get_confirmation_list()
 	return 0;
 }
 
-unsigned int PrlVm::get_cpu_count() const
+unsigned int PrlVm::get_cpu_cores() const
 {
 	PRL_RESULT ret;
 	unsigned int count = 0;
@@ -2042,6 +2042,18 @@ unsigned int PrlVm::get_cpu_count() const
 		prl_err(-1, "PrlVmCfg_GetCpuCount: %s",
 			get_error_str(ret).c_str());
 	return count;
+}
+
+unsigned PrlVm::get_cpu_sockets() const
+{
+	unsigned output = 0;
+	PRL_RESULT e = PrlVmCfg_GetCpuSocketsCount(m_hVm, &output);
+	if (PRL_FAILED(e))
+	{
+		prl_err(-1, "PrlVmCfg_GetCpuSocketsCount: %s",
+			get_error_str(e).c_str());
+	}
+	return output;
 }
 
 PRL_VM_ACCELERATION_LEVEL PrlVm::get_cpu_acc_level() const
@@ -2094,19 +2106,40 @@ int PrlVm::set_cpu_hotplug(const std::string &value)
 	return 0;
 }
 
-int PrlVm::set_cpu_count(unsigned int num)
+int PrlVm::set_cpu_cores(unsigned value_)
 {
-	PRL_RESULT ret;
-	unsigned int total;
+	if (0 == value_)
+	{
+		return prl_err(-1, "An incorrect value for the CPU cores parameter (%u).",
+			value_);
+	}
+	unsigned total = m_srv.get_cpu_count(), s = get_cpu_sockets();
+	prl_log(0, "set cpu cores(%u): %u", total / s, value_);
+	PRL_RESULT e = PrlVmCfg_SetCpuCount(m_hVm, value_);
+	if (PRL_FAILED(e))
+	{
+		return prl_err(e, ":PrlVmCfg_SetCpuCount %s",
+			get_error_str(e).c_str());
+	}
+	set_updated();
+	return 0;
+}
 
-	if ((total = m_srv.get_cpu_count()) < num)
-		return prl_err(-1, "An incorrect value for the CPU parameter (%u)"
-			" is specified. The maximal CPU number may equal %u.",
-			num, total);
-	prl_log(0, "set cpus(%u): %u", total, num);
-	if ((ret = PrlVmCfg_SetCpuCount(m_hVm, num)))
-                return prl_err(ret, ":PrlVmCfg_SetCpuCount %s",
-                        get_error_str(ret).c_str());
+int PrlVm::set_cpu_sockets(unsigned value_)
+{
+	if (0 == value_)
+	{
+		return prl_err(-1, "An incorrect value for the CPU sockets parameter (%u).",
+			value_);
+	}
+	unsigned total = m_srv.get_cpu_count(), c = get_cpu_cores();
+	prl_log(0, "set cpu sockets(%u): %u", total / c, value_);
+	PRL_RESULT e = PrlVmCfg_SetCpuSocketsCount(m_hVm, value_);
+	if (PRL_FAILED(e))
+	{
+		return prl_err(e, ":PrlVmCfg_SetCpuSocketsCount %s",
+			get_error_str(e).c_str());
+	}
 	set_updated();
 	return 0;
 }
@@ -3566,8 +3599,12 @@ int PrlVm::set(const CmdParamData &param)
 	    if ((ret = set_distribution(param.dist)))
 		return ret;
 	}
-	if (param.cpus_present) {
-		if ((ret = set_cpu_count(param.cpus)))
+	if (param.cpu_cores) {
+		if ((ret = set_cpu_cores(param.cpu_cores.get())))
+			return ret;
+	}
+	if (param.cpu_sockets) {
+		if ((ret = set_cpu_sockets(param.cpu_sockets.get())))
 			return ret;
 	}
 	if (!param.cpu_hotplug.empty()) {
@@ -4563,12 +4600,18 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.open("Hardware");
 	f.open("cpu", true);
 
-	unsigned int cpu_count = get_cpu_count();
-	if (cpu_count == PRL_CPU_UNLIMITED) // unlimited
+	unsigned c = get_cpu_cores(), s = get_cpu_sockets();
+	f.add("sockets", s, "", true);
+	if (c == PRL_CPU_UNLIMITED) // unlimited
+	{
 		f.add("cpus", "unlimited", true);
+		f.add("cores", "unlimited", true);
+	}
 	else
-		f.add("cpus", cpu_count, "", true);
-
+	{
+		f.add("cpus", c, "", true);
+		f.add("cores", c, "", true);
+	}
 	f.add("VT-x", is_vtx_enabled());
 	f.add("hotplug", is_cpu_hotplug_enabled());
 
