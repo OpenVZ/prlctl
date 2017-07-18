@@ -54,6 +54,7 @@
 #include <sstream>
 #include <assert.h>
 #include <stdarg.h>
+#include <arpa/inet.h>
 
 #include <PrlErrorsValues.h>
 
@@ -1828,32 +1829,31 @@ bool is_full_info_mode()
 
 /* IPv6 can be presented in a number of formats - this function is to convert
  * them to some predefined, for future search and compare */
-void normalize_ip(std::string &val)
+void normalize_ip(std::string &ipm)
 {
-	std::string::size_type pos = val.find_first_of(":");
+	std::string::size_type pos = ipm.find_first_of(":");
 	if (pos == std::string::npos)
 		// IPv4, do nothing
 		return;
 
 	// IPv6
+	std::string::size_type mpos;
 
-	// capitalize characters
-	std::transform(val.begin(), val.end(), val.begin(), ::toupper);
+	std::string ip = ipm;
+	mpos = ip.find_last_of("/");
+	if (mpos != std::string::npos)
+		ip = ipm.substr(0, mpos);
 
-	// check '::' instance - we need to expand if present
-	pos = val.find("::");
-	if (pos != std::string::npos) {
-		// count ':' chars
-		int count = std::count(val.begin(), val.end(), ':');
-		if (count > 7)
-			// invalid ip, do nothing
-			return;
-		std::string tmp = ":0";
-		while (7 - count++)
-			tmp += ":0";
-		tmp += ":";
-		val.replace(pos, 2, tmp);
-	}
+	unsigned char buf[sizeof(struct in6_addr)];
+	char str[INET6_ADDRSTRLEN];
+
+	if (inet_pton(AF_INET6, ip.c_str(), buf) <= 0)
+		return;
+	
+	if (inet_ntop(AF_INET6, buf, str, INET6_ADDRSTRLEN) == NULL)
+		return;
+
+	ipm = str;
 }
 
 std::string capability2str(const CapParam &capability)
