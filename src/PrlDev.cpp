@@ -744,7 +744,7 @@ int PrlDevHdd::create(const DevInfo &param)
 	if ((ret = configure(param)))
 		return ret;
 	/* add to the end of the boot order */
-	if (m_vm.get_vm_type() == PVT_VM &&
+	if (m_vm.get_vm_type() == PVT_VM && param.storage_url.empty() &&
 	    (ret = m_vm.set_boot_dev(this, -1, param.storage_url.empty())))
 		return ret;
 
