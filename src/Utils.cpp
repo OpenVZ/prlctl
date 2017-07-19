@@ -1839,10 +1839,12 @@ void normalize_ip(std::string &ipm)
 	// IPv6
 	std::string::size_type mpos;
 
-	std::string ip = ipm;
+	std::string m, ip = ipm;
 	mpos = ip.find_last_of("/");
-	if (mpos != std::string::npos)
+	if (mpos != std::string::npos) {
 		ip = ipm.substr(0, mpos);
+		m = ipm.substr(mpos);
+	}
 
 	unsigned char buf[sizeof(struct in6_addr)];
 	char str[INET6_ADDRSTRLEN];
@@ -1854,6 +1856,7 @@ void normalize_ip(std::string &ipm)
 		return;
 
 	ipm = str;
+	ipm += m;
 }
 
 std::string capability2str(const CapParam &capability)
