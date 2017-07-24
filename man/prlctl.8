@@ -165,7 +165,7 @@ Create the virtual environment with the name of \fB<ve_name>\fR and optimize it 
 .IP "\fBcreate\fR <\fIve_name\fR> [\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--no-hdd\fR]" 4
 Create the virtual environment with the name of \fB<ve_name>\fR and optimize it for use with the operating system (OS) family specified after the \fB--distribution\fR option, respectively. You can get the list of available distributions using the \fBprlctl create  ve_name -d list\fR command.
 
-Use the \fB--dst\fR option to set the path to the directory on the @PRODUCT_NAME_SHORT@ server where all configuration files of the newly created virtual environment will be stored.
+Use the \fB--dst\fR option to set the path to the directory on the @PRODUCT_NAME_SHORT@ server where the \fB<ve_uuid>\fR directory with files of the newly created virtual environment will be stored.
 
 Use the \fB--no-hdd\fR option to create virtual environment without hard disk drives.
 
@@ -175,7 +175,7 @@ Make a copy of a virtual environment and name it <\fInew_name\fR>. The differenc
 
 Use the \fB--template\fR option to create a template of a virtual environment.
 
-Use the \fB--dst\fR option to specify the full path to the directory where the clone will be stored. If this option is omitted, the clone will be created in the default directory.
+Use the \fB--dst\fR option to specify the path to the directory where the \fB<ve_uuid>\fR directory with files of the cloned virtual environment will be stored. If this option is omitted, the clone will be created in the default directory.
 
 Use the \fB--changesid\fR option to assign the clone a new Windows security identifier (SID). Note: @PRODUCT_NAME_SHORT@ Guest Tools must be installed in the original Windows-based virtual machine.
 
@@ -238,7 +238,7 @@ Mounts the specified virtual environment.
 .IP "\fBumount\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Unmounts the specified virtual environment.
 .IP "\fBmove\fR <\fIve_id\fR|\fIve_name\fR> \fB--dst\fR <\fIpath\fR>" 4
-Moves the files of the specified virtual environment to a new location on the same server.
+Moves the directory with files of the specified virtual environment to a new location on the same server.
 The command supports moving stopped, suspended, and running Containers and stopped and suspended virtual machines.
 .TP
 \fBContainer action scripts\fR
