@@ -678,8 +678,8 @@ int PrlDevHdd::set_device(const DevInfo &param)
 				return prl_err(-1, "PrlVmDevHdPart_SetSysName: %s",
 					param.device.c_str());
 		} else {
-			/* Pass device as is */
-			path = id = param.device;
+			return prl_err(-1, "Unknown device: %s",
+					param.device.c_str());
 		}
 	} else if (!param.image.empty()) {
 		type = PDT_USE_IMAGE_FILE;
