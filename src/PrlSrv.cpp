@@ -705,12 +705,6 @@ int PrlSrv::create_ct(const CmdParamData &param)
 	PRL_UINT32 resultCount;
 	PrlVm *vm;
 
-	if ((ret = update_vm_list(PVTF_CT|PVTF_VM)))
-		return ret;
-
-	if (m_VmList.find(param.id))
-		return prl_err(-1, "The %s VM already exists.",
-			param.id.c_str());
 	prl_log(0, "Creating the Container...");
 
 	PrlHandle hVm;
@@ -763,12 +757,6 @@ int PrlSrv::create_vm(const CmdParamData &param)
 	PRL_RESULT ret;
 	PrlVm *vm;
 
-	if ((ret = update_vm_list(PVTF_CT|PVTF_VM)))
-		return ret;
-
-	if (m_VmList.find(param.id))
-		return prl_err(-1, "The %s VM already exists.",
-			param.id.c_str());
 	/* in case ostemplate specified just clone VM */
 	if (!param.ostemplate.empty()) {
 		prl_log(0, "Creating the VM on the basis of the %s template...",
