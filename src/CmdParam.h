@@ -672,13 +672,16 @@ struct VNetParam {
 	int type;
 	bool is_shared;
 	std::string mac;
+	bool no_slave;
 public:
 	VNetParam() :
 		dhcp_enabled(-1),
 		dhcp6_enabled(-1),
 		type(-1),
-		is_shared(false)
+		is_shared(false),
+		no_slave(false)
 	{}
+	bool detailed() const { return cmd == VNetParam::Info; }
 };
 
 struct PrivNetParam {
@@ -1375,6 +1378,7 @@ enum cmdOptions {
 	CMD_VNET_DHCP6_ENABLED,
 	CMD_VNET_DHCP_IP,
 	CMD_VNET_DHCP_IP6,
+	CMD_VNET_NO_SLAVE,
 
 	CMD_PRIVNET_IPADD,
 	CMD_PRIVNET_IPDEL,

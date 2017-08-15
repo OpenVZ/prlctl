@@ -192,15 +192,17 @@ public:
 	int find_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet);
 	int fill_vnetwork_handle(const VNetParam &vnet, PrlHandle &hVirtNet);
 	int fill_vnetwork_nat_rules(const VNetParam &vnet, PrlHandle &hVirtNet);
-	void print_boundto_bridged(const PrlHandle *phVirtNet, const std::string &netId,
-			char *buf, int size, PrlOutFormatter &f, bool detailed);
-	void print_boundto_host_only(const PrlHandle *phVirtNet, const std::string &netId,
-								PrlOutFormatter &f, bool detailed);
+	void print_boundto_bridged(const PrlHandle *phVirtNet,
+			const std::string &netId, PrlOutFormatter &f,
+			const VNetParam &vnet);
+	void print_boundto_host_only(const PrlHandle *phVirtNet,	
+			const std::string &netId,
+			PrlOutFormatter &f, const VNetParam &vnet);
 	void print_vnetwork_info(const PrlHandle *phVirtNet,
-								PrlOutFormatter &f, bool detailed);
+			PrlOutFormatter &f, const VNetParam &vnet);
 	void print_nat_info(const PrlHandle& hVirtNet,	PrlOutFormatter &f);
 	int vnetwork(const VNetParam &param, bool use_json);
-	int vnetwork_list(bool use_json);
+	int vnetwork_list(const VNetParam &vnet, bool use_json);
 	int get_ip(const PrlHandle *phPrivNet, ip_list_t &ips);
 	int fill_priv_networks_list(PrlPrivNetList &list) const;
 	int find_priv_network_handle(const PrivNetParam &privnet, PrlHandle &hPrivNet);
