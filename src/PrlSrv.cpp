@@ -2235,16 +2235,20 @@ void PrlSrv::append_slave_ifaces(PrlOutFormatter &f, const std::string& netId, b
 		f.tbl_add_item("Slave interfaces", "%-15s", vethList.c_str());
 }
 
-void PrlSrv::print_boundto_bridged(const PrlHandle *phVirtNet, const std::string &netId,
-	char *buf, int size, PrlOutFormatter &f, bool detailed)
+void PrlSrv::print_boundto_bridged(const PrlHandle *phVirtNet,
+		const std::string &netId, PrlOutFormatter &f,
+		const VNetParam &vnet)
 {
+	char buf[1024];
 	PRL_UINT32 len;
+	bool detailed = vnet.detailed();
+
 	PrlHandle hAdapter;
 	PRL_RESULT ret = PrlVirtNet_GetBoundAdapterInfo(phVirtNet->get_handle(),
 			get_srv_config_handle(), hAdapter.get_ptr());
 	if (ret == PRL_ERR_NETWORK_ADAPTER_NOT_FOUND) {
 		/* print MAC than */
-		len = size;
+		len = sizeof(buf);
 		ret = PrlVirtNet_GetBoundCardMac(phVirtNet->get_handle(),
 				buf, &len);
 		if (PRL_FAILED(ret)) {
@@ -2259,7 +2263,7 @@ void PrlSrv::print_boundto_bridged(const PrlHandle *phVirtNet, const std::string
 		fprintf(stdout, "\n");
 		return;
 	} else {
-		PRL_UINT32 len = size;
+		len = sizeof(buf);
 		ret = PrlSrvCfgDev_GetId(hAdapter.get_handle(), buf, &len);
 		if (PRL_FAILED(ret)) {
 			prl_log(L_ERR, "Error: PrlSrvCfgDev_GetId failed: %s",
@@ -2273,7 +2277,7 @@ void PrlSrv::print_boundto_bridged(const PrlHandle *phVirtNet, const std::string
 	else
 		f.tbl_add_item("Bound To", "%-15s", buf);
 
-	len = size;
+	len = sizeof(buf);
 	ret = PrlVirtNet_GetAdapterName(phVirtNet->get_handle(), buf, &len);
 	if (PRL_FAILED(ret)) {
 		prl_log(L_ERR, "Error: PrlVirtNet_GetAdapterName"
@@ -2286,11 +2290,13 @@ void PrlSrv::print_boundto_bridged(const PrlHandle *phVirtNet, const std::string
 	else
 		f.tbl_add_item("Bridge", "%-15s", buf);
 
-	append_slave_ifaces(f, netId, detailed);
+	if (!vnet.no_slave)
+		append_slave_ifaces(f, netId, detailed);
 }
 
-void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet, const std::string &netId,
-		PrlOutFormatter &f, bool detailed)
+void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet,
+		const std::string &netId, PrlOutFormatter &f,
+		const VNetParam &vnet)
 {
 	PRL_UINT32 nIndex;
 	PRL_RESULT ret;
@@ -2298,6 +2304,7 @@ void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet, const std::stri
 	PRL_UINT32 len;
 	PrlDevSrv *dev;
 	PRL_BOOL bEnabled;
+	bool detailed = vnet.detailed();
 
 	ret = PrlVirtNet_GetAdapterIndex(phVirtNet->get_handle(),
 			&nIndex);
@@ -2328,7 +2335,8 @@ void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet, const std::stri
 	else
 		f.tbl_add_item("Bridge", "%-15s", buf);
 
-	append_slave_ifaces(f, netId, detailed);
+	if (!vnet.no_slave)
+		append_slave_ifaces(f, netId, detailed);
 
 	if (!detailed)
 		return;
@@ -2491,11 +2499,12 @@ void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet, const std::stri
 }
 
 void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
-		PrlOutFormatter &f, bool detailed)
+		PrlOutFormatter &f, const VNetParam &vnet)
 {
 	PRL_RESULT ret;
-	char buf[1024];
+	char buf[4096];
 	PRL_UINT32 len;
+	bool detailed = vnet.detailed();
 
 	/* Network ID */
 	len = sizeof(buf);
@@ -2538,8 +2547,7 @@ void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
 			f.tbl_add_item("Type", "%-10s", "bridged");
 
 		/* Bound To */
-		print_boundto_bridged(phVirtNet, netId, buf, sizeof(buf), f, detailed);
-
+		print_boundto_bridged(phVirtNet, netId, f, vnet);
 	} else {
 		PRL_BOOL bNatEnabled;
 		ret = PrlVirtNet_IsNATServerEnabled(phVirtNet->get_handle(),
@@ -2560,7 +2568,7 @@ void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
 				f.tbl_add_item("Type", "%-10s", "shared");
 
 			/* BoundTo */
-			print_boundto_host_only(phVirtNet, netId, f, detailed);
+			print_boundto_host_only(phVirtNet, netId, f, vnet);
 
 			if (f.type == OUT_FORMATTER_PLAIN)
 				f.add("", "\n", true, false, true);
@@ -2574,7 +2582,7 @@ void PrlSrv::print_vnetwork_info(const PrlHandle *phVirtNet,
 				f.tbl_add_item("Type", "%-10s", "host-only");
 
 			/* BoundTo */
-			print_boundto_host_only(phVirtNet, netId, f, detailed);
+			print_boundto_host_only(phVirtNet, netId, f, vnet);
 		}
 	}
 
@@ -2714,7 +2722,7 @@ int PrlSrv::convert_vm(const CmdParamData &param)
 int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 {
 	if (vnet.cmd == VNetParam::List)
-		return vnetwork_list(use_json);
+		return vnetwork_list(vnet, use_json);
 
 	PrlHandle hVirtNet;
 	PRL_RESULT ret;
@@ -2760,7 +2768,7 @@ int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 	} else if (vnet.cmd == VNetParam::Info) {
 		PrlOutFormatter &f = *(get_formatter(use_json, "\t"));
 
-		print_vnetwork_info(&hVirtNet, f, 1);
+		print_vnetwork_info(&hVirtNet, f, vnet);
 
 		fprintf(stdout, "%s", f.get_buffer().c_str());
 	}
@@ -2770,15 +2778,10 @@ int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 	return 0;
 }
 
-int PrlSrv::vnetwork_list(bool use_json)
+int PrlSrv::vnetwork_list(const VNetParam &vnet, bool use_json)
 {
 	PRL_RESULT ret;
 	PrlOutFormatter &f = *(get_formatter(use_json));
-
-	if (m_VmList.empty()) {
-		if ((ret = update_vm_list(PVTF_CT|PVTF_VM)))
-			return ret;
-	}
 
 	if ((ret = fill_vnetworks_list(m_VNetList)))
 		return ret;
@@ -2789,7 +2792,7 @@ int PrlSrv::vnetwork_list(bool use_json)
 	PrlVNetList::const_iterator it = m_VNetList.begin();
 	f.open_list();
 	for (; it != m_VNetList.end(); ++it)
-		print_vnetwork_info(*it, f, 0);
+		print_vnetwork_info(*it, f, vnet);
 	f.close_list();
 
 	fprintf(stdout, "%s", f.get_buffer().c_str());

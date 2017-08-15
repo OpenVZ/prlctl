@@ -431,6 +431,7 @@ static Option disp_vnet_options[] = {
 	{"dhcp-ip", '\0', OptRequireArg, CMD_VNET_DHCP_IP},
 	{"dhcp-ip6", '\0', OptRequireArg, CMD_VNET_DHCP_IP6},
 	{"json", 'j', OptNoArg, CMD_USE_JSON},
+	{"no-slave", 'j', OptNoArg, CMD_VNET_NO_SLAVE},
 	OPTION_END
 };
 
@@ -919,8 +920,8 @@ static void usage_disp(const char * argv0)
 "                   [--nat-<tcp|udp>-del <rule_name>]\n"
 #endif
 "  net del <vnetwork_id>\n"
-"  net info <vnetwork_id>\n"
-"  net list [-j, --json]\n"
+"  net info <vnetwork_id> [--no-slave] [-j, --json]]\n"
+"  net list [--no-slave] [-j, --json]\n"
 "  privnet add <private_network_id> [-a,--ipadd <addr[/mask]>] [--global <yes|no>]\n"
 "  privnet set <private_network_id> [-a,--ipadd <addr[/mask]>] [-d,--ipdel <addr[/mask]>]\n"
 "                                   [--global <yes|no>]\n"
@@ -4195,6 +4196,9 @@ CmdParamData cmdParam::get_vnet_param(int argc, char **argv,
 			break;
 		case CMD_USE_JSON:
 			param.use_json = true;
+			break;
+		case CMD_VNET_NO_SLAVE:
+			param.vnet.no_slave = true;
 			break;
 		case GETOPTUNKNOWN:
 			if (param.vnet.vnet.empty())
