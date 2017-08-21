@@ -761,6 +761,9 @@ int PrlSrv::create_vm(const CmdParamData &param)
 	if (!param.ostemplate.empty()) {
 		prl_log(0, "Creating the VM on the basis of the %s template...",
 			param.ostemplate.c_str());
+		if ((ret = update_vm_list(PVTF_CT|PVTF_VM)))
+			return ret;
+
 		if (!(vm = m_VmList.find(param.ostemplate)) ||
 		    !vm->is_template())
 			return prl_err(1, "Failed to find the %s template.",
