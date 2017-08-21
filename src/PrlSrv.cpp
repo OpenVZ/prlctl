@@ -34,6 +34,7 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory>
 
 #include <PrlIOStructs.h>
 #include <PrlApiDisp.h>
@@ -755,20 +756,23 @@ int PrlSrv::create_ct(const CmdParamData &param)
 int PrlSrv::create_vm(const CmdParamData &param)
 {
 	PRL_RESULT ret;
-	PrlVm *vm;
 
 	/* in case ostemplate specified just clone VM */
 	if (!param.ostemplate.empty()) {
+		PrlVm *v = NULL;
+
 		prl_log(0, "Creating the VM on the basis of the %s template...",
 			param.ostemplate.c_str());
-		if ((ret = update_vm_list(PVTF_CT|PVTF_VM)))
+		if ((ret = get_vm_config(param.ostemplate, &v)))
 			return ret;
 
-		if (!(vm = m_VmList.find(param.ostemplate)) ||
-		    !vm->is_template())
+		std::auto_ptr<PrlVm> vm(v);
+		if (!v || !vm->is_template())
 			return prl_err(1, "Failed to find the %s template.",
-				param.ostemplate.c_str());
-		return vm->clone(param.id, param.uuid, param.vm_location, param.clone_flags);
+					param.ostemplate.c_str());
+		
+		return vm->clone(param.id, param.uuid, param.vm_location,
+				param.clone_flags);
 	}
 	prl_log(0, "Creating the virtual machine...");
 
@@ -777,7 +781,8 @@ int PrlSrv::create_vm(const CmdParamData &param)
 		return prl_err(ret, "Failed to create the VM: %s",
 				get_error_str(ret).c_str());
 
-	vm = m_VmList.add(new PrlVm(*this, hVm.release_handle(), param.uuid, param.id, 0));
+	PrlVm *vm = m_VmList.add(new PrlVm(*this, hVm.release_handle(),
+				param.uuid, param.id, 0));
 	vm->set_state(VMS_STOPPED);
 	if (param.dist) {
 		if ((ret = vm->load_def_configuration(param.dist)))
