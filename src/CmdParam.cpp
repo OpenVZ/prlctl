@@ -4225,7 +4225,7 @@ CmdParamData cmdParam::get_vnet_param(int argc, char **argv,
 		return invalid_action;
 	}
 	if (param.vnet.type == PVN_BRIDGED_ETHERNET &&
-		param.vnet.ifname.empty()) {
+			param.vnet.ifname.empty() && param.vnet.mac.empty()) {
 		fprintf(stderr, "For a bridged Virtual Network, you need to"
 			" specify either the --ifname or --mac option.\n");
 		return invalid_action;
