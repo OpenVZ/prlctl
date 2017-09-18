@@ -661,8 +661,8 @@ int PrlDevHdd::set_device(const DevInfo &param)
 
 		dev = m_vm.find_srv_dev(m_devType, param.device);
 		if (dev) {
-			path = dev->get_name();
 			id = dev->get_id();
+			path = id;
 		} else if ((dev_part = m_vm.find_srv_dev(DEV_HDD_PARTITION, param.device))) {
 			type = PDT_USE_OTHER;
 			dev = dev_part->m_parent;
