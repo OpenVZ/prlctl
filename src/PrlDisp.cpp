@@ -344,15 +344,6 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	}
 	f.close(true);
 
-	f.open("Memory limit", true);
-	if (m_mem_limit_auto) {
-		f.add("mode", "auto", true, false, true);
-	} else {
-		f.add("limit", m_mem_limit, "Mb", true);
-		f.add("max", m_mem_limit_max, "Mb", true);
-	}
-	f.close(true);
-
 	std::string x;
 	get_security_level(m_min_security_level, x);
 	f.add("Minimal security level", x);
