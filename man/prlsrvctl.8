@@ -19,8 +19,6 @@ prlsrvctl \fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fInam
 .PP
 prlsrvctl \fBupdate-license\fR  [\fBOPTIONS\fR]
 .PP
-prlsrvctl \fBshutdown\fR [\fB-f,--force\fR] [\fB--suspend-vm-to-pram\fR] [\fBOPTIONS\fR]
-.PP
 prlsrvctl \fBuser\fR \fBlist\fR [\fB-j, --json\fR] [\fBOPTIONS\fR]
 .PP
 prlsrvctl \fBuser\fR \fBset\fR \fB--def-vm-home\fR <\fIpath\fR>
@@ -136,9 +134,6 @@ node. To disable VNC encryption, specify empty arguments (e.g., '').
 Install @PRODUCT_NAME_SHORT@ license.
 .IP "\fBupdate-license\fR" 4
 Update current @PRODUCT_NAME_SHORT@ license.
-.IP "\fBshutdown\fR  \fB--suspend-vm-to-pram\fR" 4
-Shut down the @PRODUCT_NAME_SHORT@ server. If the \fB--suspend-vm-to-pram\fR option is specified,
-all running VM will be suspended to PRAM.
 .IP "\fBinfo\fR" 4
 Show detailed information about the @PRODUCT_NAME_SHORT@ server configuration. If the
 \fB--license\fR option is specified, only the license info is displayed. You can use the \fB--json\fR option to produce machine-readable output in JSON format.

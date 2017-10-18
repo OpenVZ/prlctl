@@ -884,7 +884,6 @@ static void usage_disp(const char * argv0)
 "	[--vcmmd-policy <density|performance>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
 "	[--vnc-ssl-certificate <fname> --vnc-ssl-key <fname>]\n"
-"  shutdown [-f,--force] [--suspend-vm-to-pram]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
 "  user set --def-vm-home <path>\n"
 //"  statistics [-a, --all] [--loop] [--filter name]\n"
