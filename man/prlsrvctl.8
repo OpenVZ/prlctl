@@ -4,7 +4,7 @@ prlsrvctl \- utility for managing @PRODUCT_NAME_SHORT@ Server.
 .SH SYNOPSIS
 prlsrvctl \fBinfo\fR [\fB-j, --json\fR] [\fB--license\fR] [\fB-f, --full\fR]
 .PP
-prlsrvctl \fBset\fR [\fR--mem-limit\fR <\fIauto\fR|\fIsize\fR>] [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>]
+prlsrvctl \fBset\fR [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>]
 [{\fR--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>}]
 [\fR--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR] [\fR--backup-path\fR <\fIpath\fR>]
 [\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
@@ -89,13 +89,6 @@ Specify custom operation timeout in seconds (by default any operation has infini
 This command is used to set and configure various VM parameters.
 .br
 The following options can be used with the \fBset\fR command:
-.TP
-\fB--mem-limit\fR <\fIauto\fR|\fIsize\fR>
-Set the total memory allocated to @PRODUCT_NAME_SHORT@ Server and its virtual machines.
-.br
-\fIauto\fR - optimize the memory usage.
-.br
-\fIsize\fR - set memory size manually.
 .TP
 \fB-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>
 Specifies the minimum allowable security level that can be used by users to
