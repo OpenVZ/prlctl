@@ -1792,6 +1792,8 @@ void PrlDevNet::append_info(PrlOutFormatter &f)
 			f.add("card", "rtl", true);
 		else if (nAdapterType == PNT_E1000)
 			f.add("card", "e1000", true);
+		else if (nAdapterType == PNT_HYPERV)
+			f.add("card", "hyperv", true);
 		else if (nAdapterType == PNT_E1000E)
 			f.add("card", "e1000e", true);
 		else if (nAdapterType == PNT_VIRTIO)

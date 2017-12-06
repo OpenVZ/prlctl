@@ -844,7 +844,7 @@ static void usage_vm(const char * argv0)
 "		[--nameserver <addr>] [--searchdomain <addr>] [--configure <yes|no>]\n"
 "		[--apply-iponly <yes|no>] [--ipfilter <yes|no>] [--macfilter <yes|no>]\n"
 "		[--preventpromisc <yes|no>]\n"
-"		[--adapter-type <virtio|e1000|rtl>]\n"
+"		[--adapter-type <virtio|hyperv|e1000|rtl>]\n"
 #ifndef EXTERNALLY_AVAILABLE_BUILD
 "		[--fw <on|off>] [--fw-policy <accept|deny>] [--fw-direction <in|out>]\n"
 "		[--fw-rule <tcp|udp|* srcip|* port|* dstip|* port|*>]\n"
@@ -2425,6 +2425,8 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 				net.adapter_type = PNT_VIRTIO;
 			else if (val == "e1000")
 				net.adapter_type = PNT_E1000;
+			else if (val == "hyperv")
+				net.adapter_type = PNT_HYPERV;
 			else if (val == "rtl")
 				net.adapter_type = PNT_RTL;
 			else {
