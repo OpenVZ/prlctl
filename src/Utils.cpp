@@ -2297,6 +2297,16 @@ static const RegisterDescriptionItem s_cpuid_80000008_EAX_items[] = {
 	TERMINATOR_ITEM
 };
 
+static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
+	RESERVED_AREA(0, 25),
+	FLAG_ITEM("spec-ctrl"),
+	FLAG_ITEM("stibp"),
+	RESERVED_FLAG,
+	FLAG_ITEM("arch-capabilities"),
+	RESERVED_AREA(30, 31),
+	TERMINATOR_ITEM
+};
+
 static const RegisterDescriptionItem * const s_register_descriptions[PCFE_MAX] = {
 	s_cpuid_00000001_EDX_items,
 	s_cpuid_00000001_ECX_items,
@@ -2305,7 +2315,8 @@ static const RegisterDescriptionItem * const s_register_descriptions[PCFE_MAX] =
 	s_cpuid_80000001_EDX_items,
 	s_cpuid_80000007_EDX_items,
 	s_cpuid_80000008_EAX_items,
-	s_cpuid_0000000D_01_EAX_items
+	s_cpuid_0000000D_01_EAX_items,
+	s_cpuid_00000007_EDX_items,
 };
 
 class BitFieldAccessor {
