@@ -216,6 +216,7 @@ public:
 	void set_logoff_timeout(unsigned int timeout) { m_logoffTimeout = timeout; }
 	~PrlSrv();
 	int get_backup_disks(const std::string& id, std::list<std::string>& disks);
+	int print_dist_info(const CmdParamData &param);
 
 private:
 	int get_srv_info();
@@ -269,7 +270,6 @@ private:
 	int restart_shaping();
 	int get_supported_os_info(DistList& info);
 	int get_os_type_info(PRL_HANDLE hOsesMatrix, PRL_UINT8 nOsType, DistList& info);
-	int print_dist_info(const CmdParamData &param);
 	void print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE type);
 };
 

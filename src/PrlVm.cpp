@@ -3595,9 +3595,11 @@ int PrlVm::set(const CmdParamData &param)
 	}
 
 	/* VM configuration */
-	if (param.dist) {
-	    if ((ret = set_distribution(param.dist)))
-		return ret;
+	if (param.dist_list.print)
+		return m_srv.print_dist_info(param);
+	else if (param.dist) {
+		if ((ret = set_distribution(param.dist)))
+			return ret;
 	}
 	if (param.cpu_cores) {
 		if ((ret = set_cpu_cores(param.cpu_cores.get())))
