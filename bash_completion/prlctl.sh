@@ -61,7 +61,8 @@ _prlctl()
 		pause reset resume start stop snapshot snapshot-delete \
 		snapshot-list snapshot-switch suspend statistics unregister \
 		set backup restore backup-list backup-delete reset-uptime \
-		move exec"
+		move exec console mount umount status problem-report change-sid \
+		restart"
 	local actions_without_vmid="create list register server"
 
 	local capture_flags='--file'
