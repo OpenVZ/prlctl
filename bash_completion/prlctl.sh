@@ -127,7 +127,7 @@ _prlctl()
 			COMPREPLY=($(compgen -o dirnames -- "${cur}"))
 			return 0
 			;;
-		-c|--config|--file)
+		-c|--config|--file|--device|--image)
 			# TODO Add filtering on file extentions
 			COMPREPLY=($(compgen -A file -- "${cur}"))
 			return 0
