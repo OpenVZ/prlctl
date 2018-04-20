@@ -62,14 +62,14 @@ _prlctl()
 		snapshot-list snapshot-switch suspend statistics unregister \
 		set backup restore backup-list backup-delete reset-uptime \
 		move exec console mount umount status problem-report change-sid \
-		restart"
+		restart list"
 	local actions_without_vmid="create list register server"
 
 	local capture_flags='--file'
 	local clone_flags='--name'
 	local clone_optional_flags='--template --location'
 	local create_flags='-c --config --location -o --ostype -d --distribution --ostemplate'
-	local list_flags='-a --all -t --template -o --output -s --sort -i --info'
+	local list_flags='-a --all -t --template -o --output -s --sort -i --info -f --full -j --json --vmtype'
 	local migrate_flags='--location --mode --no-compression'
 	local snapshot_flags='-n --name -d --description'
 	local snapshotlist_flags='-t --tree -i --id'
@@ -235,6 +235,8 @@ _prlctl()
 				# TODO See '--id'
 				# opts=$(get_snaps_ids)
 				opts=""
+			elif [ "${action}" = 'list' ]; then
+				opts="${list_flags} ${global_flags}"
 			else
 				opts=$(get_ostypes)
 			fi
@@ -271,6 +273,9 @@ _prlctl()
 		--verbose)
 			# TODO find out acceptable log levels
 			opts='1 2 3'
+			;;
+		--vmtype)
+			opts='ct vm all'
 			;;
 
 		*) # processing actions' local options
