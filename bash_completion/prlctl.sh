@@ -1,11 +1,12 @@
 get_vms() {
 	# TODO if remote parameters are specified -
 	# use them here
-	prlctl list -a -o name | awk '{if (NR > 1) print $1}'
+	prlctl list -a -Ho name \
+		| while read name; do printf "%q\n" "$name"; done
 }
 
 get_uuids() {
-	prlctl list -a -o uuid | awk '{if (NR > 1) print substr($1,2,36)}'
+	prlctl list -a -Ho uuid | tr -d {}
 }
 
 get_vm_ids() {
@@ -102,6 +103,7 @@ _prlctl()
 	else
 		for i in $actions_on_vmid; do
 			if [ "${prev}" = "${i}" ]; then
+				local IFS=$'\n'
 				if [ -z "${cur}" ]; then
 					opts=$(get_vms)
 				else
@@ -417,4 +419,4 @@ _prlctl()
 	return 0
 }
 
-complete -F _prlctl prlctl
+complete -o filenames -F _prlctl prlctl
