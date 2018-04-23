@@ -1,11 +1,12 @@
 get_vms() {
 	# TODO if remote parameters are specified -
 	# use them here
-	prlctl list -a -o name | awk '{if (NR > 1) print $1}'
+	prlctl list -a -Ho name \
+		| while read name; do printf "%q\n" "$name"; done
 }
 
 get_uuids() {
-	prlctl list -a -o uuid | awk '{if (NR > 1) print substr($1,2,36)}'
+	prlctl list -a -Ho uuid | tr -d {}
 }
 
 get_vm_ids() {
@@ -61,14 +62,15 @@ _prlctl()
 		pause reset resume start stop snapshot snapshot-delete \
 		snapshot-list snapshot-switch suspend statistics unregister \
 		set backup restore backup-list backup-delete reset-uptime \
-		move exec"
+		move exec console mount umount status problem-report change-sid \
+		restart list"
 	local actions_without_vmid="create list register server"
 
 	local capture_flags='--file'
 	local clone_flags='--name'
 	local clone_optional_flags='--template --location'
 	local create_flags='-c --config --location -o --ostype -d --distribution --ostemplate'
-	local list_flags='-a --all -t --template -o --output -s --sort -i --info'
+	local list_flags='-a --all -t --template -o --output -s --sort -i --info -f --full -j --json --vmtype'
 	local migrate_flags='--location --mode --no-compression'
 	local snapshot_flags='-n --name -d --description'
 	local snapshotlist_flags='-t --tree -i --id'
@@ -101,6 +103,7 @@ _prlctl()
 	else
 		for i in $actions_on_vmid; do
 			if [ "${prev}" = "${i}" ]; then
+				local IFS=$'\n'
 				if [ -z "${cur}" ]; then
 					opts=$(get_vms)
 				else
@@ -127,7 +130,7 @@ _prlctl()
 			COMPREPLY=($(compgen -o dirnames -- "${cur}"))
 			return 0
 			;;
-		-c|--config|--file)
+		-c|--config|--file|--device|--image)
 			# TODO Add filtering on file extentions
 			COMPREPLY=($(compgen -A file -- "${cur}"))
 			return 0
@@ -234,6 +237,8 @@ _prlctl()
 				# TODO See '--id'
 				# opts=$(get_snaps_ids)
 				opts=""
+			elif [ "${action}" = 'list' ]; then
+				opts="${list_flags} ${global_flags}"
 			else
 				opts=$(get_ostypes)
 			fi
@@ -270,6 +275,9 @@ _prlctl()
 		--verbose)
 			# TODO find out acceptable log levels
 			opts='1 2 3'
+			;;
+		--vmtype)
+			opts='ct vm all'
 			;;
 
 		*) # processing actions' local options
@@ -411,4 +419,4 @@ _prlctl()
 	return 0
 }
 
-complete -F _prlctl prlctl
+complete -o filenames -F _prlctl prlctl
