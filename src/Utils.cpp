@@ -2303,7 +2303,8 @@ static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
 	FLAG_ITEM("stibp"),
 	RESERVED_FLAG,
 	FLAG_ITEM("arch-facilities"),
-	RESERVED_AREA(30, 31),
+	RESERVED_FLAG,
+	FLAG_ITEM("ssbd"),
 	TERMINATOR_ITEM
 };
 
