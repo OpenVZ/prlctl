@@ -37,6 +37,7 @@
 #include <PrlEnums.h>
 #include <PrlErrors.h>
 #include <PrlApi.h>
+#include <boost/noncopyable.hpp>
 #define VENET0_STR	"venet0"
 #define VENET0_ID	"net4294967295"
 
@@ -197,7 +198,7 @@ public:
 	T m_data;
 };
 
-class PrlBase {
+class PrlBase: boost::noncopyable {
 private:
 	PRL_HANDLE m_handle;
 
@@ -220,6 +221,11 @@ public:
 	operator PRL_HANDLE () const
 	{
 		return (m_handle) ;
+	}
+	void capture(PRL_HANDLE value_)
+	{
+		PrlHandle_AddRef(value_);
+		release()->m_handle = value_;
 	}
 };
 typedef PrlBase PrlHandle;
