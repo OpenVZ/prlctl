@@ -2135,7 +2135,7 @@ int PrlSrv::find_vnetwork_handle_by_name(
 			continue;
 		}
 		if (!strncmp(name.c_str(), buf, sizeof(buf))) {
-			hVirtNet = *(*it);
+			hVirtNet.capture((*it)->get_handle());
 			return 0;
 		}
 	}
@@ -2170,7 +2170,7 @@ int PrlSrv::find_vnetwork_handle_by_mac_and_vlan(const std::string &mac,
 
 		if (!strncmp(mac.c_str(), buf, sizeof(buf)) &&
 			vlanTag == (unsigned short)vnet_vlanTag) {
-			hVirtNet = *(*it);
+			hVirtNet.capture((*it)->get_handle());
 			return 0;
 		}
 	}
@@ -2870,7 +2870,7 @@ int PrlSrv::find_priv_network_handle(const PrivNetParam &privnet, PrlHandle &hPr
 			continue;
 		}
 		if (!strncmp(privnet.name.c_str(), buf, sizeof(buf))) {
-			hPrivNet = *(*it);
+			hPrivNet.capture((*it)->get_handle());
 			return 0;
 		}
 	}
@@ -3462,14 +3462,14 @@ int PrlSrv::set_user(const CmdParamData &param) {
 	if (param.user.def_vm_home.empty())
 		return 0;
 
-	PrlHandle j1 = PrlSrv_UserProfileBeginEdit(m_hSrv);
+	PrlHandle j1(PrlSrv_UserProfileBeginEdit(m_hSrv));
 	PRL_RESULT result;
 	std::string e;
 	result = get_job_retcode(j1.get_handle(), e);
 	if (0 != result)
 		return prl_err(result, "PrlSrv_UserProfileBeginEdit: %s", e.c_str());
 
-	PrlHandle j2 = PrlSrv_GetUserProfile(m_hSrv), r;
+	PrlHandle j2(PrlSrv_GetUserProfile(m_hSrv)), r;
 	PRL_UINT32 n = 0;
 	result = get_job_result(j2.get_handle(), r.get_ptr(), &n);
 	if (0 != result)
@@ -3488,7 +3488,7 @@ int PrlSrv::set_user(const CmdParamData &param) {
 		return prl_err(result, "PrlUsrCfg_SetDefaultVmFolder: %s",
 			get_error_str(result).c_str());
 
-	PrlHandle j3 = PrlSrv_UserProfileCommit(m_hSrv, p.get_handle());
+	PrlHandle j3(PrlSrv_UserProfileCommit(m_hSrv, p.get_handle()));
 	result = get_job_retcode(j3.get_handle(), e);
 	if (0 != result)
 		return prl_err(result, "PrlSrv_UserProfileCommit: %s", e.c_str());
@@ -3507,7 +3507,7 @@ unsigned int PrlSrv::get_min_security_level() const
 
 int PrlSrv::restart_shaping()
 {
-	PrlHandle j = PrlSrv_RestartNetworkShaping(m_hSrv, 0);
+	PrlHandle j(PrlSrv_RestartNetworkShaping(m_hSrv, 0));
 	std::string e;
 	PRL_RESULT res = get_job_retcode(j.get_handle(), e);
 	if (res)

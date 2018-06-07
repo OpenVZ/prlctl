@@ -1434,11 +1434,9 @@ int PrlDisp::usbassign(const UsbParam &param, bool use_json)
 	std::string err;
 	PRL_RESULT res;
 
-	PrlHandle hJob;
-
 	if( param.cmd != UsbParam::List )
 	{
-		hJob = PrlSrv_CommonPrefsBeginEdit(m_srv.get_handle());
+		PrlHandle hJob(PrlSrv_CommonPrefsBeginEdit(m_srv.get_handle()));
 		if ((res = get_job_retcode(hJob.get_handle(), err)))
 			return prl_err(res, "%s", err.c_str());
 	}
