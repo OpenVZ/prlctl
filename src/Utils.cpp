@@ -2187,7 +2187,8 @@ static const RegisterDescriptionItem s_cpuid_80000001_ECX_items[] = {
 	FLAG_ITEM("dbx"),
 	FLAG_ITEM("perftsc"),
 	FLAG_ITEM("perfctr_l2"),
-	RESERVED_AREA(29, 31),
+	FLAG_ITEM("mwaitext"),
+	RESERVED_AREA(30, 31),
 	TERMINATOR_ITEM
 };
 
@@ -2250,7 +2251,9 @@ static const RegisterDescriptionItem s_cpuid_80000007_EDX_items[] = {
 	FLAG_ITEM("efro"),
 	FLAG_ITEM("pfi"),
 	FLAG_ITEM("pa"),
-	RESERVED_AREA(13, 31),
+	FLAG_ITEM("cs"), // ConnectedStandby
+	FLAG_ITEM("rapl"), // RAPL: running average power limit
+	RESERVED_AREA(15, 31),
 	TERMINATOR_ITEM
 };
 
@@ -2277,7 +2280,7 @@ static const RegisterDescriptionItem s_cpuid_00000007_EBX_items[] = {
 	FLAG_ITEM("adx"),
 	FLAG_ITEM("smap"),
 	RESERVED_FLAG,
-	RESERVED_FLAG,
+	FLAG_ITEM("pcommit"),
 	FLAG_ITEM_ALIAS("clflushopt", "cflushopt"),
 	RESERVED_FLAG,
 	FLAG_ITEM("pt"),
