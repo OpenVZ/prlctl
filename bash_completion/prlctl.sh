@@ -59,11 +59,11 @@ _prlctl()
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 
 	local actions_on_vmid="capture clone delete installtools enter migrate \
-		pause reset resume start stop snapshot snapshot-delete \
-		snapshot-list snapshot-switch suspend statistics unregister \
-		set backup restore backup-list backup-delete reset-uptime \
-		move exec console mount umount status problem-report change-sid \
-		restart list"
+pause reset resume start stop snapshot snapshot-delete \
+snapshot-list snapshot-switch suspend statistics unregister \
+set backup restore backup-list backup-delete reset-uptime \
+move exec console mount umount status problem-report change-sid \
+restart list"
 	local actions_without_vmid="create list register server"
 
 	local capture_flags='--file'
@@ -82,14 +82,14 @@ _prlctl()
 	local restore_flags='-t --tag'
 	local statistics_flags='--loop --filter'
 	local set_flags='--cpus --memsize --videosize --description \
-		--onboot --name --device-add --device-del --device-set \
-		--device-connect --device-disconnect --applyconfig \
-		--netfilter --swappages --swap --quotaugidlimit \
-		--autostart --autostart-delay --autostop \
-		--vnc-mode --vnc-port --vnc-passwd --ioprio \
-		--ha-enable --ha-prio'
+--onboot --name --device-add --device-del --device-set \
+--device-connect --device-disconnect --applyconfig \
+--netfilter --swappages --swap --quotaugidlimit \
+--autostart --autostart-delay --autostop \
+--vnc-mode --vnc-port --vnc-passwd --ioprio \
+--ha-enable --ha-prio'
 	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr \
-		--encrypt --decrypt --encryption-keyid --reencrypt --nowipe'
+--encrypt --decrypt --encryption-keyid --reencrypt --nowipe'
 	local set_device_cdrom_flags='--device --image --iface --position --passthr'
 	local set_device_net_flags='--type --mac --iface'
 	local set_device_fdd_flags='--device --image --recreate'
@@ -99,11 +99,10 @@ _prlctl()
 	local global_flags='-l -p -v --verbose'
 
 	if [ $COMP_CWORD == 1 ]; then
-		opts="${actions_on_vmid} ${actions_without_vmid}"
+		opts="${actions_on_vmid// /$'\n'}\n${actions_without_vmid// /$'\n'}"
 	else
 		for i in $actions_on_vmid; do
 			if [ "${prev}" = "${i}" ]; then
-				local IFS=$'\n'
 				if [ -z "${cur}" ]; then
 					opts=$(get_vms)
 				else
@@ -412,9 +411,17 @@ _prlctl()
 			esac
 			;;
 		esac
+
+	opts=$(for name in $opts; do printf "%q\n" "$name"; done)
+
 	fi
 
+	local OLDIFS=$IFS
+	IFS=$'\n'
+
 	COMPREPLY=($(compgen -W "${opts}" -- "${cur}"))
+
+	IFS=$OLDIFS
 
 	return 0
 }
