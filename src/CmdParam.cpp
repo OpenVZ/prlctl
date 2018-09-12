@@ -564,7 +564,7 @@ static Option snapshot_list_options[] = {
 
 static Option migrate_options[] = {
 	OPTION_GLOBAL
-	{"force", 'f',	OptRequireArg, CMD_FORCE},
+	{"force", 'f',	OptNoArg, CMD_FORCE},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
 	{"location", '\0', OptRequireArg, CMD_LOCATION},
 	{"dst", '\0', OptRequireArg, CMD_LOCATION},
@@ -3489,9 +3489,6 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 			break;
 		switch (id) {
 		CASE_PARSE_OPTION_GLOBAL(val, param)
-		case CMD_FORCE:
-			param.migrate.force = true;
-			break;
 		case CMD_SECURITY_LEVEL:
 			if (get_security_level(val, &param.migrate.security_level)) {
 				 fprintf(stderr, "An incorrect security level is"
@@ -3510,6 +3507,9 @@ CmdParamData cmdParam::get_migrate_param(int argc, char **argv, Action action,
 			break;
 		case CMD_SESSIONID:
 			param.migrate.sessionid = val;
+			break;
+		case CMD_FORCE:
+			param.migrate.flags |= PVM_FORCE;
 			break;
 		case CMD_CLONE_MODE:
 			param.migrate.flags |= PVMT_CLONE_MODE;

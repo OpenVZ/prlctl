@@ -483,14 +483,12 @@ public:
 	LoginInfo dst;
 	std::string vm_location;
 	std::string sessionid;
-	bool force;
 	unsigned int security_level;
 	unsigned int flags;
 	str_list_t ssh_opts;
 
 public:
-	MigrateParam()
-		: force(false),
+	MigrateParam():
 		security_level(0),
 		flags(0) {}
 };
