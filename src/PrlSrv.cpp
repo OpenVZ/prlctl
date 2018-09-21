@@ -514,6 +514,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return status_vm(param);
 	else if (param.action == VmPerfStatsAction && param.list_all)
 		return print_statistics(param);
+	else if (param.action == VmMonitorAction)
+		return monitor();
 
 	/* Per VM actions */
 	PrlVm *vm = NULL;
@@ -662,7 +664,7 @@ int PrlSrv::run_disp_action(const CmdParamData &param)
 	case SrvCopyCtTemplateAction:
 		 return copy_ct_template(param.ct_tmpl, param.copy_ct_tmpl);
 	case SrvMonitorAction:
-		return run_monitor();
+		return monitor();
 	case SrvBackupNodeAction:
 		return backup_node(param);
 	case SrvShapingRestartAction:
@@ -3361,7 +3363,7 @@ int PrlSrv::copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplatePa
 	return ret;
 }
 
-static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
+int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 {
 	PrlHandle h(hEvent);
 	PRL_HANDLE_TYPE type;
@@ -3446,7 +3448,7 @@ static int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 	return 0;
 }
 
-int PrlSrv::run_monitor(void)
+int PrlSrv::monitor(void)
 {
 	char c;
 
@@ -3454,6 +3456,8 @@ int PrlSrv::run_monitor(void)
 
 	/* wait until stdin is closed */
 	while (fread(&c, 1, 1, stdin));
+
+	unreg_event_callback(server_event_handler_monitor, this);
 
 	return 0;
 }

@@ -4046,6 +4046,8 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 	} else if (!strcmp(argv[1], "reinstall")) {
 		return get_param(argc, argv, VmReinstallAction,
                                     reinstall_options, 2);
+	} else if (!strcmp(argv[i], "monitor")) {
+		return get_param(argc, argv, VmMonitorAction, no_options, 2);
 	} else if (!strcmp(argv[i], "server")) {
 		// sergeyt@:  very strange code
 		++i;
