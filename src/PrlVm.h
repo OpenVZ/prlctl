@@ -250,6 +250,7 @@ public:
 	int set_template_sign(int template_sign);
 	int set_nested_virt(int enabled);
 	int reinstall(const CmdParamData &param);
+	int monitor();
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);

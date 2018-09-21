@@ -112,6 +112,7 @@ enum Action {
 
 	VmConvertAction,
 	VmReinstallAction,
+	VmMonitorAction,
 
 	InvalidAction
 };

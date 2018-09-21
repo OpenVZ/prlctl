@@ -212,7 +212,7 @@ public:
 	int appliance_install(const CmdParamData &param);
 	int ct_templates(const CtTemplateParam &param, bool use_json);
 	int copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplateParam &copy_tmpl);
-	int run_monitor();
+	int monitor();
 	void set_logoff_timeout(unsigned int timeout) { m_logoffTimeout = timeout; }
 	~PrlSrv();
 	int get_backup_disks(const std::string& id, std::list<std::string>& disks);
@@ -273,4 +273,5 @@ private:
 	void print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE type);
 };
 
+int server_event_handler_monitor(PRL_HANDLE hEvent, void *data);
 #endif // __PRLSRV_H__
