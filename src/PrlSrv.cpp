@@ -3457,6 +3457,8 @@ int PrlSrv::monitor(void)
 	/* wait until stdin is closed */
 	while (fread(&c, 1, 1, stdin));
 
+	unreg_event_callback(server_event_handler_monitor, this);
+
 	return 0;
 }
 
