@@ -2447,6 +2447,8 @@ DevType str2devtype(const std::string &str)
 		return DEV_PARALLEL;
 	else if (str == "sound")
 		return DEV_SOUND;
+	else if (str == "pci")
+		return DEV_GENERIC_PCI;
 	else
 		return DEV_NONE;
 }
