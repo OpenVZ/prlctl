@@ -703,16 +703,15 @@ std::string PrlDisp::get_def_backup_storage()
 	std::string out;
 
 	len = sizeof(buf);
-	ret = PrlDispCfg_GetBackupUserLogin(m_hDisp, buf, &len);
+	ret = PrlDispCfg_GetDefaultBackupServer(m_hDisp, buf, &len);
 	if (ret == 0)
 		out = buf;
 
-	len = sizeof(buf);
-	ret = PrlDispCfg_GetDefaultBackupServer(m_hDisp, buf, &len);
-	if (ret == 0) {
-		if (!out.empty())
-			out += "@";
-		out += buf;
+	if (!out.empty()) {
+		len = sizeof(buf);
+		ret = PrlDispCfg_GetBackupUserLogin(m_hDisp, buf, &len);
+		if (ret == 0)
+			out = std::string(buf) + std::string("@") + out;
 	}
 
 	return out;
@@ -726,6 +725,10 @@ int PrlDisp::set_def_backup_storage(const LoginInfo &server)
 		if ((ret = PrlDispCfg_SetDefaultBackupServer(m_hDisp, server.server.c_str())))
 			return prl_err(ret, "PrlDispCfg_SetDefaultBackupServer: %s",
 					get_error_str(ret).c_str());
+	} else {
+		PrlDispCfg_SetDefaultBackupServer(m_hDisp, "");
+		set_updated();
+		return 0;
 	}
 	if (!server.user.empty()) {
 		if ((ret = PrlDispCfg_SetBackupUserLogin(m_hDisp, server.user.c_str())))
