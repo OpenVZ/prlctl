@@ -1464,7 +1464,8 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 			}
 			break;
 		case CMD_BACKUP_STORAGE:
-			if (parse_auth(val, param.disp.def_backup_storage)) {
+			if (!val.empty() &&
+			    parse_auth(val, param.disp.def_backup_storage)) {
 				fprintf(stderr, "An incorrect value is"
 						" specified for backup storage: %s\n",
 						val.c_str());
