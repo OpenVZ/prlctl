@@ -61,8 +61,6 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-
 .br
 	[\fB--cpu-hotplug\fR <\fIon\fR|\fIoff\fR>]
 .br
-	[\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>]
-.br
 	[\fB--ioprio\fR <\fIpriority\fR>] [\fB--iolimit\fR <\fIlimit\fR>] [\fB--iopslimit\fR <\fIlimit\fR>]
 .br
 	[\fB--mem-hotplug\fR <\fIon\fR|\fIoff\fR>]
@@ -465,9 +463,6 @@ Disable or enable nested virtualization.
 .TP
 \fB--applyconfig\fR <\fIpath\fR>
 Apply the resource parameter values from the specified VE configuration file to the virtual environment. The parameters defining the OS family and OS version are left intact.
-.TP
-\fB--distribution\fR <\fIname\fR>
-Optimize the virtual environment for use with the operating system (OS) family specified after the \fB--distribution\fR option. You can get the list of available distributions using the \fBprlctl set  ve_name -d list\fR command.
 .TP
 \fB--description\fR <\fIdesc\fR>
 Set the VE description.
