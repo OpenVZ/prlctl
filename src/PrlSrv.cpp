@@ -1577,37 +1577,13 @@ const PrlVm *PrlSrv::find_dev_in_use(PrlDevSrv *dev)
 
 void PrlSrv::append_hw_info(PrlOutFormatter &f)
 {
-	int mode;
-	const char *assignment = NULL;
-	const char *used_by = NULL;
-
 	get_hw_dev_info();
 	f.open("Hardware info");
 	PrlDevSrvList::const_iterator it = m_DevList.begin(),
 		eit = m_DevList.end();
 	for (; it != eit; ++it) {
-		if ((*it)-> m_devType == DEV_GENERIC_PCI) {
-			if ((mode = (*it)->get_assignment_mode()) != -1) {
-				switch (mode) {
-				case PGS_CONNECTED_TO_HOST:
-					assignment = "host";
-					break;
-				case PGS_CONNECTED_TO_VM:
-				case PGS_CONNECTING_TO_VM: {
-					assignment = "vm";
-
-					const PrlVm *vm = find_dev_in_use(*it);
-					if (vm)
-						used_by = vm->get_uuid().c_str();
-					break;
-				} case PGS_RESERVED:
-					break;
-				}
-			}
-		}
-
 		f.add_host_dev((*it)->get_id().c_str(), (*it)->get_name().c_str(),
-					   devtype2str((*it)->m_devType), assignment, used_by);
+				devtype2str((*it)->m_devType), NULL, NULL);
 	}
 	f.close();
 }
