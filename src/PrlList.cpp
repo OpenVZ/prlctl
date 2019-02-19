@@ -466,7 +466,8 @@ int PrlSrv::list_vm(const CmdParamData &param)
 		order_str = default_template_order;
 		flags |= PGVLF_GET_ONLY_VM_TEMPLATES;
 	} else {
-		flags |= PGVLF_GET_STATE_INFO | PGVLF_GET_NET_STATIC_IP_INFO;
+		if (!param.info)
+			flags |= PGVLF_GET_STATE_INFO | PGVLF_GET_NET_STATIC_IP_INFO;
 		order_str = g_vzcompat_mode ?
 				(param.list_name ? default_vzcompat_name_field_order : default_vzcompat_field_order) :
 				default_field_order;
