@@ -3672,8 +3672,8 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_memguarantee(param)))
 			return ret;
 	}
-	if (!param.desc.empty()) {
-		if ((ret = set_desc(param.desc)))
+	if (param.desc) {
+		if ((ret = set_desc(param.desc.get())))
 			return ret;
 	}
 	if (!param.autostart.empty()) {
