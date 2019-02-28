@@ -143,7 +143,7 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 		server,
 		port,
 		sessionid,
-		param.desc.c_str(),
+		param.desc ? param.desc.get().c_str() : "",
 		bparam.flags | security_level,
 		0,
 		PRL_TRUE);

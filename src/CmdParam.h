@@ -855,7 +855,7 @@ public:
 	int mem_hotplug;
 	PRL_MEMGUARANTEE_DATA memguarantee;
 	bool memguarantee_set;
-	std::string desc;
+	boost::optional<std::string > desc;
 	std::string uuid;
 	std::string autostart;
 	unsigned int autostart_delay;
