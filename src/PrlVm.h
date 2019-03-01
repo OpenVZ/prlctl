@@ -61,6 +61,7 @@ private:
 	PRL_HANDLE m_hVm;
 	std::string m_uuid;
 	std::string m_name;
+	std::string m_home;
 	unsigned int m_ostype;
 	bool m_template;
 	std::string m_owner;
@@ -222,6 +223,7 @@ public:
 	const std::string &get_id() const { return get_uuid(); }
 	const std::string &get_ctid() const { return m_ctid; }
 	const std::string &get_name() const { return m_name; }
+	const std::string &get_home() const { return m_home; }
 	int create_dev(DevType type, const DevInfo &param);
 	std::string get_dist() const;
 	std::string get_ostemplate() const;

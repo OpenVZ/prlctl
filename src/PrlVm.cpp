@@ -125,6 +125,8 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	len = sizeof(buf);
 	if (PrlVmCfg_GetExternalBootDevice(m_hVm, buf, &len) == 0)
 		m_ext_boot_dev = buf;
+
+	get_home_dir(m_home);
 }
 
 const char *PrlVm::get_vm_type_str() const
