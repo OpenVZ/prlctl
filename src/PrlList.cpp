@@ -82,6 +82,11 @@ inline bool name_sort_fn(const PrlVm *val1, const PrlVm *val2)
 	return (val1->get_name().compare(val2->get_name()) < 0);
 }
 
+inline bool home_sort_fn(const PrlVm *val1, const PrlVm *val2)
+{
+	return (val1->get_home().compare(val2->get_home()) < 0);
+}
+
 static std::string handle_empty_str(const std::string &in)
 {
 	if (in.empty())
@@ -97,6 +102,11 @@ static std::string get_id(PrlVm *vm)
 static std::string get_ctid(PrlVm *vm)
 {
 	return vm->get_ctid();
+}
+
+static std::string get_home(PrlVm *vm)
+{
+	return vm->get_home();
 }
 
 static std::string get_status(PrlVm *vm)
@@ -318,6 +328,8 @@ static FieldVm vm_field_tbl[] = {
 {"ctid" ,	"UUID", PVTF_ALL | PVTF_HIDE, "%-39s ", get_id, uuid_sort_fn},
 {"veid" ,	"UUID", PVTF_ALL | PVTF_HIDE, "%-39s ", get_id, uuid_sort_fn},
 {"envid" ,	"ENVID", PVTF_ALL, "%-10s ", get_ctid, 0},
+{"home" ,	"HOME", PVTF_ALL, "%-32s ", get_home, home_sort_fn},
+{"private" ,	"HOME", PVTF_ALL, "%-32s ", get_home, home_sort_fn},
 
 {"status",	"STATUS", PVTF_ALL, "%-12s ", get_status, 0},
 {"name",	"NAME", PVTF_ALL, "%-32s ", get_name, name_sort_fn},
