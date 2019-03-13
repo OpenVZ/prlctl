@@ -2,7 +2,7 @@
 .SH NAME
 prlctl \- utility for managing @PRODUCT_NAME_SHORT@ servers and virtual environments residing on them.
 .SH SYNOPSIS
-prlctl \fBcreate\fR <\fIve_name\fR> [\fB--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
+prlctl \fBcreate\fR <\fIve_name\fR> [\fB-t,--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
 prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR] [\fB--no-tunnel\fR]
 .PP
@@ -152,7 +152,7 @@ Configure the \fBprlctl\fR logging level.
 .IP "\fB--timeout <sec>\fR" 4
 Specify a custom operation timeout in seconds. By default, timeouts for all operation are unlimited.
 .SS Managing virtual environments
-.IP "\fBcreate\fR <\fIve_name\fR> \fB--ostemplate\fR <\fIname\fR> [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--changesid\fR]" 4
+.IP "\fBcreate\fR <\fIve_name\fR> \fB-t,--ostemplate\fR <\fIname\fR> [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--uuid\fR <\fIuuid\fR>] [\fB--changesid\fR]" 4
 Create the virtual environment with the name of \fB<ve_name>\fR on the basis of the specified template. You can get the list of available templates using the \fBprlctl list -t\fR command.
 
 Use the \fB--changesid\fR option to assign the new Windows-based virtual machine a new Windows security identifier (SID). Note: @PRODUCT_NAME_SHORT@ Guest Tools must be installed in the virtual machine.
