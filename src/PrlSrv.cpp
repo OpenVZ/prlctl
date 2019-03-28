@@ -452,22 +452,10 @@ int PrlSrv::get_vm_config(const std::string &id, PrlVm **vm, bool ignore_not_fou
 				get_error_str(ret).c_str(), ret);
 
 	ret = vm_from_result(hResult, 0, vm);
-	if (ret)
-		return ret;
-
-	PrlVmCfg_GetConfigValidity((*vm)->get_handle(), &ret);
-	if (ret) {
-		prl_err(ret, "Unable to get %s config: %s",
-				(*vm)->get_vm_type_str(),
-				get_error_str(ret).c_str());
-		delete *vm;
-		*vm = NULL;
-		return ret;
-	}
 
 	prl_log(L_DEBUG, "The virtual machine found: %s", (*vm)->get_name().c_str());
 
-	return 0;
+	return ret;
 }
 
 int PrlSrv::get_vm_config(const CmdParamData &param, PrlVm **vm,
