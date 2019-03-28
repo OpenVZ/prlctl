@@ -553,6 +553,13 @@ int PrlSrv::list_vm(const CmdParamData &param)
 			return ret;
 
 		vm_list.push_back(vm);
+		if (param.info) {
+			PrlVmCfg_GetConfigValidity(vm->get_handle(), &ret);
+			if (ret)
+				return prl_err(ret, "Unable to get %s config: %s",
+						vm->get_vm_type_str(),
+						get_error_str(ret).c_str());
+		}
 	}
 
 	if (prl_get_log_verbose() == L_NORMAL)
