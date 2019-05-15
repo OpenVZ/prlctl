@@ -2302,7 +2302,9 @@ static const RegisterDescriptionItem s_cpuid_80000008_EAX_items[] = {
 };
 
 static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
-	RESERVED_AREA(0, 25),
+	RESERVED_AREA(0, 10),
+	FLAG_ITEM("md_clear"),
+	RESERVED_AREA(12, 25),
 	FLAG_ITEM("spec-ctrl"),
 	FLAG_ITEM("stibp"),
 	RESERVED_FLAG,
