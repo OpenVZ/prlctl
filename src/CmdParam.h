@@ -1482,6 +1482,7 @@ enum cmdOptions {
 	CMD_SKIP_BACKIP,
 	CMD_SKIP_SCRIPTS,
 	CMD_RESET_PWDB,
+	CMD_RESTORE_LIVE,
 };
 
 #endif // __CMDPARAM_H__

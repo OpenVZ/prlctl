@@ -30,6 +30,7 @@
 #include <boost/optional.hpp>
 
 #include <PrlApiDisp.h>
+#include <prlcommon/Interfaces/ParallelsDomModel.h>
 
 #include "PrlBackup.h"
 #include "CmdParam.h"
@@ -104,6 +105,13 @@ static int backup_event_handler(PRL_HANDLE hEvent, void *data)
 			std::string err;
 			get_result_error_string(hEvent, err);
 			fprintf(stdout, "%s\n", err.c_str());
+		} else if (evt_type == PET_DSP_EVT_VM_STATE_CHANGED) {
+			int s;
+			PrlHandle hParam;
+
+			if (PrlEvent_GetParamByName(hEvent, EVT_PARAM_VMINFO_VM_STATE, hParam.get_ptr()) == 0 &&
+					PrlEvtPrm_ToInt32(hParam, &s) == 0)
+				fprintf(stdout, "Vm state changed to %s\n", vmstate2str((VIRTUAL_MACHINE_STATE)s));
 		}
 	}
 	return 0;
