@@ -11,7 +11,7 @@ prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--loc
 prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
 .PP
 prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
-[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR]
+[\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR] [\fB--live\fR]
 .PP
 prlctl \fBcapture\fR <\fIve_id\fR|\fIve_name\fR> [\fB--file\fR <\fIpath\fR>]
 .PP
@@ -777,6 +777,11 @@ Restore the virtual environment data to the specified directory on the @PRODUCT_
 .TP
 \fB--no-tunnel\fR
 Do not use connection tunneling for restore. Connection tunneling is enabled for restore by default to provide secure data transmission.
+.TP
+\fB--live\fR
+Live restore reduces VM downtime by starting the restored VM right after
+the restore process begins.
+
 .IP "\fBbackup-delete\fR {<\fIve_id\fR> | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR]" 4
 Delete the backup for specified virtual environment.
 If \fB--keep-chain\fR is specified, the rest of the backup chain is preserved.

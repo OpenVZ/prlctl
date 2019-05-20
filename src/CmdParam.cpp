@@ -617,6 +617,7 @@ static Option restore_options[] = {
 	{"location", '\0', OptRequireArg, CMD_LOCATION},
 	{"dst", '\0', OptRequireArg, CMD_LOCATION},
 	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
+	{"live", '\0', OptNoArg, CMD_RESTORE_LIVE},
 
 	OPTION_END
 };
@@ -734,7 +735,7 @@ static void usage_vm(const char * argv0)
 "    [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  backup-delete {<ID> | -t,--tag <backupid>} [--keep-chain] [-s,--storage <user[[:passwd]@server[:port]>]\n"
 "  restore {<ID> | -t,--tag <backupid>} [-s,--storage <user[[:passwd]@server[:port]>]\n"
-"    [-n,--name <new_name>] [--dst <path>] [--no-tunnel]\n"
+"    [-n,--name <new_name>] [--dst <path>] [--no-tunnel] [--live]\n"
 "  capture <ID | NAME> [--file <path>]\n"
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
@@ -3658,6 +3659,9 @@ CmdParamData cmdParam::get_restore_param(int argc, char **argv, Action action,
 			break;
 		case CMD_NO_TUNNEL:
 			param.backup.flags |= PBT_DIRECT_DATA_CONNECTION;
+			break;
+		case CMD_RESTORE_LIVE:
+			param.backup.flags |= PBT_RESTORE_RUNNING;
 			break;
 		case GETOPTUNKNOWN:
 		{
