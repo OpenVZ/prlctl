@@ -1473,25 +1473,6 @@ struct FeaturesMap {
 	unsigned long id;
 	const char *name;
 } features_map[] = {
-	{PVT_VM, FT_AutoCaptureReleaseMouse,	"auto_capture_release_mouse"},
-	{PVT_VM, FT_ShareClipboard,		"share_clipboard"},
-	{PVT_VM, FT_TimeSynchronization,	"time_synchronization"},
-	{PVT_VM, FT_TimeSyncSmartMode,		"time_sync_smart_mode"},
-	{PVT_VM, FT_SharedProfile,		"shared_profile"},
-	{PVT_VM, FT_UseDesktop,			"use_desktop"},
-	{PVT_VM, FT_UseDocuments,		"use_documents"},
-	{PVT_VM, FT_UsePictures,		"use_pictures"},
-	{PVT_VM, FT_UseMusic,			"use_music"},
-	{PVT_VM, FT_TimeSyncInterval,		"time_sync_interval"},
-	{PVT_VM, FT_SmartGuard,			"smart_guard"},
-	{PVT_VM, FT_SmartGuardNotify,		"smart_guard_notify"},
-	{PVT_VM, FT_SmartGuardInterval,		"smart_guard_interval"},
-	{PVT_VM, FT_SmartGuardMaxSnapshots,	"smart_guard_max_snapshots"},
-	{PVT_VM, FT_SmartMount,			"smart_mount"},
-	{PVT_VM, FT_SmartMountRemovableDrives,	"smart_mount_external_disks"},
-	{PVT_VM, FT_SmartMountDVDs,		"smart_mount_external_dvds"},
-	{PVT_VM, FT_SmartMountNetworkShares,	"smart_mount_network_shares"},
-
 	{PVT_CT, PCF_FEATURE_SYSFS,		"sysfs"},
 	{PVT_CT, PCF_FEATURE_NFS,		"nfs"},
 	{PVT_CT, PCF_FEATURE_SIT,		"sit"},
@@ -1500,7 +1481,7 @@ struct FeaturesMap {
 	{PVT_CT, PCF_FEATURE_IPGRE,		"ipgre"},
 	{PVT_CT, PCF_FEATURE_BRIDGE,		"bridge"},
 	{PVT_CT, PCF_FEATURE_NFSD,		"nfsd"},
-	{PVT_CT, PCF_FEATURE_TIME,		"time"},
+	{PVT_CT, PCF_FEATURE_TIME,		"time"}
 };
 
 unsigned long feature2id(const std::string &name, int &type)
@@ -1538,20 +1519,7 @@ std::string feature2str(const FeaturesParam &feature)
 		if (feature.known & features_map[i].id) {
 			out += features_map[i].name;
 			out += ":";
-			switch (features_map[i].id) {
-			case FT_TimeSyncInterval:
-				out += ui2string(feature.time_sync_interval);
-				break;
-			case FT_SmartGuardInterval:
-				out += ui2string(feature.smart_guard_interval);
-				break;
-			case FT_SmartGuardMaxSnapshots:
-				out += ui2string(feature.smart_guard_max_snapshots);
-				break;
-			default:
-				out += feature.mask & features_map[i].id ? "on" : "off";
-				break;
-			}
+			out += feature.mask & features_map[i].id ? "on" : "off";
 			out += " ";
 		}
 	}
