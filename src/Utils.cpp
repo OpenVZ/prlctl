@@ -1499,7 +1499,8 @@ struct FeaturesMap {
 	{PVT_CT, PCF_FEATURE_PPP,		"ppp"},
 	{PVT_CT, PCF_FEATURE_IPGRE,		"ipgre"},
 	{PVT_CT, PCF_FEATURE_BRIDGE,		"bridge"},
-	{PVT_CT, PCF_FEATURE_NFSD,		"nfsd"}
+	{PVT_CT, PCF_FEATURE_NFSD,		"nfsd"},
+	{PVT_CT, PCF_FEATURE_TIME,		"time"},
 };
 
 unsigned long feature2id(const std::string &name, int &type)
