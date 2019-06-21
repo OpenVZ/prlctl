@@ -193,13 +193,6 @@ restart list"
 		--ha-enable)
 			opts='yes no'
 			;;
-		--mode)
-			if [ "${COMP_WORDS[1]}" = 'migrate' ]; then
-				opts='cold warm hot'
-			else
-				opts='ro rw'
-			fi
-			;;
 		--path)
 			COMPREPLY=($(compgen -o dirnames -- "${cur}"))
 			return 0
