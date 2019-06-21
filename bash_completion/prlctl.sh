@@ -71,7 +71,7 @@ restart list"
 	local clone_optional_flags='--template --location'
 	local create_flags='-c --config --location -o --ostype -d --distribution --ostemplate'
 	local list_flags='-a --all -t --template -o --output -s --sort -i --info -f --full -j --json --vmtype'
-	local migrate_flags='--location --mode --no-compression'
+	local migrate_flags='--location --no-compression'
 	local snapshot_flags='-n --name -d --description'
 	local snapshotlist_flags='-t --tree -i --id'
 	local snapshotdelete_flags='-i --id'
