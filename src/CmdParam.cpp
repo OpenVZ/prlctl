@@ -602,6 +602,7 @@ static Option backup_options[] = {
 	{"uncompressed", 'u',	OptNoArg, CMD_UNCOMPRESSED},
 	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
 	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
+	{"no-reversed-delta", '\0', OptNoArg, CMD_NO_REVERSED_DELTA},
 	OPTION_END
 };
 
@@ -4609,6 +4610,9 @@ CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
 			break;
 		case CMD_NO_TUNNEL:
 			param.backup.flags |= PBT_DIRECT_DATA_CONNECTION;
+			break;
+		case CMD_NO_REVERSED_DELTA:
+			param.backup.flags |= PBT_DIRECT_DELTA;
 			break;
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
