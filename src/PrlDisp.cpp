@@ -1391,8 +1391,8 @@ int PrlDisp::set(const DispParam &param)
 		if ((ret = set_def_backup_storage(param.def_backup_storage)))
 			return ret;
 	}
-	if (!param.backup_tmpdir.empty()) {
-		if ((ret = set_backup_tmpdir(param.backup_tmpdir)))
+	if (param.backup_tmpdir) {
+		if ((ret = set_backup_tmpdir(param.backup_tmpdir.get())))
 			return ret;
 	}
 

@@ -427,7 +427,7 @@ public:
 	NetworkClassParam network_class;
 	int log_rotation;
 	std::string cpu_features_mask_changes;
-	std::string backup_tmpdir;
+	boost::optional<std::string> backup_tmpdir;
 	int adv_security_mode;
 	int allow_attach_screenshots;
 	int lock_edit_settings;
