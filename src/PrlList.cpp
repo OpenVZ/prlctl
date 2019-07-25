@@ -343,7 +343,7 @@ static FieldVm vm_field_tbl[] = {
 {"system-flags","SYSTEM_FLAGS", PVTF_VM, "%-32s ", get_system_flags, 0},
 {"description",	"DESCRIPTION", PVTF_ALL, "%-32s ", get_description, 0},
 
-{"numproc",	"NPROC", PVTF_CT, "%9s ", get_empty, 0},
+{"numproc",	"NPROC", PVTF_CT|PVTF_HIDE, "%9s ", get_empty, 0},
 {"ip",		"IP_ADDR", PVTF_ALL|PVTF_FULL, "%-15s ", get_ip, 0},
 {"ip_configured","IP_ADDR", PVTF_ALL|PVTF_NET_IP, "%-15s ", get_ip_configured, 0},
 {"hostname",	"HOSTNAME", PVTF_ALL, "%-32s ", get_hostname, 0},
