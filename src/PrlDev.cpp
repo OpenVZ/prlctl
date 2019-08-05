@@ -682,9 +682,9 @@ int PrlDevHdd::set_device(const DevInfo &param)
 			/* Pass device as is */
 			path = id = param.device;
 		}
-	} else if (!param.image.empty()) {
+	} else if (param.image) {
 		type = PDT_USE_IMAGE_FILE;
-		id = path = param.image;
+		id = path = param.image.get();
 	} else if (!param.storage_url.empty()) {
 		if ((ret = PrlVmDevHd_SetStorageURL(m_hDev, param.storage_url.c_str())))
 			return prl_err(ret, "PrlVmDevHd_SetStorageURL(%s): %s",
@@ -784,11 +784,11 @@ int PrlDevHdd::configure(const DevInfo &param)
 				get_error_str(ret).c_str());
 	}
 
-	if (!param.mnt.empty() || param.empty_mnt) {
+	if (param.mnt) {
 		if (m_vm.get_vm_type() == PVT_VM)
 			return prl_err(1, "Assigning a mount point to virtual"
 				" machines is not supported");
-		if ((ret = PrlVmDevHd_SetMountPoint(m_hDev, param.mnt.c_str())))
+		if ((ret = PrlVmDevHd_SetMountPoint(m_hDev, param.mnt.get().c_str())))
 			return prl_err(ret, "PrlVmDev_SetMountPoint: %s",
 				get_error_str(ret).c_str());
 		set_updated();
@@ -963,7 +963,7 @@ int PrlDevCdrom::create(const DevInfo &param)
 {
 	PRL_RESULT ret = PRL_ERR_SUCCESS;
 
-	if (param.device.empty() && param.image.empty() && !param.empty_image)
+	if (param.device.empty() && param.image == boost::none)
 		return prl_err(-1, "The device type is not specified."
 			" Use either the --device or --image option.");
 
@@ -1033,13 +1033,13 @@ int PrlDevCdrom::set_device(const DevInfo &param)
 			return prl_err(-1, "Unknown device: %s",
 				param.device.c_str());
 		path = dev->get_name();
-	} else if (!param.image.empty() || param.empty_image) {
+	} else if (param.image) {
 		type = PDT_USE_IMAGE_FILE;
-		path = param.image;
+		path = param.image.get();
 	} else {
 		return 0;
 	}
-	if (!path.empty() || param.empty_image) {
+	if (!path.empty() || param.image) {
 		if ((ret = PrlVmDev_SetImagePath(m_hDev, path.c_str())))
 			return prl_err(ret, "PrlVmDev_SetImagePath: %s",
 					get_error_str(ret).c_str());
@@ -1963,9 +1963,9 @@ int PrlDevFdd::set_device(const DevInfo &param)
 			return prl_err(-1, "Unknown device: %s",
 				param.device.c_str());
 		path = dev->get_name();
-	} else if (!param.image.empty()) {
+	} else if (param.image) {
 		type = PDT_USE_IMAGE_FILE;
-		path = param.image;
+		path = param.image.get();
 	} else {
 		/* Skip to create new image on the set action */
 		if (param.cmd == Set)

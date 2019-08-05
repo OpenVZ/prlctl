@@ -1727,7 +1727,7 @@ if (expr) {								\
 		}
 		break;
 	case CMD_DEVICE:
-		CHECK_SYMUL(!dev.image.empty(),
+		CHECK_SYMUL((dev.image != boost::none),
 			"--device", "--image")
 		break;
 	case CMD_IMAGE:
@@ -1924,7 +1924,7 @@ bool CmdParamData::is_valid()
 	}
 	if (!get_realpath(vm_location, false))
 		return false;
-	if (!get_realpath(dev.image, false))
+	if (dev.image && !get_realpath(dev.image.get(), false))
 		return false;
 	if (dev.recreate && dev.type != DEV_FDD && dev.type != DEV_HDD) {
 		fprintf(stderr, "The --recreate option have to be"
@@ -2324,16 +2324,10 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.dev.cmd = BootOrder;
 			break;
 		case CMD_IMAGE:
-			if (val.empty())
-				param.dev.empty_image = true;
-			else
-				param.dev.image = val;
+			param.dev.image = val;
 			break;
 		case CMD_MNT:
-			if (val.empty())
-				param.dev.empty_mnt = true;
-			else
-				param.dev.mnt = val;
+			param.dev.mnt = val;
 			break;
 		case CMD_RECREATE:
 			param.dev.recreate = true;

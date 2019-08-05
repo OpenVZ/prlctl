@@ -246,10 +246,8 @@ public:
 	int position;
 	DevType type;
 	std::string device;
-	std::string image;
-	bool empty_image;
-	std::string mnt;
-	bool empty_mnt;
+	boost::optional<std::string> image;
+	boost::optional<std::string> mnt;
 	std::string name;
 	std::string iface;
 	std::string subtype;
@@ -286,8 +284,6 @@ public:
 		size(0),
 		position(-1),
 		type(DEV_NONE),
-		empty_image(false),
-		empty_mnt(false),
 		socket_mode(-1),
 		hdd_block_size(0),
 		no_fs_resize(0),
@@ -307,8 +303,7 @@ public:
 			passthr != -1 ||
 			size != 0 ||
 			position != -1 ||
-			empty_image ||
-			!image.empty() ||
+			image ||
 			//!name.empty() ||
 			!iface.empty() ||
 			!mac.empty() ||
