@@ -912,13 +912,8 @@ int PrlVm::exec(const CmdParamData &param)
 		return run_vzctl(get_ctid(), "enter");
 
 	PrlHandle hLoginJob(PrlVm_LoginInGuest(m_hVm, PRL_PRIVILEGED_GUEST_OS_SESSION, 0, 0));
-	const PrlHook *hLoginCleanupHook =
-		get_cleanup_ctx().register_hook(login_cancel_job, hLoginJob.get_handle());
 	if ((ret = get_job_retcode(hLoginJob.get_handle(), err)))
 		return prl_err(ret, "%s", err.c_str());
-
-	get_cleanup_ctx().unregister_hook(hLoginCleanupHook);
-
 	PrlHandle hResult;
 	if ((ret = PrlJob_GetResult(hLoginJob.get_handle(), hResult.get_ptr())))
 		return prl_err(ret, "PrlJob_GetResult: %s",  get_error_str(ret).c_str());
