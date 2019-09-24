@@ -359,7 +359,12 @@ int PrlSrv::problem_report(const CmdParamData &param)
 	//Create or request problem report from server
 	if (!param.problem_report.stand_alone)
 	{
-		PrlHandle hJob(PrlSrv_GetPackedProblemReport(m_hSrv, 0));
+		int flags = 0;
+
+		if (!param.problem_report.send && param.problem_report.full)
+				flags |= PPRF_DUMP_FULL_REPORT;
+
+		PrlHandle hJob(PrlSrv_GetPackedProblemReport(m_hSrv, flags));
 		ret = get_job_result(hJob.get_handle(), hResult.get_ptr(), &resultCount);
 
 		if (PRL_ERR_UNRECOGNIZED_REQUEST == ret)//Seems remote server has old scheme

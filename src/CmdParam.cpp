@@ -659,6 +659,7 @@ static Option problem_report_options[] = {
 	OPTION_GLOBAL
 	{"send"     , 's' , OptNoArg     , CMD_SEND_PROBLEM_REPORT},
 	{"dump"     , 'd' , OptNoArg     , CMD_DUMP_PROBLEM_REPORT},
+	{"full"     , 'd' , OptNoArg     , CMD_DUMP_FULL_PROBLEM_REPORT},
 	{"no-proxy"     , '\0' , OptNoArg     , CMD_DONT_USE_PROXY},
 	{"proxy"    , '\0' , OptRequireArg     , CMD_USE_PROXY},
 	{"stand-alone"     , '\0' , OptNoArg     , CMD_CREATE_PROBLEM_REPORT_WITHOUT_SERVER},
@@ -772,7 +773,7 @@ static void usage_vm(const char * argv0)
 "  umount <ID | NAME>\n"
 #endif
 "  move <vm_id|vm_name> --dst <path>\n"
-"  problem-report <ID | NAME> <-d,--dump|-s,--send [--proxy [user[:password]@proxyhost[:port]]]> "
+"  problem-report <ID | NAME> <-d,--dump [--full]|-s,--send [--proxy [user[:password]@proxyhost[:port]]]> "
 	"[--no-proxy] [--name <your name>] [--email <your E-mail>] [--description <problem description>]\n"
 "  statistics {<ID | NAME> | <-a,--all>} [--filter <filter>] [--loop]\n"
 "  set <ID | NAME>\n"
@@ -890,7 +891,7 @@ static void usage_disp(const char * argv0)
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
 "  user set --def-vm-home <path>\n"
 //"  statistics [-a, --all] [--loop] [--filter name]\n"
-"  problem-report <-d,--dump|-s,--send [--proxy [user[:password]@proxyhost[:port]]] [--no-proxy]> "
+"  problem-report <-d,--dump [--full]|-s,--send [--proxy [user[:password]@proxyhost[:port]]] [--no-proxy]> "
 	"[--stand-alone] [--name <your name>] [--email <your E-mail>] [--description <problem description>]\n"
 "  net add <vnetwork_id> [-i,--ifname <if>] [-m,--mac <mac_address>]\n"
 #ifdef _LIN_
@@ -3887,6 +3888,9 @@ CmdParamData cmdParam::get_problem_report_param(int argc, char **argv, Action ac
 			param.problem_report.send = false;
 			action_specified = true;
 			break ;
+		case CMD_DUMP_FULL_PROBLEM_REPORT:
+			param.problem_report.full = true;
+			break ;
 		case CMD_CREATE_PROBLEM_REPORT_WITHOUT_SERVER:
 			param.problem_report.stand_alone = true;
 			break ;
@@ -3920,6 +3924,13 @@ CmdParamData cmdParam::get_problem_report_param(int argc, char **argv, Action ac
 	if (!action_specified) {
 		fprintf(stderr, "Please, choose an action: send the problem"
 		" report (-s, --send) or dump it to stdout (-d, --dump)\n");
+
+		return invalid_action;
+	}
+
+	if (param.problem_report.full && param.problem_report.send) {
+		fprintf(stderr, "\"--full\" option can only be used with \"--dump\""
+			" mode, it is not supported for \"--send\".\n");
 
 		return invalid_action;
 	}

@@ -529,6 +529,7 @@ struct StatisticsParam {
 
 struct ProblemReportParam {
 	bool send ;
+	bool full ;
 	std::string proxy_settings ;
 	bool dont_use_proxy ;
 	bool stand_alone;
@@ -536,7 +537,7 @@ struct ProblemReportParam {
 	std::string user_email;
 	std::string description;
 
-	ProblemReportParam():send(false), dont_use_proxy(false), stand_alone(false) {}
+	ProblemReportParam():send(false), full(false), dont_use_proxy(false), stand_alone(false) {}
 };
 
 class PrlOutFormatter;
@@ -1348,6 +1349,7 @@ enum cmdOptions {
 
 	CMD_SEND_PROBLEM_REPORT,
 	CMD_DUMP_PROBLEM_REPORT,
+	CMD_DUMP_FULL_PROBLEM_REPORT,
 	CMD_USE_PROXY,
 	CMD_DONT_USE_PROXY,
 	CMD_CREATE_PROBLEM_REPORT_WITHOUT_SERVER,
