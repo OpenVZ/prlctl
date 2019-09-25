@@ -775,8 +775,12 @@ int PrlVm::problem_report(const CmdParamData &param)
 	PRL_RESULT ret;
 	PRL_UINT32 resultCount = 0;
 	PrlHandle hResult, hProblemReport;
+	int flags = 0;
 
-	PrlHandle hJob(PrlVm_GetPackedProblemReport(m_hVm, 0));
+	if (!param.problem_report.send && param.problem_report.full)
+			flags |= PPRF_DUMP_FULL_REPORT;
+
+	PrlHandle hJob(PrlVm_GetPackedProblemReport(m_hVm, flags));
 	ret = get_job_result(hJob.get_handle(), hResult.get_ptr(), &resultCount);
 
 	if (PRL_ERR_UNRECOGNIZED_REQUEST == ret)//Seems remote server has old scheme
