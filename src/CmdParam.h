@@ -136,24 +136,24 @@ public:
 
 	LoginInfo() : port(0) {};
 
-	static std::string &get_passwd_buf() {
-		g_passwds_stack.push_back( std::string() );
-		return g_passwds_stack.back();
+	std::string &get_passwd_buf() {
+		passwds_stack.push_back( std::string() );
+		return passwds_stack.back();
 	}
 
-	static std::string get_passwd_from_stack(bool &ok) {
+	std::string get_passwd_from_stack(bool &ok) const {
 		std::string passwd;
 		ok = false;
-		if (g_passwds_stack.size()) {
-			passwd = g_passwds_stack.front();
+		if (passwds_stack.size()) {
+			passwd = passwds_stack.front();
 			ok = true;
-			g_passwds_stack.erase(g_passwds_stack.begin());
+			passwds_stack.erase(passwds_stack.begin());
 		}
 		return passwd;
 	}
 
 private:
-	static std::vector<std::string> g_passwds_stack;
+	mutable std::vector<std::string> passwds_stack;
 };
 
 struct NetParam {
