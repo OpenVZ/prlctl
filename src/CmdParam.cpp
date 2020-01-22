@@ -52,8 +52,6 @@
 bool g_vzcompat_mode = false;
 bool g_problem_report_cmd = false;
 
-std::vector<std::string> LoginInfo::g_passwds_stack;
-
 static CmdParamData invalid_action;
 #define OPTION_GLOBAL					\
 	{"verbose", 'v', OptRequireArg, CMD_VERBOSE},	\
