@@ -3340,6 +3340,24 @@ int PrlSrv::copy_ct_template(const CtTemplateParam &tmpl, const CopyCtTemplatePa
 	return ret;
 }
 
+static  const char *evt2str(int e)
+{
+	switch (e) {
+	case PET_DSP_EVT_VM_CONFIG_CHANGED:
+		return "VM_CONFIG_CHANGED";
+	case PET_DSP_EVT_VM_CREATED:
+		return "VM_CREATED";
+	case PET_DSP_EVT_VM_ADDED:
+		return "VM_ADDED";
+	case PET_DSP_EVT_VM_DELETED:
+		return "VM_DELETED";
+	case PET_DSP_EVT_VM_UNREGISTERED:
+		return "VM_UNREGISTERED";
+	default:
+		return NULL;
+	}
+}
+
 int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 {
 	PrlHandle h(hEvent);
@@ -3391,20 +3409,11 @@ int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 
 		srv->get_vm_config(std::string(buf), &vm, false);
 		f.open_object();
-
-		switch (evt_type) {
-		case PET_DSP_EVT_VM_CONFIG_CHANGED:
-			f.add("event_type", "VM_CONFIG_CHANGED");
-			break;
-		case PET_DSP_EVT_VM_CREATED:
-			f.add("event_type", "VM_CREATED");
-			break;
-		case PET_DSP_EVT_VM_ADDED:
-			f.add("event_type", "VM_ADDED");
-			break;
-		default:
-			f.add("event_type", "UNKNOWN");
-		}
+		const char *e = evt2str(evt_type);
+		if (e)
+			f.add("event_type", e);
+		else
+			f.add("event_type", evt_type);
 
 		f.open("vm_info");
 		vm->append_configuration(f);
@@ -3412,7 +3421,11 @@ int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 		f.close_object();
 	} else {
 		f.open_object();
-		f.add("event_type", evt_type);
+		const char *e = evt2str(evt_type);
+		if (e)
+			f.add("event_type", e);
+		else
+			f.add("event_type", evt_type);
 		f.open("vm_info");
 		f.add_uuid("ID", buf);
 		f.close();
