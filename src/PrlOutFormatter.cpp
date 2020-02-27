@@ -115,7 +115,22 @@ void PrlOutFormatterJSON::add(const char *key, const char *value,
 								bool, bool, bool)
 {
 	add_key(key);
-	out << '\"' << value << "\"";
+	out << '\"';
+	while (*value) {
+		char c = *value;
+		switch (c) {
+			case '\\': out << "\\\\"; break;
+			case '"':  out << "\\\""; break;
+			case '\n': out << "\\n"; break;
+			case '\t': out << "\\t"; break;
+			case '\b': out << "\\b"; break;
+			case '\f': out << "\\f"; break;
+			case '\r': out << "\\r"; break;
+			default: out << c;
+		}
+		++value;
+	}
+	out << "\"";
 };
 
 void PrlOutFormatterJSON::add(const char *key, std::string value,
