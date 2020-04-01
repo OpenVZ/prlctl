@@ -59,7 +59,7 @@
 
 #include <PrlErrorsValues.h>
 
-// #include "Interfaces/ParallelsDomModel.h"
+// #include "Interfaces/VirtuozzoDomModel.h"
 #define EVT_PARAM_OP_RC								"op_rc"
 #define EVT_PARAM_PROGRESS_STAGE					"progress_stage"
 
@@ -98,7 +98,7 @@ int init_sdk_lib()
 	nFlags |= g_problem_report_cmd ? PAIF_USE_GRAPHIC_MODE : 0;
 
 	PRL_RESULT ret;
-	ret = PrlApi_InitEx(PARALLELS_API_VER,
+	ret = PrlApi_InitEx(VIRTUOZZO_API_VER,
 			PAM_SERVER,
 			nFlags,
 			0);

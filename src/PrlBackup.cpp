@@ -31,7 +31,7 @@
 #include <boost/optional.hpp>
 
 #include <PrlApiDisp.h>
-#include <prlcommon/Interfaces/ParallelsDomModel.h>
+#include <prlcommon/Interfaces/VirtuozzoDomModel.h>
 
 #include "PrlBackup.h"
 #include "CmdParam.h"

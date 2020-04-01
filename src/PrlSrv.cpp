@@ -27,7 +27,6 @@
  * Schaffhausen, Switzerland.
  */
 
-// #include "Interfaces/ParallelsDomModel.h"
 #include <set>
 #include <vector>
 #include <sstream>
@@ -41,7 +40,7 @@
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlApiDeprecated.h>
-#include <Interfaces/ParallelsDomModel.h>
+#include <Interfaces/VirtuozzoDomModel.h>
 
 
 #include "CmdParam.h"
@@ -2329,7 +2328,7 @@ void PrlSrv::print_boundto_host_only(const PrlHandle *phVirtNet,
 		return;
 
 	/* Information below printed only in detailed mode */
-	/* Parallels adapter information */
+	/* Virtuozzo adapter information */
 	ret = PrlVirtNet_IsAdapterEnabled(phVirtNet->get_handle(), &bEnabled);
 	if (PRL_FAILED(ret)) {
 		prl_log(L_ERR, "Error: PrlVirtNet_IsAdapterEnabled"
