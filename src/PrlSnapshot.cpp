@@ -98,7 +98,7 @@ int PrlSnapshotTree::parse(const char *str)
 		return 0;
 	}
 
-	boost::optional<tree_type& > v = t.get_child_optional("ParallelsSavedStates");
+	boost::optional<tree_type& > v = t.get_child_optional("VirtuozzoSavedStates");
 	if (!v)
 		return 0;
 
