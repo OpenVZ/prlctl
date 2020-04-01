@@ -52,7 +52,6 @@
 #include <boost/archive/iterators/transform_width.hpp>
 
 #include "EventSyncObject.h"
-//#include "Interfaces/ParallelsDomModel.h"
 #define EVT_PARAM_VM_EXEC_APP_RET_CODE		"vm_exec_app_ret_code"
 
 #include "CmdParam.h"

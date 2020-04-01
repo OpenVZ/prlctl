@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <bitset>
 
-// #include "Interfaces/ParallelsDomModel.h"
+// #include "Interfaces/VirtuozzoDomModel.h"
 #define XML_DATE_FORMAT								"yyyy-MM-dd"
 
 #include "CmdParam.h"
