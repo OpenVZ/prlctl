@@ -758,7 +758,7 @@ static void usage_vm(const char * argv0)
 "  status <ID | NAME>\n"
 "  change-sid <ID | NAME>\n"
 "  stop <ID | NAME> [--kill | --noforce]\n"
-"  snapshot <ID | NAME> [-n,--name <name>]\n"
+"  snapshot <ID | NAME> [-n,--name <name>] [-d,--description <desc>]\n"
 "  snapshot-delete <ID | NAME> -i,--id <snapid> [-c,--children]\n"
 "  snapshot-list <ID | NAME> [-t,--tree] [-i,--id <snapid>]\n"
 "  snapshot-switch <ID | NAME> -i,--id <snapid> [--skip-resume]\n"
