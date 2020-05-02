@@ -72,6 +72,7 @@ enum DevMode {
 	DEV_TYPE_NET_BRIDGED,
 	DEV_TYPE_NET_DEVICE,
 	DEV_TYPE_NET_ROUTED,
+	DEV_TYPE_NET_BRIDGE,
 };
 
 struct OsDistribution {

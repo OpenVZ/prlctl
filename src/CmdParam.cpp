@@ -986,6 +986,8 @@ int CmdParamData::set_dev_mode(const std::string &str)
 		dev.mode = DEV_TYPE_NET_SHARED;
 	else if (str == "routed")
 		dev.mode = DEV_TYPE_NET_ROUTED;
+	else if (str == "bridge")
+		dev.mode = DEV_TYPE_NET_BRIDGE;
 	else
 		return 1;
 	return 0;
@@ -1945,7 +1947,7 @@ bool CmdParamData::is_valid()
 			" supported.\n");
 		return false;
 	}
-	if (!dev.vnetwork.empty() && dev.mode != DEV_TYPE_NONE) {
+	if (!dev.vnetwork.empty() && dev.mode != DEV_TYPE_NONE && dev.mode != DEV_TYPE_NET_BRIDGE) {
 		fprintf(stderr, "Assigning a virtual network adapter to a"
 			" Virtual Network and specifying its type at the same"
 			" time is not supported.\n");
@@ -2006,12 +2008,12 @@ bool CmdParamData::is_dev_valid() const
 			if (!dev.vnetwork.empty())
 			{
 				fprintf(stderr, "The '--type' parameter cannot be used with"
-					" the '--network' parameter.");
+					" the '--network' parameter.\n");
 				return false;
 			}
-			if (mode != DEV_TYPE_NET_ROUTED)
+			if (mode != DEV_TYPE_NET_ROUTED && mode != DEV_TYPE_NET_BRIDGE)
 			{
-				fprintf(stderr, "An invalid device type is specified for %s",
+				fprintf(stderr, "An invalid device type is specified for %s\n",
 						devtype2str(dev.type));
 				return false;
 			}
