@@ -32,6 +32,7 @@
 
 #include <PrlApiDisp.h>
 #include <prlcommon/Interfaces/ParallelsDomModel.h>
+#include <prlsdk/PrlDisk.h>
 
 #include "PrlBackup.h"
 #include "CmdParam.h"
@@ -199,6 +200,70 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 
 	PrlHandle_Free(hBackup);
 	unreg_event_callback(backup_event_handler, vm_uuid);
+
+	return ret;
+}
+
+/* Example of using PrlVm_BeginBackup()/PrlVmBackup_Commit() */
+int PrlSrv::do_vm_abackup(const PrlVm& vm)
+{	
+	PRL_RESULT ret, r;
+	PRL_UINT32 n;
+	std::string err;
+	PrlHandle hResult;
+
+	PrlHandle j(PrlVm_BeginBackup(vm.get_handle(), 0));
+	if ((ret = get_job_result(j, hResult.get_ptr(), &n))) {
+		prl_err(ret, "Failed to begin backup %s",
+				 err.c_str());
+		return ret;
+	}
+
+	PrlHandle hBackup;
+	ret = PrlResult_GetParam(hResult, hBackup.get_ptr());
+	if (ret) {
+		prl_err(ret, "Failed to get backup disk count: %s",
+				get_error_str(ret).c_str());
+		return ret;
+	}
+
+	ret = PrlVmBackup_GetDisksCount(hBackup, &n);
+	if (ret) {
+		prl_err(ret, "Failed to get backup disk count: %s",
+				get_error_str(ret).c_str());
+		return ret;
+	}
+
+	prl_log(0, "Disk count %d", n);
+
+	void *buf = aligned_alloc(4096, 4096);
+	for (unsigned int i = 0; i < n; i++) {
+		PrlHandle hDisk;
+		ret = PrlVmBackup_GetDisk(hBackup, i, hDisk.get_ptr());
+		if (ret) {
+			prl_err(ret, "PrlVmBackup_GetDisk: %s",
+					get_error_str(ret).c_str());
+			break;
+		}
+
+		for (i = 0; i < 100; i++) {
+			ret = PrlDisk_Read(hDisk, buf, 4096, 4096/512 * i );
+			if (ret) {
+				prl_err(ret, "PrlVmBackup_GetDisk: %s",
+					get_error_str(ret).c_str());
+				break;
+			}
+		}
+	}
+
+	free(buf);
+	
+	PrlHandle c(ret ? PrlVmBackup_Rollback(hBackup) : PrlVmBackup_Commit(hBackup));
+	if ((r = get_job_retcode(c, err))) {
+		prl_err(ret, "Failed to backup %s %s: %s",
+				ret ? "PrlVmBackup_Rollback" : "PrlVmBackup_Commit",
+				vm.get_vm_type_str(), err.c_str());
+	}
 
 	return ret;
 }
