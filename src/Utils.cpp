@@ -2384,7 +2384,7 @@ public:
 		unsigned int v = m_features->getItem(f);
 		if (!f.name) {
 			if (v)
-				*m_os << "RESERVED ";
+				*m_os << "RESERVED(" << f.reg << "[" << f.begin << ":" << f.size << "]) ";
 		} else if (!f.isBit()) {
 			*m_os << f.name << "=" << v << " ";
 		} else if (v) {
