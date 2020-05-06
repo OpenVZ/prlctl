@@ -1232,6 +1232,9 @@ int PrlDevNet::set_device(DevMode mode, const std::string &iface,
 		type = PNA_SHARED;
 	} else if (mode == DEV_TYPE_NET_ROUTED) {
 		type = PNA_ROUTED;
+	} else if (mode == DEV_TYPE_NET_BRIDGE) {
+		type = PNA_BRIDGE;
+		PrlVmDevNet_SetVirtualNetworkId(m_hDev, iface.c_str());
 	} else if (mode == DEV_TYPE_NET_DEVICE) {
 		type = PNA_DIRECT_ASSIGN;
 		PrlDevSrv *dev = m_vm.find_srv_dev(DEV_GENERIC_PCI, iface);
@@ -1251,7 +1254,9 @@ int PrlDevNet::set_device(DevMode mode, const std::string &iface,
 		return prl_err(-1, "An incorrect network type is specified.");
 	}
 	if (mode != DEV_TYPE_NONE) {
-		if (mode != DEV_TYPE_NET_DEVICE && mode != DEV_TYPE_NET_ROUTED) {
+		if (mode != DEV_TYPE_NET_DEVICE && mode != DEV_TYPE_NET_ROUTED &&
+				mode != DEV_TYPE_NET_BRIDGE)
+		{
 			if (get_vnetwork().length() != 0)
 				return prl_err(-1, "To specify the virtual network,"
 					" use the --network option instead of --type.");
@@ -1752,12 +1757,14 @@ void PrlDevNet::append_info(PrlOutFormatter &f)
 		f.add("ifname", ifname.c_str(), true, true);
 #endif
 
-	if (type != PNA_DIRECT_ASSIGN && type != PNA_ROUTED && vnet.length()) {
+	if (type == PNA_BRIDGE) {
+		f.add("type", "bridge", true);
+	} else if (type == PNA_BRIDGED_ETHERNET) {
 		f.add("network", vnet, true, true);
 	} else {
-		if (type == PNA_ROUTED)
+		if (type == PNA_ROUTED) {
 			f.add("type", "routed", true);
-		else if (   type == PNA_HOST_ONLY
+		} else if (   type == PNA_HOST_ONLY
 				 || type == PNA_BRIDGED_ETHERNET)
 		{
 			int idx;
