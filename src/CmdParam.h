@@ -897,6 +897,7 @@ public:
 	int pmu_virt;
 	int longer_battery_life;
 	int battery_status;
+	boost::optional<std::string > backup_path;
 
 	/* License options */
 	std::string key;

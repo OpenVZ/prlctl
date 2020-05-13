@@ -109,6 +109,8 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-
 .br
 	[\fB--template\fR <\fIyes\fR|\fIno\fR>]
 .br
+	[\fB--backup-path\fR <\fIpath\fR>]
+.br
 	[\fB--backup-add\fR <\fIbackup_id\fR> [\fB--disk\fR <\fIdisk_name\fR>]
 .br
 	[\fB--backup-del\fR <\fIbackup_id\fR|\fIall\fR>]
@@ -512,6 +514,8 @@ Specifies a host OS administrator's name if an administrator's password is requi
 .TP
 \fB--template\fR <\fIyes\fR|\fIno\fR>
 Convert the virtual environment to template and vice versa.
+\fB--backup-path\fR <\fIpath\fR>
+Set the backup location for the given virtual environment.
 .TP
 \fBManaging VE devices\fR
 The following options can be used to manage VE devices: \fB--device-add\fR, \fB--device-set\fR,
