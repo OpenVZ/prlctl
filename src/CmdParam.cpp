@@ -360,6 +360,7 @@ static Option set_options[] = {
 	{"detach-only",		'\0', OptNoArg, CMD_DETACH_HDD},
 	{"password-to-edit",'\0', OptNoArg, CMD_SET_RESTRICT_EDITING},
 	{"autocompact",		'\0', OptRequireArg, CMD_AUTOCOMPACT},
+	{"backup-path", '\0', OptRequireArg, CMD_BACKUP_PATH},
         OPTION_END
 };
 
@@ -2618,6 +2619,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_VM_NAME:
 			param.name = val;
+			break;
+		case CMD_BACKUP_PATH:
+			param.backup_path = val;
 			break;
 		case CMD_TEMPLATE:
 			if ((param.is_template = str2on_off(val)) == -1) {

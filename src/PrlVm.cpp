@@ -4026,6 +4026,10 @@ int PrlVm::set(const CmdParamData &param)
 					get_error_str(ret).c_str());
 		set_updated();
 	}
+	if (param.backup_path) {
+		if ((ret = set_backup_path(param.backup_path.get())))
+			return ret;
+	}
 
 	if (is_updated()) {
 		if (param.dev.cmd == Set && param.dev.enc_action != ENC_NONE) {
@@ -4592,6 +4596,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	std::string x;
 	get_home_dir(x);
 	f.add("Home", x);
+	f.add("Backup path", get_backup_path());
 
 	f.add("Owner", m_owner);
 	get_tools_info(f);
@@ -5072,4 +5077,30 @@ int PrlVm::monitor()
 	unreg_event_callback(server_event_handler_monitor, &m_srv);
 
 	return 0;
+}
+
+int PrlVm::set_backup_path(const std::string &dir)
+{
+	PRL_RESULT ret;
+
+	ret = PrlVmCfg_SetDefaultBackupDirectory(m_hVm, dir.c_str());
+	if (PRL_FAILED(ret))
+		return prl_err(ret, "PrlVmCfg_SetDefaultBackupDirectory: %s",
+			get_error_str(ret).c_str());
+
+	set_updated();
+	return 0;
+}
+
+std::string PrlVm::get_backup_path() const
+{
+	PRL_RESULT ret;
+	char buf[4096];
+	unsigned int len = sizeof(buf);
+
+	ret = PrlVmCfg_GetDefaultBackupDirectory(m_hVm, buf, &len);
+	if (PRL_FAILED(ret))
+		return "";
+
+	return std::string(buf);
 }

@@ -254,6 +254,8 @@ public:
 	int set_nested_virt(int enabled);
 	int reinstall(const CmdParamData &param);
 	int monitor();
+	std::string get_backup_path() const;
+	int set_backup_path(const std::string &path);
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);
