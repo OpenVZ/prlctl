@@ -602,6 +602,7 @@ static Option backup_options[] = {
 	{"no-compression", '\0', OptNoArg, CMD_UNCOMPRESSED},
 	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 	{"no-reversed-delta", '\0', OptNoArg, CMD_NO_REVERSED_DELTA},
+	{"backup-path", '\0',	OptRequireArg, CMD_BACKUP_PATH},
 	OPTION_END
 };
 
@@ -619,6 +620,7 @@ static Option restore_options[] = {
 	{"dst", '\0', OptRequireArg, CMD_LOCATION},
 	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 	{"live", '\0', OptNoArg, CMD_RESTORE_LIVE},
+	{"backup-path", '\0',	OptRequireArg, CMD_BACKUP_PATH},
 
 	OPTION_END
 };
@@ -632,6 +634,7 @@ static Option backup_list_options[] = {
 		{"localvm",	'\0',	OptNoArg, CMD_LIST_LOCAL_VM},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
 	{"vmtype", '\0', OptRequireArg, CMD_VMTYPE},
+	{"backup-path", '\0',	OptRequireArg, CMD_BACKUP_PATH},
 	OPTION_END
 };
 
@@ -642,6 +645,7 @@ static Option backup_delete_options[] = {
 		{"id",	'i',    OptRequireArg, CMD_BACKUP_ID},
 	{"securitylevel", '\0',	OptRequireArg, CMD_SECURITY_LEVEL},
 	{"keep-chain", 'k',	OptNoArg, CMD_BACKUP_KEEP_CHAIN},
+	{"backup-path", '\0',	OptRequireArg, CMD_BACKUP_PATH},
 	OPTION_END
 };
 
@@ -3642,6 +3646,9 @@ CmdParamData cmdParam::get_restore_param(int argc, char **argv, Action action,
 			}
 			opt.hide_arg();
 			break;
+		case CMD_BACKUP_PATH:
+			param.backup.path = val;
+			break;
 		case CMD_SECURITY_LEVEL:
 			if (get_security_level(val, &param.security_level)) {
 				fprintf(stderr, "An incorrect security level is"
@@ -3722,6 +3729,9 @@ CmdParamData cmdParam::get_backup_delete_param(int argc, char **argv, Action act
 			}
 			opt.hide_arg();
 			break;
+		case CMD_BACKUP_PATH:
+			param.backup.path = val;
+			break;
 		case CMD_SECURITY_LEVEL:
 			if (get_security_level(val, &param.security_level)) {
 				fprintf(stderr, "An incorrect security level is"
@@ -3794,6 +3804,9 @@ CmdParamData cmdParam::get_backup_list_param(int argc, char **argv, Action actio
 				return invalid_action;
 			}
 			opt.hide_arg();
+			break;
+		case CMD_BACKUP_PATH:
+			param.backup.path = val;
 			break;
 		case CMD_SECURITY_LEVEL:
 			if (get_security_level(val, &param.security_level)) {
@@ -4610,6 +4623,9 @@ CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
 				return invalid_action;
 			}
 			opt.hide_arg();
+			break;
+		case CMD_BACKUP_PATH:
+			param.backup.path = val;
 			break;
 		case CMD_DESC:
 			param.desc = val;

@@ -236,8 +236,9 @@ private:
 	int restore_vm(const CmdParamData &param);
 	int backup_delete(const CmdParamData &param);
 	int backup_list(const CmdParamData &param);
-	int do_get_backup_tree(const std::string& id, const std::string& server,
-		int port, const std::string& session_id, unsigned int flags, PrlBackupTree &tree);
+	int do_get_backup_tree(const std::string& id, const std::string& server, int port,
+		const std::string& dir, const std::string& session_id, unsigned int flags,
+		PrlBackupTree &tree);
 	int get_backup_tree(const CmdParamData &param, PrlBackupTree &tree, PrlSrv &storage);
 	int get_hw_info(ResType type);
 	int get_hw_dev_info();

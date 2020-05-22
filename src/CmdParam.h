@@ -494,6 +494,7 @@ struct BackupParam {
 	std::string id;
 	std::string name;
 	std::string vm_location;
+	std::string path;
 	LoginInfo login;
 	LoginInfo storage;
 	unsigned int flags;

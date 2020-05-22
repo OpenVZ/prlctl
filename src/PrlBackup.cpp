@@ -143,11 +143,14 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 	if (security_level < param.security_level)
 		security_level = param.security_level;
 
+	PRL_BACKUP_PARAM extra = { 0 };
+	extra.backup_directory = bparam.path.c_str();
+
 	prl_log(L_DEBUG, "security_level=%d", security_level);
 	prl_log(0, "Backing up the %s %s",
 			vm.get_vm_type_str(), vm.get_name().c_str());
 	PRL_HANDLE hBackup;
-	hBackup = PrlSrv_CreateVmBackup(
+	hBackup = PrlSrv_CreateVmBackupEx(
 		m_hSrv,
 		vm.get_id().c_str(),
 		server,
@@ -156,7 +159,8 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 		param.desc ? param.desc.get().c_str() : "",
 		bparam.flags | security_level,
 		0,
-		PRL_TRUE);
+		PRL_TRUE,
+		&extra);
 
 	snprintf(vm_uuid, sizeof(vm_uuid), "%s", vm.get_id().c_str());
 	reg_event_callback(backup_event_handler, vm_uuid);
@@ -380,8 +384,11 @@ int PrlSrv::restore_vm(const CmdParamData &param)
 	if (!bparam.name.empty())
 		flags |= PBT_RESTORE_TO_COPY;
 
+	PRL_BACKUP_PARAM extra = { 0 };
+	extra.backup_directory = bparam.path.c_str();
+
 	PRL_HANDLE hRestore;
-	hRestore = PrlSrv_RestoreVmBackup(
+	hRestore = PrlSrv_RestoreVmBackupEx(
 		m_hSrv,
 		vm_id.c_str(),
 		bparam.id.c_str(),
@@ -392,7 +399,8 @@ int PrlSrv::restore_vm(const CmdParamData &param)
 		bparam.name.c_str(),
 		flags | security_level,
 		0,
-		false);
+		false,
+		&extra);
 
 	reg_event_callback(backup_event_handler, (void *) vm_id.c_str());
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hRestore);
@@ -453,8 +461,11 @@ int PrlSrv::backup_delete(const CmdParamData &param)
 	} else
 		return prl_err(1, "VM ID is not specified.");
 
+	PRL_BACKUP_PARAM extra = { 0 };
+	extra.backup_directory = bparam.path.c_str();
+
 	PRL_HANDLE hRemove;
-	hRemove = PrlSrv_RemoveVmBackup(
+	hRemove = PrlSrv_RemoveVmBackupEx(
 		m_hSrv,
 		vm_id.c_str(),
 		bparam.id.c_str(),
@@ -463,7 +474,8 @@ int PrlSrv::backup_delete(const CmdParamData &param)
 		sessionid,
 		bparam.flags | security_level,
 		0,
-		PRL_TRUE);
+		PRL_TRUE,
+		&extra);
 
 	reg_event_callback(backup_event_handler, (void *) vm_id.c_str());
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hRemove);
@@ -507,11 +519,15 @@ int PrlSrv::backup_list(const CmdParamData &param)
 int PrlSrv::do_get_backup_tree(const std::string& id,
 	const std::string& server,
 	int port,
+	const std::string& dir,
 	const std::string& session_id,
 	unsigned int flags,
 	PrlBackupTree &tree)
 {
-	PrlHandle hJob(PrlSrv_GetBackupTree(
+	PRL_BACKUP_PARAM extra = { 0 };
+	extra.backup_directory = dir.c_str();
+
+	PrlHandle hJob(PrlSrv_GetBackupTreeEx(
 			m_hSrv,
 			id.c_str(),
 			server.c_str(),
@@ -519,7 +535,8 @@ int PrlSrv::do_get_backup_tree(const std::string& id,
 			session_id.c_str(),
 			flags,
 			0,
-			true));
+			true,
+			&extra));
 
 	const PrlHook *h = get_cleanup_ctx().register_hook(cancel_job, hJob.get_handle());
 
@@ -579,14 +596,14 @@ int PrlSrv::get_backup_tree(const CmdParamData &param, PrlBackupTree &tree, PrlS
 	if (param.vmtype & PVTF_CT)
 		flags |= PBT_CT;
 
-	return do_get_backup_tree(id, server, port, sessionid, flags, tree);
+	return do_get_backup_tree(id, server, port, bparam.path, sessionid, flags, tree);
 }
 
 int PrlSrv::get_backup_disks(const std::string& id, std::list<std::string>& disks)
 {
 	PrlBackupTree tree;
 	/* XXX: using the localhost, since we cannot handle backups located on a remote server yet */
-	int ret = do_get_backup_tree(id, "", 0, get_sessionid(), PBT_VM | PBT_CT | PBT_BACKUP_ID, tree);
+	int ret = do_get_backup_tree(id, "", 0, "", get_sessionid(), PBT_VM | PBT_CT | PBT_BACKUP_ID, tree);
 	if (ret)
 		return ret;
 	ret = tree.get_disks_by_id(id, disks);
