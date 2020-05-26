@@ -4,13 +4,13 @@ prlctl \- utility for managing @PRODUCT_NAME_SHORT@ servers and virtual environm
 .SH SYNOPSIS
 prlctl \fBcreate\fR <\fIve_name\fR> [\fB-t,--ostemplate\fR <\fIname\fR>|\fB-o,--ostype\fR <\fIname\fR|\fIlist\fR>|\fB-d,--distribution\fR <\fIname\fR|\fIlist\fR>] [\fB--vmtype ct|vm\fR] [\fB--dst\fR <\fIpath\fR>] [\fB--changesid\fR] [\fB--no-hdd\fR] [\fB--uuid\fR <\fIuuid\fR>] [\fBOPTIONS\fR]
 .PP
-prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR] [\fB--no-tunnel\fR] [\fB--no-reversed-delta\fR]
+prlctl \fBbackup\fR <\fIve_id\fR|\fIve_name\fR> [\fB-f,--full\fR] [\fB-i,--incremental\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port] [\fB--description\fR <\fIdesc\fR>]\fR>] [\fB--no-compression\fR] [\fB--no-tunnel\fR] [\fB--no-reversed-delta\fR] [\fB--backup-path\fR <\fIpath\fR>]
 .PP
-prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup-list\fR [\fIve_id\fR|\fIve_name\fR] [\fB-f,--full\fR] [\fB--localvms\fR] [\fB--vmtype ct|vm|all\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--backup-path\fR <\fIpath\fR>]
 .PP
-prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBbackup-delete\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>} [\fB--keep-chain\fR] [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--backup-path\fR <\fIpath\fR>]
 .PP
-prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>]
+prlctl \fBrestore\fR {\fB<ve_id>\fR | \fB-t,--tag\fR <\fIbackup_id\fR>}  [\fB-s,--storage\fR <\fBuser[[:passwd]@server[:port]\fR>] [\fB--backup-path\fR <\fIpath\fR>]
 [\fB-n,--name\fR <\fBnew_name\fR>] [\fB--dst\fR <\fIpath\fR>] [\fB--no-tunnel\fR] [\fB--live\fR]
 .PP
 prlctl \fBcapture\fR <\fIve_id\fR|\fIve_name\fR> [\fB--file\fR <\fIpath\fR>]
