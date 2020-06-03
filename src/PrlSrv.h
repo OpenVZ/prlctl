@@ -228,7 +228,7 @@ private:
 	int create_ct(const CmdParamData &param);
 	int register_vm(const CmdParamData &param);
 	int convert_vm(const CmdParamData &param);
-	int do_vm_abackup(const PrlVm& vm);
+	int do_vm_abackup(const PrlVm& vm, const BackupParam& param);
 	int do_vm_backup(const PrlVm& vm, const CmdParamData& param,
 			const PrlSrv &storage);
 	int backup_vm(const CmdParamData& param);
