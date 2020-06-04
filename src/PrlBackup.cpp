@@ -241,7 +241,7 @@ struct cbt_bitmap
 	int save(const std::string &fname) const
 	{
 		int rc = 0, fd;
-		fd = open(fname.c_str(), O_WRONLY|O_CREAT|O_TRUNC);
+		fd = open(fname.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0600);
 		if (fd == -1) {
 			prl_err(-1, "Cannot open %s: %m", fname.c_str());
 			return -1;
@@ -366,12 +366,12 @@ static int store(PRL_HANDLE hDisk, int id, const cbt_bitmap *bmap, const std::st
 
 	prl_log(0, "\tsave backup %s blocks: %lu gran: %lu", f.c_str(),
 			bmap->bits, bmap->gran);
-	ff = open(f.c_str(), O_WRONLY|O_CREAT|O_TRUNC);
+	ff = open(f.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0600);
 	if (ff == -1) {
 		prl_log(-1, "Cannot open %s", f.c_str());
 		return -1;
 	}
-	fd = open(d.c_str(), O_WRONLY|O_CREAT|O_TRUNC);
+	fd = open(d.c_str(), O_WRONLY|O_CREAT|O_TRUNC, 0600);
 	if (fd == -1) {
 		prl_log(-1, "Cannot open %s", d.c_str());
 		close(ff);
