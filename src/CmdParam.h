@@ -500,8 +500,11 @@ struct BackupParam {
 	unsigned int flags;
 	bool list_full;
 	bool list_local_vm;
+	bool abackup;
+	std::string dst;
+	std::string uuid;
 
-	BackupParam() : flags(0), list_full(false), list_local_vm(false) {}
+	BackupParam() : flags(0), list_full(false), list_local_vm(false), abackup(false) {}
 };
 
 struct SnapshotParam {
@@ -1484,6 +1487,7 @@ enum cmdOptions {
 	CMD_SKIP_SCRIPTS,
 	CMD_RESET_PWDB,
 	CMD_RESTORE_LIVE,
+	CMD_ABACKUP, 
 };
 
 #endif // __CMDPARAM_H__

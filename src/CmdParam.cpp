@@ -603,6 +603,8 @@ static Option backup_options[] = {
 	{"no-tunnel", '\0', OptNoArg, CMD_NO_TUNNEL},
 	{"no-reversed-delta", '\0', OptNoArg, CMD_NO_REVERSED_DELTA},
 	{"backup-path", '\0',	OptRequireArg, CMD_BACKUP_PATH},
+	{"uuid", '\0', OptRequireArg, CMD_UUID},
+	{"abackup-mode", 'd',	OptNoArg, CMD_ABACKUP},
 	OPTION_END
 };
 
@@ -4638,6 +4640,17 @@ CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
 			break;
 		case CMD_NO_REVERSED_DELTA:
 			param.backup.flags |= PBT_DIRECT_DELTA;
+			break;
+		case CMD_ABACKUP:
+			param.backup.abackup = true;
+			break;
+		case CMD_UUID:
+			if (normalize_uuid(val, param.backup.uuid)) {
+				fprintf(stderr, "An invalid value was"
+						" specified for --uuid: %s\n",
+						val.c_str());
+				return invalid_action;
+			}
 			break;
 		case GETOPTUNKNOWN:
 			fprintf(stderr, "Unrecognized option: %s\n",
