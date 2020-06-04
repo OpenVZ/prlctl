@@ -226,7 +226,7 @@ struct cbt_bitmap
 	{
 		bits = bsize / gran;
 		bytes = (bits + 7) / 8;
-		map = (unsigned long *)malloc(bytes);
+		map = (unsigned long *)calloc(1, bytes);
 		if (map == NULL)
 			prl_err(-1, "ENOMEM");
 		return map;
