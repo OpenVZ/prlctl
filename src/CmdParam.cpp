@@ -4608,6 +4608,9 @@ CmdParamData cmdParam::parse_backup_args(int argc, char **argv, Action action,
 			}
 			opt.hide_arg();
 			break;
+		case CMD_BACKUP_PATH:
+			param.backup.path = val;
+			break;
 		case CMD_DESC:
 			param.desc = val;
 			break;
