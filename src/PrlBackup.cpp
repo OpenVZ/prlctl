@@ -214,8 +214,7 @@ int PrlSrv::do_vm_backup(const PrlVm& vm, const CmdParamData &param,
 struct cbt_bitmap
 {
 	typedef unsigned long bmap_t;
-	cbt_bitmap(unsigned long size, unsigned int bsize) :
-			bsize(size), gran(bsize), map(NULL)
+	cbt_bitmap(PRL_HANDLE h) : hMap(h), map(NULL)
 	{}
 	~cbt_bitmap()
 	{
@@ -224,12 +223,43 @@ struct cbt_bitmap
 
 	bmap_t *alloc()
 	{
-		bits = bsize / gran;
+		PRL_RESULT e;
+
+		e = PrlDiskMap_GetGranularity(hMap, &gran);
+		if (PRL_FAILED(e)) {
+			prl_log(e, "%s: failed to GetGranularity: %s",
+					__FUNCTION__, get_error_str(e).c_str());
+			return NULL;
+		}
+
+		e = PrlDiskMap_GetSize(hMap, &bits);
+		if (PRL_FAILED(e)) {
+			prl_log(e, "%s: failed to PrlDiskMap_GetSize: %s",
+					__FUNCTION__, get_error_str(e).c_str());
+			return NULL;
+		}
+
 		bytes = (bits + 7) / 8;
-		map = (unsigned long *)calloc(1, bytes);
+		map = (unsigned long *)malloc(bytes);
 		if (map == NULL)
 			prl_err(-1, "ENOMEM");
 		return map;
+	}
+	int read()
+	{
+		if (map)
+			release();
+		if (alloc() == NULL)
+			return -1;
+
+		unsigned int bmap_size = bytes;
+		PRL_RESULT e = PrlDiskMap_Read(hMap, (void *)map, &bmap_size);
+		if (PRL_FAILED(e)) {
+			prl_log(e, "%s: failed to read CBT bitmap: %s",
+					__FUNCTION__, get_error_str(e).c_str());
+			return -1;
+		}
+		return 0;
 	}
 	void release()
 	{
@@ -260,49 +290,18 @@ struct cbt_bitmap
 		return rc;
 	}
 
+	PRL_HANDLE hMap;
 	unsigned long bsize;	/* bitmap block size */
 	unsigned int gran;	/* block size */
-	unsigned long bits;	/* size of bitmap in bits */
+	unsigned int bits;	/* size of bitmap in bits */
 	unsigned long bytes;
 	bmap_t *map;
 };
-
-static unsigned long get_disk_size(PRL_HANDLE hDisk)
-{
-	PRL_RESULT e;
-	void *buf;
-	unsigned int len = 0;
-	unsigned long ret;
-
-	e = PrlDisk_GetDiskInfo(hDisk, NULL, &len);
-	if (PRL_FAILED(e)) {
-		prl_log(e, "%s: failed to GetDiskInfo capacity: %s",
-				__FUNCTION__, get_error_str(e).c_str());
-		return 0;
-	}
-	buf = (void*)malloc(len);
-	e = PrlDisk_GetDiskInfo(hDisk, (PRL_DISK_PARAMETERS *)buf, &len);
-	if (PRL_FAILED(e)) {
-		prl_log(e, "%s: failed to GetDiskInfo: %s",
-				__FUNCTION__, get_error_str(e).c_str());
-		free(buf);
-		return 0;
-	}
-	ret = ((PRL_DISK_PARAMETERS *)buf)->m_SizeInSectors * 512;
-	free(buf);
-	return ret;
-}
 
 static cbt_bitmap *get_cbt_bitmap(PRL_HANDLE hDisk, const char *uuid) 
 {
 	PrlHandle hMap;
 	PRL_RESULT e;
-	unsigned int gran, bmap_size;
-	unsigned long size;
-
-	size = get_disk_size(hDisk);
-	if (size == 0)
-		return NULL;
 
 	prl_log(1, "\t get CBT by uuid %s", uuid);
 	e = PrlDisk_GetChangesMap_Local(hDisk, uuid, NULL, hMap.get_ptr());
@@ -311,25 +310,12 @@ static cbt_bitmap *get_cbt_bitmap(PRL_HANDLE hDisk, const char *uuid)
 				__FUNCTION__, uuid, get_error_str(e).c_str());
 		return NULL;
 	}
-	e = PrlDiskMap_GetGranularity(hMap, &gran);
-	if (PRL_FAILED(e)) {
-		prl_log(e, "%s: failed to GetGranularity: %s",
-				__FUNCTION__, get_error_str(e).c_str());
-		return NULL;
-	}
 
-	cbt_bitmap *bmap = new cbt_bitmap(size, gran);
-	if (bmap->alloc() == NULL)
-		return NULL;
-	bmap_size = bmap->bytes;
-	e = PrlDiskMap_Read(hMap, (void *)bmap->map, &bmap_size);
-	if (PRL_FAILED(e)) {
-		prl_log(e, "%s: failed to read CBT bitmap: %s",
-				__FUNCTION__, get_error_str(e).c_str());
+	cbt_bitmap *bmap = new cbt_bitmap(hMap);
+	if (bmap->read()) {
 		delete bmap;
 		return NULL;
 	}
-	//BUG_ON(bmap_size != ((bmap->size + 7) / 8));
 
 	return bmap;
 }
