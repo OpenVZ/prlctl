@@ -115,7 +115,7 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-
 .br
 	[\fB--backup-del\fR <\fIbackup_id\fR|\fIall\fR>]
 .PP
-prlctl \fBstart\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
+prlctl \fBstart\fR <\fIve_id\fR|\fIve_name\fR> [\fB--repair\fR] [\fBOPTIONS\fR]
 .PP
 prlctl \fBstop\fR <\fIve_id\fR|\fIve_name\fR> [\fB--kill\fR] [\fBOPTIONS\fR]
 .PP
@@ -217,8 +217,9 @@ container (unless \fB--resetpwdb\fR is specified), and renames the old root
 directory '/' to '/old' (unless \fB--no-backup\fR is specified).
 .IP "\fBreset\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Reset the specified virtual environment.
-.IP "\fBstart\fR <\fIve_id\fR|\fIve_name\fR>" 4 
-Start the specified virtual environment.
+.IP "\fBstart\fR <\fIve_id\fR|\fIve_name\fR> [\fB--repair\fR]" 4 
+Start the specified virtual environment. If the VE is a container and the \fB--repair\fR option is specified,
+the container will start in the repair mode.
 .IP "\fBrestart\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Restart the specified virtual environment.
 .IP "\fBstop\fR <\fIve_id\fR|\fIve_name\fR> [\fB--kill\fR]" 4

@@ -698,6 +698,7 @@ static Option mount_options[] = {
 static Option start_options[] = {
 	OPTION_GLOBAL
 	{"wait", '\0', OptNoArg, CMD_WAIT},
+	{"repair", '\0', OptNoArg, CMD_REPAIR},
 	OPTION_END
 };
 
@@ -761,7 +762,7 @@ static void usage_vm(const char * argv0)
 "  reset <ID | NAME>\n"
 "  resume <ID | NAME>\n"
 "  restart <ID | NAME>\n"
-"  start <ID | NAME>\n"
+"  start <ID | NAME> [--repair]\n"
 "  status <ID | NAME>\n"
 "  change-sid <ID | NAME>\n"
 "  stop <ID | NAME> [--kill | --noforce]\n"
@@ -3346,6 +3347,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			break;
 		case CMD_WAIT:
 			param.start_opts |= PNSF_VM_START_WAIT;
+			break;
+		case CMD_REPAIR:
+			param.start_opts |= PNSF_VM_START_REPAIR;
 			break;
 		case CMD_DESTROY_HDD:
 			device_del_flags |= PVCF_DESTROY_HDD_BUNDLE;
