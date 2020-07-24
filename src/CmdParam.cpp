@@ -3349,7 +3349,7 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.start_opts |= PNSF_VM_START_WAIT;
 			break;
 		case CMD_REPAIR:
-			param.start_opts |= PNSF_VM_START_REPAIR;
+			param.start_opts |= PNSF_CT_START_REPAIR;
 			break;
 		case CMD_DESTROY_HDD:
 			device_del_flags |= PVCF_DESTROY_HDD_BUNDLE;
