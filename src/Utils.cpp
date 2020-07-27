@@ -108,7 +108,7 @@ int init_sdk_lib()
 		return -1;
 	}
 
-	PrlApi_SetLogPath(NULL);
+	//PrlApi_SetLogPath(NULL);
 
 	return 0;
 }
