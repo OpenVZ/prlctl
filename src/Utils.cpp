@@ -2279,7 +2279,7 @@ static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
 	RESERVED_AREA(11, 25),
 	FLAG_ITEM("spec-ctrl"),
 	FLAG_ITEM("stibp"),
-	RESERVED_FLAG,
+	FLAG_ITEM("flush_l1d"),
 	FLAG_ITEM("arch-facilities"),
 	RESERVED_FLAG,
 	FLAG_ITEM("ssbd"),
