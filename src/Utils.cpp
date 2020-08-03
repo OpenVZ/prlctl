@@ -2255,7 +2255,7 @@ static const RegisterDescriptionItem s_cpuid_00000007_EBX_items[] = {
 	RESERVED_FLAG,
 	FLAG_ITEM("pcommit"),
 	FLAG_ITEM_ALIAS("clflushopt", "cflushopt"),
-	RESERVED_FLAG,
+	FLAG_ITEM("clwb"),
 	FLAG_ITEM("intel_pt"),
 	FLAG_ITEM("avx512pf"),
 	FLAG_ITEM("avx512er"),
