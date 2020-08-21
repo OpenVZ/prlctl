@@ -2276,7 +2276,9 @@ static const RegisterDescriptionItem s_cpuid_80000008_EAX_items[] = {
 static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
 	RESERVED_AREA(0, 9),
 	FLAG_ITEM("md_clear"),
-	RESERVED_AREA(11, 25),
+	RESERVED_AREA(11, 12),
+	FLAG_ITEM("tsx_force_abort"),
+	RESERVED_AREA(14, 25),
 	FLAG_ITEM("spec-ctrl"),
 	FLAG_ITEM("stibp"),
 	FLAG_ITEM("flush_l1d"),
