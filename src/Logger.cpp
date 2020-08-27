@@ -101,6 +101,8 @@ int prl_set_log_enable(int enable)
 
 	tmp = _g_log.enable;
 	_g_log.enable = enable;
+	if (enable && _g_log.verbose == L_DEBUG)
+		SetLogLevel(DBG_DEBUG);
 	return tmp;
 }
 
