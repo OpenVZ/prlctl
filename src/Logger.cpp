@@ -34,6 +34,7 @@
 #include <errno.h>
 #include <stdio.h>
 
+#include <prlcommon/Logging/Logging.h>
 
 #include "Logger.h"
 
