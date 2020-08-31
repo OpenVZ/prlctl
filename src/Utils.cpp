@@ -67,8 +67,6 @@
 #include <PrlApiDeprecated.h>
 #include <PrlApiDisp.h>
 
-#include <prlcommon/Logging/Logging.h>
-
 #include "Utils.h"
 #include "CmdParam.h"
 #include "PrlDev.h"
