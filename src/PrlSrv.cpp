@@ -534,7 +534,7 @@ int PrlSrv::run_action(const CmdParamData &param)
 
 	switch (param.action) {
 	case VmStartAction:
-		return vm->start(param.start_opts);
+		return vm->start(param.start_mode, param.start_opts);
 	case VmMountAction:
 		return vm->mount(param.mnt_opts);
 	case VmUmountAction:

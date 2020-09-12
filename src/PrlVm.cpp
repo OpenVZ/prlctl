@@ -222,7 +222,7 @@ static int start_event_handler(PRL_HANDLE hEvent, void *)
 	return 0;
 }
 
-int PrlVm::start(int flags)
+int PrlVm::start(int mode, int flags)
 {
 	PRL_RESULT ret;
 
@@ -231,7 +231,7 @@ int PrlVm::start(int flags)
 	std::string err;
 
 	m_srv.reg_event_callback(start_event_handler);
-	PrlHandle hJob(PrlVm_StartEx(m_hVm, PSM_VM_START, flags));
+	PrlHandle hJob(PrlVm_StartEx(m_hVm, mode, flags));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		prl_err(ret, "Failed to start the %s: %s",
 				get_vm_type_str(), err.c_str());
