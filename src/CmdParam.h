@@ -953,6 +953,7 @@ public:
 	bool dry_run;
 	int mnt_opts;
 	int mnt_info;
+	int start_mode;
 	int start_opts;
 	int apply_iponly;
 
@@ -1058,6 +1059,7 @@ public:
 		dry_run(false),
 		mnt_opts(0),
 		mnt_info(0),
+		start_mode(PSM_VM_START),
 		start_opts(0),
 		apply_iponly(-1),
 		ha_enable(-1),

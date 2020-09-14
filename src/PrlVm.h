@@ -86,7 +86,7 @@ public:
 	const PrlSrv &get_srv() const { return m_srv; }
 	void set_updated() { m_updated = true; }
 	bool is_updated() const { return m_updated; }
-	int start(int mask);
+	int start(int mode, int mask);
 	int mount(int flags);
 	int mount_info();
 	int umount();
