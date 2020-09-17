@@ -1178,14 +1178,20 @@ static int read_passwd(const char *fname, std::string &passwd)
 
 static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 {
-	char proto[11];
-	char srcip[32];
-	char srcport[11];
-	char dstip[32];
-	char dstport[11];
+	static const unsigned int PROTO_MAX_LENGTH = 10;
+	// longest possible ipv6: 0000:0000:0000:0000:0000:ffff:192.168.100.228
+	static const unsigned int IP_MAX_LENGTH = 45;
+	// 16-bit integer, max: 65535
+	static const unsigned int PORT_MAX_LENGTH = 5;
 
-	// proto srcip port dstip port"
-	int res = sscanf(str, "%10s %31s %10s %31s %10s",
+	char proto[PROTO_MAX_LENGTH + 1];
+	char srcip[IP_MAX_LENGTH + 1];
+	char srcport[PORT_MAX_LENGTH + 1];
+	char dstip[IP_MAX_LENGTH + 1];
+	char dstport[PORT_MAX_LENGTH + 1];
+
+	// proto srcip port dstip port
+	int res = sscanf(str, "%10s %45s %5s %45s %5s",
 		proto, srcip, srcport, dstip, dstport);
 
 	if (res != 5) {
