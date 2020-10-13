@@ -1739,34 +1739,8 @@ int get_error(int action, PRL_RESULT res)
 
 static time_t _timegm(struct tm *tm)
 {
-	time_t ret = 0;
-	char *tz;
-
-	tz = getenv("TZ");
-#ifdef _WIN_
-#define tzset _tzset
-	_putenv("TZ=UTC");
-	tzset();
-	ret = mktime(tm);
-	if (tz) {
-		char tzstr[256];
-                snprintf(tzstr, sizeof(tzstr), "TZ=%s", tz);
-                tzstr[sizeof(tzstr)-1] = 0;
-		_putenv(tzstr);
-	} else
-		_putenv("TZ=");
-#else
-	setenv("TZ", "UTC", 1);
-	tzset();
-	ret = mktime(tm);
-	if (tz)
-		setenv("TZ", tz, 1);
-	else
-		unsetenv("TZ");
-#endif
-	tzset();
-
-	return ret;
+        time_t epoch = 0, offset = mktime(gmtime(&epoch)), utc = mktime(tm);
+        return difftime(utc, offset);
 }
 
 std::string convert_time(const char *date)
