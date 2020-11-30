@@ -158,7 +158,7 @@ private:
 
 struct NetParam {
 	std::string ifname;
-	str_list_t searchdomain;
+	boost::optional<str_list_t> searchdomain;
 	str_list_t nameserver;
 	ip_list_t ip;
 	ip_list_t ip_del;
@@ -206,7 +206,7 @@ struct NetParam {
 		!ip.empty() ||
 		!ip_del.empty() ||
 		delall_ip ||
-		!searchdomain.empty() ||
+		!searchdomain ||
 		!nameserver.empty() ||
 		!ifname.empty()	||
 		adapter_type != PNT_UNDEFINED ||
@@ -930,7 +930,7 @@ public:
 	CapParam cap;
 	Netfilter::Mode netfilter;
 	str_list_t nameserver;
-	str_list_t searchdomain;
+	boost::optional<str_list_t> searchdomain;
 	std::string hostname;
 	str_list_t off_srv;
 	std::string userpasswd;

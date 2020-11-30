@@ -2065,7 +2065,7 @@ bool CmdParamData::set_net_param(NetParam &param)
 {
 	if (dev.type != DEV_NET) {
 		searchdomain = param.searchdomain;
-		param.searchdomain.clear();
+		param.searchdomain = boost::none;
 		nameserver = param.nameserver;
 		param.nameserver.clear();
 	}
@@ -2945,7 +2945,8 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 				return invalid_action;
 			break;
 		case CMD_SEARCHDOMAIN:
-			net.searchdomain = split(val, " ,");
+			// Empty searchdomain implies removal of existing searchdomains
+			net.searchdomain = boost::make_optional(split(val, " ,"));
 			break;
 		case CMD_HOSTNAME:
 			param.hostname = val;

@@ -1453,10 +1453,10 @@ int PrlDevNet::set_network(const DevInfo& param)
 					get_error_str(ret).c_str());
 		updated++;
 	}
-	if (!net.searchdomain.empty()) {
+	if (net.searchdomain) {
 		PrlHandle hArgs;
 
-		str_list2handle(net.searchdomain, hArgs);
+		str_list2handle(net.searchdomain.get(), hArgs);
 
 		if ((ret = PrlVmDevNet_SetSearchDomains(m_hDev, hArgs.get_handle())))
 			return prl_err(ret, "PrlVmDevNet_SetSearchDomains: %s",
