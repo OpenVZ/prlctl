@@ -3304,10 +3304,10 @@ int PrlVm::set_net(const CmdParamData &param)
 					get_error_str(ret).c_str());
 		set_updated();
 	}
-	if (!param.searchdomain.empty()) {
+	if (param.searchdomain) {
 		PrlHandle hArgs;
 
-		str_list2handle(param.searchdomain, hArgs);
+		str_list2handle(param.searchdomain.get(), hArgs);
 
 		if ((ret = PrlVmCfg_SetSearchDomains(m_hVm, hArgs.get_handle())))
 			return prl_err(ret, "PrlVmCfg_SetSearchDomains: %s",
