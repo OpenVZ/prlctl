@@ -206,7 +206,7 @@ struct NetParam {
 		!ip.empty() ||
 		!ip_del.empty() ||
 		delall_ip ||
-		!searchdomain ||
+		searchdomain ||
 		!nameserver.empty() ||
 		!ifname.empty()	||
 		adapter_type != PNT_UNDEFINED ||
