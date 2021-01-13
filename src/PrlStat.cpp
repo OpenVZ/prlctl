@@ -165,8 +165,6 @@ int PrlSrv::print_statistics(const CmdParamData &param, PrlVm *vm)
 	if (!param.statistics.loop)
 		s_evt = new CEventSyncObject();
 
-	const PrlHook *hHook = get_cleanup_ctx().register_hook(call_exit, NULL);
-
 	if (param.action == SrvPerfStatsAction) {
 		ret = PrlSrv_RegEventHandler(get_handle(), &perfstats_srv_callback, (void*)&param);
 		if (PRL_FAILED(ret))
@@ -206,8 +204,6 @@ int PrlSrv::print_statistics(const CmdParamData &param, PrlVm *vm)
 		}
 		fprintf(stdout, "\n");
 	}
-
-	get_cleanup_ctx().unregister_hook(hHook);
 
 	if (param.action == SrvPerfStatsAction)
 		PrlSrv_UnregEventHandler(get_handle(), &perfstats_srv_callback, NULL);

@@ -69,6 +69,5 @@ public:
 void cancel_job(void *data);
 void migrate_cancel_job(void *data);
 void cancel_session(void *data);
-void call_exit(void *data);
 PrlCleanup &get_cleanup_ctx();
 #endif // __PRLCLEANUP_H__

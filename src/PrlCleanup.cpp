@@ -181,9 +181,3 @@ void cancel_session(void *data)
 	prl_log(0, "\nCanceling the session...");
 	PrlHandle hJob(PrlVmGuest_Logout((PRL_HANDLE) data, 0));
 }
-
-void call_exit(void *data)
-{
-	(void) data;
-	exit(0);
-}
