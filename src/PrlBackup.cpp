@@ -812,6 +812,14 @@ int PrlSrv::get_backup_tree(const CmdParamData &param, PrlBackupTree &tree, PrlS
 			id = vm->get_uuid();
 		prl_log(L_DEBUG, "filter: %s", id.c_str());
 	}
+        else if(!bparam.id.empty()){
+            if(std::string::npos == bparam.id.find("."))
+                flags |= PBT_BACKUP_ID;
+            else
+                flags |= PBT_CHAIN;
+
+            id = bparam.id;
+        }
 
 	flags |= security_level;
 	if (param.vmtype & PVTF_VM)
