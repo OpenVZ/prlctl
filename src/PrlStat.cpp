@@ -198,10 +198,7 @@ int PrlSrv::print_statistics(const CmdParamData &param, PrlVm *vm)
 	}
 
 	if (param.statistics.loop) {
-		int ch = 0 ;
-		while (ch!=0x0A && ch!=0x0D && ch!=0x03) {
-			ch = _getch();
-		}
+		fgetc(stdin);
 		fprintf(stdout, "\n");
 	}
 
