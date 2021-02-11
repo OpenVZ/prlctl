@@ -543,7 +543,7 @@ int PrlSrv::backup_node(const CmdParamData& param)
 			continue;
 		}
 
-		std::auto_ptr<PrlVm> vm(v);
+		std::unique_ptr<PrlVm> vm(v);
 
 		CmdParamData p(param);
 		p.id = u;
