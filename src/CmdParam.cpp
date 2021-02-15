@@ -857,7 +857,7 @@ static void usage_vm(const char * argv0)
 "		[--adapter-type <virtio|hyperv|e1000|rtl>]\n"
 #ifndef EXTERNALLY_AVAILABLE_BUILD
 "		[--fw <on|off>] [--fw-policy <accept|deny>] [--fw-direction <in|out>]\n"
-"		[--fw-rule <tcp|udp|* srcip|* port|* dstip|* port|*>]\n"
+"		[--fw-rule <tcp|udp|icmp|* srcip|* port|* dstip|* port|*>]\n"
 #endif
 "	--device-add fdd [--device <real_name>]\n"
 "	--device-add fdd --image <image> [--recreate]\n"
@@ -1198,24 +1198,17 @@ static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 		fprintf(stderr, "An incorrect firewall rule syntax: %s\n", str);
 		return -1;
 	}
-	rule.proto = proto;
+	rule.proto = std::string(proto);
 	if (rule.proto == "*")
 		rule.proto = "";
-	else if (rule.proto != "tcp" && rule.proto != "udp")
-		return -1;
 	if (strcmp(srcip, "*") != 0)
-		rule.src_ip = srcip;
+		rule.src_ip = std::string(srcip);
 	if (strcmp(srcport, "*") != 0)
 		rule.src_port = atoi(srcport);
 	if (strcmp(dstip, "*") != 0)
-		rule.dst_ip = dstip;
+		rule.dst_ip = std::string(dstip);
 	if (strcmp(dstport, "*") != 0)
 		rule.dst_port = atoi(dstport);
-	if (rule.proto[0] == '\0' &&
-		(rule.src_port != 0 || rule.dst_port != 0)) {
-		fprintf(stderr, "Port number may only be specified for protocol 'tcp' or 'udp'\n");
-		return -1;
-	}
 
 	return 0;
 }
