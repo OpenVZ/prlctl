@@ -739,8 +739,8 @@ int PrlDisp::set_def_backup_storage(const LoginInfo &server)
 	bool passwd_from_stack = false;
 	server.get_passwd_from_stack(passwd_from_stack);
 	if (passwd_from_stack)
-    	return prl_err(PRL_ERR_FAILURE, "Password authentication for default backup server is deprecated.\n"
-                    "Use public key authentication: [TODO: Link to docs]");
+    	return prl_err(PRL_ERR_FAILURE, "Password authentication for the default backup server is deprecated.\n"
+										"Use public key authentication instead.");
 	set_updated();
 
 	return 0;
@@ -1550,3 +1550,4 @@ int PrlDisp::set_vm_cpulimit_type(int vm_cpulimit_type)
 
 	return 0;
 }
+

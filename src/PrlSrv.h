@@ -269,6 +269,8 @@ private:
 	int get_supported_os_info(DistList& info);
 	int get_os_type_info(PRL_HANDLE hOsesMatrix, PRL_UINT8 nOsType, DistList& info);
 	void print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE type);
+	std::string load_rsa_public_key();
+	std::string get_user_keys_directory();
 };
 
 int server_event_handler_monitor(PRL_HANDLE hEvent, void *data);
