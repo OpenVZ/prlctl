@@ -736,17 +736,11 @@ int PrlDisp::set_def_backup_storage(const LoginInfo &server)
 			return prl_err(ret, "PrlDispCfg_SetBackupUserLogin: %s",
 					get_error_str(ret).c_str());
 	}
-	bool ok = false;
-	std::string passwd = server.get_passwd_from_stack(ok);
-	if (!ok) {
-		ret = read_passwd(server.user, server.server, passwd);
-		if (ret)
-			return ret;
-	}
-	if ((ret = PrlDispCfg_SetBackupUserPassword(m_hDisp, passwd.c_str())))
-		return prl_err(ret, "PrlDispCfg_SetBackupUserPassword: %s",
-				get_error_str(ret).c_str());
-	PrlDispCfg_SetBackupUserPasswordEnabled(m_hDisp, PRL_TRUE);
+	bool passwd_from_stack = false;
+	server.get_passwd_from_stack(passwd_from_stack);
+	if (passwd_from_stack)
+    	return prl_err(PRL_ERR_FAILURE, "Password authentication for the default backup server is deprecated.\n"
+										"Use public key authentication instead.");
 	set_updated();
 
 	return 0;

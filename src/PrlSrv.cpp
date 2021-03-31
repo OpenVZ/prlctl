@@ -35,12 +35,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <memory>
+#include <fstream>
 
 #include <PrlIOStructs.h>
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlApiDeprecated.h>
 #include <Interfaces/VirtuozzoDomModel.h>
+#include <pwd.h>
 
 
 #include "CmdParam.h"
@@ -158,7 +160,7 @@ static bool is_local(const std::string &host)
 
 int PrlSrv::login(const LoginInfo &login)
 {
-	PRL_RESULT ret;
+	PRL_RESULT ret = PRL_ERR_SUCCESS;
 	PRL_HANDLE hJob = PRL_INVALID_HANDLE;
 
 	if (m_logged)
@@ -167,6 +169,7 @@ int PrlSrv::login(const LoginInfo &login)
 	if (PRL_FAILED(ret))
 		return prl_err(ret, "PrlSrv_Create returned the following error: %s",
 				get_error_str(ret).c_str());
+	std::string err;
 	if (is_local(login.server)) {
 		prl_log(L_INFO, "Logging in");
 		hJob = PrlSrv_LoginLocalEx(m_hSrv, NULL, 0, PSL_HIGH_SECURITY, PACF_NON_INTERACTIVE_MODE);
@@ -179,30 +182,53 @@ int PrlSrv::login(const LoginInfo &login)
 					login.server.c_str(), hstrerror(h_errno));
 #endif
 
-		bool ok = false;
-		std::string passwd(login.get_passwd_from_stack(ok));
+		bool paswd_in_args = false;
+		std::string passwd(login.get_passwd_from_stack(paswd_in_args));
+		unsigned int nFlags = PACF_NON_INTERACTIVE_MODE;
 
-		if (!ok) {
-			ret = read_passwd(login.user, login.server, passwd);
-			if (ret)
-				return ret;
-		}
-		prl_log(L_INFO, "Logging in %s@%s", login.user.c_str(),
-			login.server.c_str());
+		// If pass not in args, try public key authorization
+		std::string pub_key = load_rsa_public_key();
+		if (!paswd_in_args && !pub_key.empty())
+		{
+			prl_log(L_INFO, "Logging in %s@%s using public key", login.user.c_str(),
+							login.server.c_str());
 
+			hJob = PrlSrv_LoginEx(m_hSrv,
+						 		login.server.c_str(),
+						 		login.user.c_str(),
+						 		pub_key.c_str(),
+						 		NULL,
+						 		login.port,
+						 		JOB_WAIT_TIMEOUT/*TODO: timeout support need to be added*/,
+						 		PSL_HIGH_SECURITY,
+						 		nFlags | PLLF_LOGIN_WITH_RSA_KEYS);
+			if ((ret = get_job_retcode(hJob, err)) != 0)
+				prl_log(L_WARN, "Public key auth failed: %s", err.c_str());
+    	}
 
-		hJob = PrlSrv_LoginEx(m_hSrv,
-				login.server.c_str(),
-				login.user.c_str(),
-				passwd.c_str(),
-				NULL,
-				login.port,
-				JOB_WAIT_TIMEOUT/*TODO: timeout support need to be added*/,
-				PSL_HIGH_SECURITY,
-				PACF_NON_INTERACTIVE_MODE);
+		// If it didn't succeed, or password was passed explcitly, try password authentication
+		if (pub_key.empty() || paswd_in_args || ret)
+		{
+			// Read pass if we haven't already done it
+		 	if (!paswd_in_args)
+		 	{
+				ret = read_passwd(login.user, login.server, passwd);
+				if (ret)
+					return ret;
+			}
+
+		 	hJob = PrlSrv_LoginEx(m_hSrv,
+								login.server.c_str(),
+								login.user.c_str(),
+								passwd.c_str(),
+								NULL,
+								login.port,
+								JOB_WAIT_TIMEOUT/*TODO: timeout support need to be added*/,
+								PSL_HIGH_SECURITY,
+								nFlags);
+		 }
 	}
 
-	std::string err;
 	if ((ret = get_job_retcode(hJob, err))) {
 		// Workaround for bug #266053
 		if (login.server.empty() && ret == PRL_ERR_OUT_OF_DISK_SPACE)
@@ -920,6 +946,19 @@ void PrlSrv::print_dist_list(const DistList& info, PRL_GUEST_OS_SUPPORT_TYPE typ
 	}
 	if (i%4)
 		printf("\n");
+}
+
+std::string PrlSrv::load_rsa_public_key()
+{
+  std::string pubkey_file = get_user_keys_directory() + "/id_rsa.pub";
+  std::ifstream stream(pubkey_file.c_str(), std::ifstream::in);
+  // Can't open file
+  if (!stream)
+    return std::string();
+  // Read the whole file
+  std::stringstream buffer;
+  buffer << stream.rdbuf();
+  return buffer.str();
 }
 
 int PrlSrv::print_dist_info(const CmdParamData &param)
@@ -3508,4 +3547,13 @@ int PrlSrv::restart_shaping()
 
 	prl_log(0, "Network shaping has been successfully restarted");
 	return 0;
+}
+
+std::string PrlSrv::get_user_keys_directory()
+{
+  const char *homedir;
+  if ((homedir = std::getenv("HOME")) == nullptr) {
+    homedir = getpwuid(getuid())->pw_dir;
+  }
+  return std::string(homedir) + "/.vz/keys";
 }
