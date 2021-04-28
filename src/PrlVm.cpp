@@ -3595,6 +3595,11 @@ int PrlVm::set(const CmdParamData &param)
 		}
 	}
 
+	if (!param.userpasswd.empty()) {
+		if ((ret = set_userpasswd(param.userpasswd, param.crypted)))
+			return ret;
+	}
+
 	PrlHandle hJob(PrlVm_BeginEdit(m_hVm));
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
 		return prl_err(ret, "failed to apply settings %s", err.c_str());
@@ -3814,10 +3819,6 @@ int PrlVm::set(const CmdParamData &param)
 	}
 	if ((ret = set_vnc(param.vnc)))
 		return ret;
-	if (!param.userpasswd.empty()) {
-		if ((ret = set_userpasswd(param.userpasswd, param.crypted)))
-			return ret;
-	}
 	/* Use default answers enabling sign */
 	if (-1 != param.use_default_answers) {
 		int ret;
