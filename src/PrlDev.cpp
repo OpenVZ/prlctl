@@ -909,8 +909,7 @@ void PrlDevHdd::append_info_spec(PrlOutFormatter &f, unsigned int spec)
 	if (PrlVmDevHd_GetMountPoint(m_hDev, buf, &len) == 0 && len > 1)
 		f.add("mnt", buf, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	if (get_iface_type() == PMS_SCSI_DEVICE)
 	{
@@ -1115,8 +1114,7 @@ void PrlDevCdrom::append_info(PrlOutFormatter &f)
 	else
 		f.add("real", get_fname(), true, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	if (get_iface_type() == PMS_SCSI_DEVICE)
 	{
@@ -1854,8 +1852,7 @@ void PrlDevNet::append_info(PrlOutFormatter &f)
 		}
 	}
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 };
@@ -1936,8 +1933,7 @@ void PrlDevUsb::append_info(PrlOutFormatter &f)
 	f.open_dev(get_id().c_str());
 	f.add_isenabled(is_enable());
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 };
@@ -2050,8 +2046,7 @@ void PrlDevFdd::append_info(PrlOutFormatter &f)
 	str_type = (type == PDT_USE_REAL_DEVICE) ? "real" : "image";
 	f.add(str_type, get_fname(), true, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 
@@ -2192,8 +2187,7 @@ void PrlDevSerial::append_info(PrlOutFormatter &f)
 		}
 	}
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 };
@@ -2268,8 +2262,7 @@ void PrlDevParallel::append_info(PrlOutFormatter &f)
 	str_type = (type == PDT_USE_REAL_DEVICE) ? "real" : "output";
 	f.add(str_type, get_fname(), true, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 };
@@ -2352,8 +2345,7 @@ void PrlDevSound::append_info(PrlOutFormatter &f)
 	if (!PrlVmDevSound_GetMixerDev(m_hDev, buf, &len))
 		f.add("mixer", buf, true, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 };
@@ -2427,8 +2419,7 @@ void PrlDevGenericPci::append_info(PrlOutFormatter &f)
 	f.add("friendly_name", get_fname(), true, true, true);
 	f.add("sys_name", get_sname(), true, true, true);
 
-	if (!is_connected())
-		f.add("state", "disconnected", true);
+	f.add("state", is_connected() ? "connected" : "disconnected", true);
 
 	f.close(true);
 
