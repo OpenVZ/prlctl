@@ -38,6 +38,9 @@ int main(int argc, char **argv)
 {
 	int ret = 1;
 
+	fprintf(stderr, "WARNING: You are using a deprecated CLI component "
+			"that will be dropped in the next major release. "
+			"Please use virsh instead\n");
 	cmdParam cmd;
 	PrlSrv *srv = new PrlSrv();
 	PrlCleanup::set_cleanup_handler();
