@@ -1,12 +1,12 @@
 get_vms() {
 	# TODO if remote parameters are specified -
 	# use them here
-	prlctl list -a -Ho name \
+	prlctl list -a -Ho name 2>/dev/null \
 		| while read name; do printf "%q\n" "$name"; done
 }
 
 get_uuids() {
-	prlctl list -a -Ho uuid | tr -d {}
+	prlctl list -a -Ho uuid 2>/dev/null | tr -d {}
 }
 
 get_vm_ids() {
@@ -41,14 +41,14 @@ get_distros() {
 
 get_ostemplates() {
 	# available templates
-	prlctl list -t -o name | awk '{if (NR > 1) print $1}'
+	prlctl list -t -o name 2>/dev/null | awk '{if (NR > 1) print $1}'
 }
 
 get_devs() {
 	# TODO Add checking of vm existence and device type/mode
 	vmid=$1
 	devtype=$2
-	prlctl list -i $vmid | egrep '^[[:space:]]+[[:alnum:]]+ \([+-]\)' | awk '{print $1}'
+	prlctl list -i $vmid 2>/dev/null | egrep '^[[:space:]]+[[:alnum:]]+ \([+-]\)' | awk '{print $1}'
 }
 
 _prlctl()
