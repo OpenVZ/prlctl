@@ -38,9 +38,6 @@ int main(int argc, char **argv)
 {
 	int ret = 1;
 
-	fprintf(stderr, "WARNING: You are using a deprecated CLI component "
-			"that will be dropped in the next major release. "
-			"Please use virsh instead\n");
 	cmdParam cmd;
 	PrlSrv *srv = new PrlSrv();
 	PrlCleanup::set_cleanup_handler();
@@ -48,6 +45,19 @@ int main(int argc, char **argv)
 	CmdParamData param = cmd.get_vm(argc, argv);
 	param.original_id = param.id;
 	normalize_uuid(param.original_id, param.id);
+
+	switch (param.action)
+	{
+		case VmExecAction:
+		case VmListAction:
+			break;
+		default:
+			fprintf(stderr, "WARNING: You are using a deprecated CLI component "
+					"that will be dropped in the next major release. "
+					"Please use virsh instead\n");
+			break;
+	}
+
 	if (param.action != InvalidAction)
 	{
 		if (init_sdk_lib())
