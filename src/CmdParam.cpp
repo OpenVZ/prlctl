@@ -2962,6 +2962,12 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			}
 			break;
 		case CMD_RATE: {
+			if (!param.rate)
+				param.rate = boost::make_optional(rate_list_t());
+
+			if (val.empty())
+				break;
+
 			struct rate_data rate;
 			if (parse_rate(val.c_str(), rate)) {
 				fprintf(stderr, "An incorrect value for"
@@ -2969,8 +2975,7 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
-
-			param.rate.add(rate);
+			param.rate.get().add(rate);
 			break;
 		}
 		case CMD_RATEBOUND:

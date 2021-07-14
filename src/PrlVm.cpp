@@ -3850,8 +3850,8 @@ int PrlVm::set(const CmdParamData &param)
 					get_error_str(ret).c_str());
 		set_updated();
 	}
-	if (!param.rate.empty()) {
-		ret = set_rate(param.rate);
+	if (param.rate) {
+		ret = set_rate(param.rate.get());
 		if (ret)
 			return ret;
 	}

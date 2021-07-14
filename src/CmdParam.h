@@ -945,7 +945,7 @@ public:
 	int tools_autoupdate;
 	int smart_mount;
 	bool batch;
-	rate_list_t rate;
+	boost::optional<rate_list_t> rate;
 	int ratebound;
 	unsigned vmtype;
 
