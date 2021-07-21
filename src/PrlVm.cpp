@@ -3245,6 +3245,9 @@ int PrlVm::set_ct_resources(const CmdParamData &param)
 	for (ct_resource_list_t::const_iterator it = param.ct_resource.begin(),
 						eit = param.ct_resource.end(); it != eit; it++)
 	{
+		if(it->id == PCR_SWAPPAGES && strcmp(get_vm_type_str(), "CT") == 0)
+			fprintf(stderr, "WARNING: Use of swap significantly slows down both the container and the node.\n");
+
 		prl_log(0, "Set %s %llu", prl_ct_resource2str(it->id), it->limit);
 		ret = PrlVmCfg_SetResource(m_hVm, it->id, it->barrier, it->limit);
 		if (ret)

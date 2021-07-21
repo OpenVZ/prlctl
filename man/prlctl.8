@@ -413,7 +413,8 @@ Restrict access to iptable modules inside the Container. The following modes are
 Note: This parameter cannot be applied to running Containers.
 .TP
 \fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR
-This parameter limits the amount of swap space that can be allocated to processes running in a Container.
+This parameter limits the amount of swap space that can be allocated to processes running in a container.
+Container processes can use swap even if the host has available memory. Use of swap (as opposed to only reserving it) significantly slows down both the container and the node.
 .TP
 \fB--quotaugidlimit\fR \fInum\fR
 Sets the maximum number of user/group IDs in a Container for which disk quota is calculated.
