@@ -4569,6 +4569,45 @@ void PrlVm::get_high_availability_info(PrlOutFormatter &f)
 	f.close(true);
 }
 
+void PrlVm::append_net_shaping_info(PrlOutFormatter &f)
+{
+	PRL_BOOL enabled, ratebound;
+	std::ostringstream os;
+
+	enabled = m_srv.get_disp()->is_network_shaping_enabled();
+	if (PrlVmCfg_IsRateBound(m_hVm, &ratebound))
+		return;
+	PrlHandle hList;
+	if (PrlVmCfg_GetNetworkRateList(m_hVm, hList.get_ptr()))
+		return;
+	PRL_UINT32 count;
+	if (PrlHndlList_GetItemsCount(hList, &count))
+		return;
+	if (count) {
+		for (unsigned int i = 0; i < count; i++) {
+			PRL_UINT32 id, rate;
+			PrlHandle hRate;
+
+			if (PrlHndlList_GetItem(hList, i, hRate.get_ptr()))
+				return;
+			if (PrlNetworkRate_GetClassId(hRate, &id))
+				return;
+			if (PrlNetworkRate_GetRate(hRate, &rate))
+				return;
+			if (i)
+				os << " ";
+			os << id <<":" << rate ; 
+		}
+	} else {
+		m_srv.get_disp()->get_net_shaping_rate_info(os);
+	}
+
+	f.open_shf("Network Shaping", prl_bool(enabled));
+	f.add("ratebound", (ratebound ? "on" : "off"));
+	f.add("rate", os.str());
+	f.close();
+}
+
 void PrlVm::append_configuration(PrlOutFormatter &f)
 {
 	PRL_APPLICATION_MODE appMode = PAM_UNKNOWN;
@@ -4803,8 +4842,8 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 			f.add("Netfilter", m.name);
 
 		get_high_availability_info(f);
+		append_net_shaping_info(f);
 	}
-
 }
 
 void PrlVm::clear()

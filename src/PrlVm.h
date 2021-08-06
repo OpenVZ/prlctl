@@ -244,6 +244,7 @@ public:
 	bool get_ha_enable() const;
 	unsigned int get_ha_prio() const;
 	void get_high_availability_info(PrlOutFormatter &f);
+	void append_net_shaping_info(PrlOutFormatter &f);
 	void append_configuration(PrlOutFormatter &f);
 	int validate_config(PRL_VM_CONFIG_SECTIONS section) const;
 	~PrlVm();
