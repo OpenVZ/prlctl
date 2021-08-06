@@ -81,6 +81,8 @@ public:
 	int update_info();
 	int get_confirmation_list();
 	int up_listen_interface(const std::string &iface);
+	int is_network_shaping_enabled();
+	void get_net_shaping_rate_info(std::ostringstream &os);
 	~PrlDisp();
 
 private:
@@ -104,7 +106,6 @@ private:
 	int update_network_classes_config(const NetworkClassParam &param);
 	int get_network_shaping_config(PrlHandle &hShaping);
 	int list_network_shaping_config();
-	int is_network_shaping_enabled();
 	int update_network_shaping_list(const NetworkShapingParam &param,
 			PrlHandle &hShaping, bool *pupdated);
 	int update_network_shaping_config(const DispParam &param);

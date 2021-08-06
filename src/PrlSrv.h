@@ -157,6 +157,7 @@ public:
 	{
 		m_disp = new PrlDisp(*this);
 	}
+	PrlDisp *get_disp() { return m_disp; };
 	int login(const LoginInfo &login);
 	void logoff();
 	int run_action(const CmdParamData &param);

@@ -1077,6 +1077,34 @@ static int print_network_shaping_totarrate(PrlHandle &hShaping)
 	return 0;
 }
 
+void PrlDisp::get_net_shaping_rate_info(std::ostringstream &os)
+{
+	PrlHandle hList;
+	PRL_UINT32 resultcount;
+	PRL_RESULT ret;
+	PrlHandle hShaping;
+
+	if (get_network_shaping_config(hShaping))
+		return;
+	if (PrlNetworkShapingConfig_GetNetworkShapingList(hShaping.get_handle(),
+					hList.get_ptr()))
+		return;
+	if (PrlHndlList_GetItemsCount(hList.get_handle(), &resultcount))
+		return;
+	for (unsigned int i = 0; i < resultcount; i++) {
+		PRL_UINT32 class_id, rate;
+		PrlHandle hEntry;
+		if ((ret = PrlHndlList_GetItem(hList.get_handle(), i, hEntry.get_ptr())))
+			return;
+		if (PrlNetworkShapingEntry_GetClassId(hEntry.get_handle(), &class_id))
+			return;
+		if (PrlNetworkShapingEntry_GetRate(hEntry.get_handle(), &rate))
+			return;
+		if (i)
+			os << " ";
+		os << class_id <<":" << rate ;
+	}
+}
 
 int PrlDisp::list_network_shaping_config()
 {
