@@ -221,6 +221,21 @@ void PrlSnapshotTree::print_info(const std::string &id)
 	}
 }
 
+std::string PrlSnapshotTree::get_current_snapshot_id(){
+	SnapshotNodePtrList pool;
+	if (m_root_tree) {
+		add_child_to_pool(pool, m_root_tree);
+		while (pool.size()) {
+			SnapshotNode *node = pool.back();
+			pool.pop_back();
+			if (node->data().current) 
+				return node->data().id;
+			add_child_to_pool(pool, node);
+		}
+	}
+	return std::string("");
+}
+
 #if 0
 #include <sys/types.h>
 #include <sys/stat.h>
