@@ -680,15 +680,21 @@ int PrlVm::snapshot_create(const SnapshotParam &param)
 
 int PrlVm::snapshot_switch_to(const SnapshotParam &param)
 {
-	PRL_RESULT ret;
-	const std::string &id = param.id;
+	PRL_RESULT ret = 0;
+	std::string id = param.id;
 	std::string err;
 	PRL_UINT32 nFlags = param.skip_resume ? PSSF_SKIP_RESUME : 0;
 
 	if (id.empty())
-		return prl_err(-1, "Snapshot id is not specified.");
-
-	prl_log(0, "Switch to the snapshot...");
+		ret = get_current_snapshot_id(id);
+	
+	if(ret)
+		return ret;
+	
+	if (id.empty())
+		return prl_err(-1, "No snapshot to revert to.");
+	
+	prl_log(0, "Switch to the snapshot %s", id.c_str());
 #if __USE_ISOCXX11
 	std::unique_ptr<Snapshot::Event> e;
 #else
@@ -5146,4 +5152,17 @@ std::string PrlVm::get_backup_path() const
 		return "";
 
 	return std::string(buf);
+}
+
+int PrlVm::get_current_snapshot_id(std::string& output){
+	PRL_RESULT ret;
+	std::string tree_output;
+	if ((ret = snapshot_get_tree(tree_output)))
+		return ret;
+	
+	PrlSnapshotTree tree;
+	tree.parse(tree_output.c_str());
+
+	output = tree.get_current_snapshot_id();
+	return 0;
 }

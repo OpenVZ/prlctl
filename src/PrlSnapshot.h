@@ -57,6 +57,7 @@ public:
 	void print_tree();
 	void print_list(bool no_hdr);
 	void print_info(const std::string &id);
+	std::string get_current_snapshot_id();  // returns id of snapshot we are based now, or empty string if snapshot doesn't exist
 
 private:
 	SnapshotNode * parse_entry(const tree_type& entry_, SnapshotNode *parent_);

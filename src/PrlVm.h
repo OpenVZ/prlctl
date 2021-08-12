@@ -285,6 +285,7 @@ private:
 	int detach_backup_disks(const std::string& id);
 	void search_attached_backups(std::list<PrlDevHdd *>& disks);
 	int commit_encryption(const CmdParamData &param);
+	int get_current_snapshot_id(std::string& output);
 };
 
 #endif // __PRLVM_H__
