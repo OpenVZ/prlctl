@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2021 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -99,7 +99,7 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	unsigned int len;
 
 	if (!uuid.empty()) {
-	        PrlVmCfg_SetUuid(m_hVm, uuid.c_str());
+			PrlVmCfg_SetUuid(m_hVm, uuid.c_str());
 	} else {
 		len = sizeof(buf);
 		PrlVmCfg_GetUuid(m_hVm, buf, &len);
@@ -956,7 +956,7 @@ int PrlVm::exec(const CmdParamData &param)
 	PrlApi_CreateStringsList(hEnvs.get_ptr());
 #ifndef _WIN_
 	if (action == VmEnterAction &&
-	    m_ostype == PVS_GUEST_TYPE_LINUX) {
+		m_ostype == PVS_GUEST_TYPE_LINUX) {
 		const char *envs_enter[] = {"HOME=/",
 			"HISTFILE=/dev/null",
 			"PATH=/bin:/sbin:/usr/bin:/usr/sbin:.",
@@ -2115,8 +2115,8 @@ int PrlVm::set_cpu_hotplug(const std::string &value)
 		enable = PRL_TRUE;
 	prl_log(0, "set cpu hotplug: %d", enable);
 	if ((ret = PrlVmCfg_SetCpuHotplugEnabled(m_hVm, enable)))
-                return prl_err(ret, ":PrlVmCfg_SetCpuHotplugEnabled %s",
-                        get_error_str(ret).c_str());
+				return prl_err(ret, ":PrlVmCfg_SetCpuHotplugEnabled %s",
+						get_error_str(ret).c_str());
 	set_updated();
 	return 0;
 }
@@ -2161,14 +2161,14 @@ int PrlVm::set_cpu_sockets(unsigned value_)
 
 int PrlVm::set_distribution(const OsDistribution *dist)
 {
-    PRL_RESULT ret;
+	PRL_RESULT ret;
 
-    prl_log(0, "set distribution: %s", dist->name);
-    if ((ret = PrlVmCfg_SetOsVersion(m_hVm, dist->ver)))
+	prl_log(0, "set distribution: %s", dist->name);
+	if ((ret = PrlVmCfg_SetOsVersion(m_hVm, dist->ver)))
 	return prl_err(ret, ":PrlVmCfg_SetOsVersion %s",
-		       get_error_str(ret).c_str());
-    set_updated();
-    return 0;
+			   get_error_str(ret).c_str());
+	set_updated();
+	return 0;
 }
 
 int PrlVm::set_cpuunits(unsigned int cpuunits)
@@ -2515,8 +2515,8 @@ int PrlVm::set_mem_hotplug(int value)
 		enable = PRL_TRUE;
 	prl_log(0, "set mem hotplug: %d", enable);
 	if ((ret = PrlVmCfg_SetRamHotplugEnabled(m_hVm, enable)))
-                return prl_err(ret, ":PrlVmCfg_SetRamHotplugEnabled %s",
-                        get_error_str(ret).c_str());
+				return prl_err(ret, ":PrlVmCfg_SetRamHotplugEnabled %s",
+						get_error_str(ret).c_str());
 	set_updated();
 	return 0;
 }
@@ -2559,8 +2559,8 @@ int PrlVm::set_memguarantee(const CmdParamData &param)
 		break;
 	}
 	if ((ret = PrlVmCfg_SetMemGuaranteeSize(m_hVm, &param.memguarantee)))
-                return prl_err(ret, "PrlVmCfg_SetMemGuaranteeSize %s",
-                        get_error_str(ret).c_str());
+				return prl_err(ret, "PrlVmCfg_SetMemGuaranteeSize %s",
+						get_error_str(ret).c_str());
 
 	set_updated();
 	return 0;
@@ -3455,14 +3455,14 @@ static int commit_event_handler(PRL_HANDLE hEvent, void *data)
 		ret = PrlEvent_GetIssuerId(h.get_handle(), uuid, &len);
 		if (PRL_FAILED(ret)) {
 			prl_log(L_DEBUG, "PrlEvent_GetIssuerId %s",
-				    get_error_str(ret).c_str());
+					get_error_str(ret).c_str());
 			return ret;
 		}
 
 		prl_log(L_DEBUG, "vmuuid=%s IssuerId=%s\n", vm_uuid, uuid);
 		if (vm_uuid != NULL) {
 			if (strcmp(uuid, vm_uuid))
-			    return 0;
+				return 0;
 		}
 
 		if (evt_type == PET_DSP_EVT_VM_MESSAGE || evt_type == PET_DSP_EVT_VM_CONFIG_APPLIED) {
@@ -3516,7 +3516,7 @@ int PrlVm::commit_configuration(const CmdParamData &param)
 				break;
 			len = sizeof(buf);
 			if (!PrlEvent_GetErrCode(hEvent.get_handle(), &ret) &&
-			    !PrlEvent_GetErrString(hEvent.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len))
+				!PrlEvent_GetErrString(hEvent.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len))
 			{
 				if( i > 0 )
 					err += "\n"; // to separate from next error
@@ -3779,7 +3779,7 @@ int PrlVm::set(const CmdParamData &param)
 		str_list_t::const_iterator it;
 		for (it = names.begin(); it != names.end(); ++it) {
 			if (!(dev = m_DevList.find(*it)) &&
-			    !(dev = find_dev(*it)))
+				!(dev = find_dev(*it)))
 			{
 				return prl_err(1, "The %s device does not exist.",
 					(*it).c_str());
@@ -4206,7 +4206,8 @@ int PrlVm::migrate(const MigrateParam &param)
 		close(in[0]); close(out[1]);
 		prl_log(0, "fork() error : '%m', ignored");
 	} else if (pid == 0) {
-		/* redirect stdout to out and stdin to in */
+		/* redirect stdout to out, stdin to in, stderr to /dev/null */
+		freopen("/dev/null", "w", stderr);
 		close(in[1]); close(out[0]);
 		dup2(in[0], STDIN_FILENO);
 		dup2(out[1], STDOUT_FILENO);
@@ -4237,6 +4238,8 @@ int PrlVm::migrate(const MigrateParam &param)
 
 	/* start migration */
 	if (sessionid) {
+		prl_log(L_WARN, "This authentication method is deprecated and will be dropped in the next major release"
+				"Please use SSH-compatible RSA keys instead");
 		MigrateParam newparam = param;
 		newparam.sessionid = sessionid;
 		if (security_level > newparam.security_level)
@@ -4332,11 +4335,11 @@ int PrlVm::migrate_internal(const MigrateParam &param)
 			rc = PrlResult_GetParamByIndex(hResult.get_handle(), i, hEvent.get_ptr());
 			if (rc) {
 				prl_err(rc, "PrlResult_GetParamByIndex %s [%d]",
-	                                get_error_str(rc).c_str(), rc);
+									get_error_str(rc).c_str(), rc);
 				break;
 			}
 			if (!PrlEvent_GetErrCode(hEvent.get_handle(), &rc) &&
-			    !PrlEvent_GetErrString(hEvent.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len))
+				!PrlEvent_GetErrString(hEvent.get_handle(), PRL_FALSE, PRL_FALSE, buf, &len))
 			{
 				prl_err(0, "%s", buf);
 			}
@@ -4709,7 +4712,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 
 	PRL_CPULIMIT_DATA cpulimit = {0, PRL_CPULIMIT_MHZ};
 	if (get_cpulimit(&cpulimit) == 0 &&
-	    cpulimit.value != 0) {
+		cpulimit.value != 0) {
 		if (cpulimit.type == PRL_CPULIMIT_MHZ)
 			tmp = "Mhz";
 		else
