@@ -277,7 +277,6 @@ private:
 	int update_owner(PRL_HANDLE hVmInfo);
 	int commit_configuration(const CmdParamData &param);
 	int set_rate(const rate_list_t &rate);
-	int migrate_internal(const MigrateParam &param);
 	int attach_backup_disk(const std::string& id, const std::string& disk,
 		const DevInfo *param);
 	int attach_backup_disks(const CmdParamData& param);
