@@ -4206,7 +4206,8 @@ int PrlVm::migrate(const MigrateParam &param)
 		close(in[0]); close(out[1]);
 		prl_log(0, "fork() error : '%m', ignored");
 	} else if (pid == 0) {
-		/* redirect stdout to out and stdin to in */
+		/* redirect stdout to out, stdin to in, stderr to /dev/null */
+		freopen("/dev/null", "w", stderr);
 		close(in[1]); close(out[0]);
 		dup2(in[0], STDIN_FILENO);
 		dup2(out[1], STDOUT_FILENO);
