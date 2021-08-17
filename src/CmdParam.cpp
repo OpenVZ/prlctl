@@ -855,10 +855,8 @@ static void usage_vm(const char * argv0)
 "		[--apply-iponly <yes|no>] [--ipfilter <yes|no>] [--macfilter <yes|no>]\n"
 "		[--preventpromisc <yes|no>]\n"
 "		[--adapter-type <virtio|hyperv|e1000|rtl>]\n"
-#ifndef EXTERNALLY_AVAILABLE_BUILD
 "		[--fw <on|off>] [--fw-policy <accept|deny>] [--fw-direction <in|out>]\n"
-"		[--fw-rule <tcp|udp|icmp|* srcip|* port|* dstip|* port|*>]\n"
-#endif
+"		[--fw-rule <tcp|udp|icmp|* local_ip|* local_port|* remote_ip|* remote_port|*>]\n"
 "	--device-add fdd [--device <real_name>]\n"
 "	--device-add fdd --image <image> [--recreate]\n"
 "	--device-add serial {--device <name> | --output <file>\n"
@@ -1185,14 +1183,13 @@ static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 	static const unsigned int PORT_MAX_LENGTH = 5;
 
 	char proto[PROTO_MAX_LENGTH + 1];
-	char srcip[IP_MAX_LENGTH + 1];
-	char srcport[PORT_MAX_LENGTH + 1];
-	char dstip[IP_MAX_LENGTH + 1];
-	char dstport[PORT_MAX_LENGTH + 1];
+	char local_ip[IP_MAX_LENGTH + 1];
+	char local_port[PORT_MAX_LENGTH + 1];
+	char remote_ip[IP_MAX_LENGTH + 1];
+	char remote_port[PORT_MAX_LENGTH + 1];
 
-	// proto srcip port dstip port
 	int res = sscanf(str, "%10s %45s %5s %45s %5s",
-		proto, srcip, srcport, dstip, dstport);
+		proto, local_ip, local_port, remote_ip, remote_port);
 
 	if (res != 5) {
 		fprintf(stderr, "An incorrect firewall rule syntax: %s\n", str);
@@ -1201,14 +1198,14 @@ static int parse_fw_rule(const char *str, struct fw_rule_s &rule)
 	rule.proto = std::string(proto);
 	if (rule.proto == "*")
 		rule.proto = "";
-	if (strcmp(srcip, "*") != 0)
-		rule.src_ip = std::string(srcip);
-	if (strcmp(srcport, "*") != 0)
-		rule.src_port = atoi(srcport);
-	if (strcmp(dstip, "*") != 0)
-		rule.dst_ip = std::string(dstip);
-	if (strcmp(dstport, "*") != 0)
-		rule.dst_port = atoi(dstport);
+	if (strcmp(local_ip, "*") != 0)
+		rule.local_ip = std::string(local_ip);
+	if (strcmp(local_port, "*") != 0)
+		rule.local_port = atoi(local_port);
+	if (strcmp(remote_ip, "*") != 0)
+		rule.remote_ip = std::string(remote_ip);
+	if (strcmp(remote_port, "*") != 0)
+		rule.remote_port = atoi(remote_port);
 
 	return 0;
 }
