@@ -375,12 +375,12 @@ public:
 
 struct fw_rule_s {
 	std::string proto;
-	unsigned int src_port;
-	std::string src_ip;
-	unsigned int dst_port;
-	std::string dst_ip;
+	unsigned int local_port;
+	std::string local_ip;
+	unsigned int remote_port;
+	std::string remote_ip;
 
-	fw_rule_s() : src_port(0), dst_port(0)
+	fw_rule_s() : local_port(0), remote_port(0)
 	{}
 };
 
