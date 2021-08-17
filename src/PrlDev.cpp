@@ -1383,23 +1383,23 @@ int PrlDevNet::set_firewall(const NetParam &net)
 					return prl_err(-1, "PrlFirewallRule_SetProtocol: %s",
 							get_error_str(ret).c_str());
 			}
-			if (it->src_port != 0) {
-				if ((ret = PrlFirewallRule_SetLocalPort(hRule, it->src_port)))
+			if (it->local_port != 0) {
+				if ((ret = PrlFirewallRule_SetLocalPort(hRule, it->local_port)))
 					return prl_err(-1, "PrlFirewallRule_SetLocalPort: %s",
 							get_error_str(ret).c_str());
 			}
-			if (!it->src_ip.empty()) {
-				if ((ret = PrlFirewallRule_SetLocalNetAddress(hRule, it->src_ip.c_str())))
+			if (!it->local_ip.empty()) {
+				if ((ret = PrlFirewallRule_SetLocalNetAddress(hRule, it->local_ip.c_str())))
 					return prl_err(-1, "PrlFirewallRule_SetLocalNetAddress: %s",
 							get_error_str(ret).c_str());
 			}
-			if (it->dst_port != 0) {
-				if ((ret = PrlFirewallRule_SetRemotePort(hRule, it->dst_port)))
+			if (it->remote_port != 0) {
+				if ((ret = PrlFirewallRule_SetRemotePort(hRule, it->remote_port)))
 					return prl_err(-1, "PrlFirewallRule_SetRemotePort: %s",
 							get_error_str(ret).c_str());
 			}
-			if (!it->dst_ip.empty()) {
-				if ((ret = PrlFirewallRule_SetRemoteNetAddress(hRule, it->dst_ip.c_str())))
+			if (!it->remote_ip.empty()) {
+				if ((ret = PrlFirewallRule_SetRemoteNetAddress(hRule, it->remote_ip.c_str())))
 					return prl_err(-1, "PrlFirewallRule_SetRemoteNetAddress: %s",
 							get_error_str(ret).c_str());
 			}
