@@ -3542,7 +3542,7 @@ int PrlVm::commit_configuration(const CmdParamData &param)
 				get_error_str(retcode).c_str() : err.c_str());
 	}
 
-	m_srv.unreg_event_callback(commit_event_handler);
+	m_srv.unreg_event_callback(commit_event_handler, vm_uuid); // data pointer must be the same as in reg_event_callback
 	m_srv.unreg_event_callback(progress_event_handler);
 
 	return retcode;
