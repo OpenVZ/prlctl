@@ -636,6 +636,8 @@ If the \fB--no-fs-resize\fR option is specified, the last partition on the hard 
 [\fB--nameserver\fR <\fIaddr\fR>\fR] [\fB--searchdomain\fR <\fIaddr\fR>\fR]
 [\fB--configure\fR <\fIyes|no\fR>\fR] [\fB--ipfilter\fR <\fIyes|no\fR>\fR] [\fB--macfilter\fR <\fIyes|no\fR>\fR]
 [\fB--preventpromisc\fR <\fIyes|no\fR>] [\fB--adapter-type\fR <\fIvirtio\fR|\fIhyperv\fR|\fIe1000\fR|\fIrtl\fR>]
+[\fB--fw\fR <\fIon\fR|\fIoff\fR>] [\fB--fw-policy\fR <\fIaccept\fR|\fIdeny\fR>] [\fB--fw-direction\fR <\fIin\fR|\fIout\fR>]
+[\fB--fw-rule\fR <\fItcp|udp|icmp|* \fIlocal_ip|*\fR \fIlocal_port|*\fR \fIremote_ip|*\fR \fIremote_port|*\fR>]
 
 
 \fBtype\fR: the type of the network adapter to create in the virtual environment.
@@ -681,6 +683,14 @@ packages not addressed to its virtual environment. If set to "yes", the adapter 
 drop packages not addressed to its virtual environment.
 .br
 \fBadapter-type\fR: specifies network adapter emulation type.
+.br
+\fBfw\fR: determines whether basic firewall is on
+.br
+\fBfw-policy\fR: specifies the default traffic policy for the provided direction
+.br
+\fBfw-direction\fR: specifies the direction of the firewall for the fw-rule and fw-policy options
+.br
+\fBfw-rule\fR: specifies the exception for the default policy
 
 \fBAdding virtual serial port to VE\fR
 .br
