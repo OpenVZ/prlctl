@@ -557,7 +557,7 @@ int PrlDevHdd::resize_image(const DevInfo &param)
 	std::string err;
 	PRL_UINT32 flags = (param.no_fs_resize ? 0 : PRIF_RESIZE_LAST_PARTITION) |
 				(param.offline ? PRIF_RESIZE_OFFLINE : 0);
-	prl_log(0, "Resize disk image '%s' up to %d", get_fname().c_str(), size);
+	prl_log(0, "Resize disk image '%s' up to %u", get_fname().c_str(), size);
 	PrlHandle hJob(PrlVmDev_ResizeImage(m_hDev, param.size, flags));
 	PrlCleanup::register_cancel(hJob.get_handle());
 	if ((ret = get_job_retcode(hJob.get_handle(), err)))
