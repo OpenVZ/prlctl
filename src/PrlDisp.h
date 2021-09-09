@@ -94,7 +94,9 @@ private:
 	int switch_cep_mechanism(int on_off);
 	int switch_verbose_log_level(int on_off);
 	std::string get_backup_path();
+	std::string get_backup_mode();
 	int set_backup_path(const std::string &path);
+	int set_backup_mode(PRL_VM_BACKUP_MODE mode);
 	int get_backup_timeout(unsigned int *tmo);
 	int set_backup_timeout(unsigned int tmo);
 	std::string get_def_backup_storage();
