@@ -358,6 +358,8 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	f.add("Backup path", get_backup_path());
 	f.add("Backup temporary directory", get_backup_tmpdir());
 
+	f.add("Backup mode", get_backup_mode());
+
 	unsigned int tmo;
 	get_backup_timeout(&tmo);
 	f.add("Backup timeout", tmo, "");
@@ -670,6 +672,37 @@ int PrlDisp::set_backup_path(const std::string &path)
 
 	set_updated();
 	return 0;
+}
+
+int PrlDisp::set_backup_mode(PRL_VM_BACKUP_MODE mode)
+{
+	int ret;
+
+	if ((ret = PrlDispCfg_SetBackupMode(m_hDisp, mode)))
+		return prl_err(ret, "PrlDispCfg_SetBackupMode %s [%d]",
+					   get_error_str(ret).c_str(), ret);
+	set_updated();
+	return 0;
+}
+
+std::string PrlDisp::get_backup_mode()
+{
+	PRL_RESULT ret;
+
+	PRL_VM_BACKUP_MODE res = PBM_PUSH;
+
+	if ((ret = PrlDispCfg_GetBackupMode(m_hDisp, &res)))
+	{
+		prl_err(ret, "PrlDispCfg_GetBackupMode %s", get_error_str(ret).c_str());
+		return "unknown";
+	}
+
+	if (res == PBM_PUSH)
+		return "push";
+	else if (res == PBM_PUSH_REVERSED_DELTA)
+		return "push-with-reversed-delta";
+	else
+		return "unknown";
 }
 
 int PrlDisp::get_backup_timeout(unsigned int *tmo)
@@ -1405,6 +1438,13 @@ int PrlDisp::set(const DispParam &param)
 		if ((ret = set_backup_path(param.backup_path)))
 			return ret;
 	}
+
+	if (param.backup_mode.is_initialized())
+	{
+		if ((ret = set_backup_mode(param.backup_mode.get())))
+				return ret;
+	}
+
 	if (param.backup_timeout) {
 		if ((ret = set_backup_timeout(param.backup_timeout)))
 			return ret;

@@ -7,7 +7,7 @@ prlsrvctl \fBinfo\fR [\fB-j, --json\fR] [\fB--license\fR] [\fB-f, --full\fR]
 prlsrvctl \fBset\fR [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>]
 [{\fR--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>}]
 [\fR--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR] [\fR--backup-path\fR <\fIpath\fR>]
-[\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
+[\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-mode\fR <\fIpush\fR|\fIpush-with-reversed-delta\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
 [\fR--allow-attach-screenshots\fR <\fIon\fR|\fIoff\fR>]
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
@@ -100,6 +100,9 @@ connect to the server:
 .TP
 \fB--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>
 Set assignment mode for VTd devices.
+.TP
+\fB--backup-mode\fR <\fIpush\fR|\fIpush-with-reversed-delta\fR>
+Set the backup mode.
 .TP
 \fB--backup-path\fR <\fIpath\fR>
 Set the backup location on the local server.

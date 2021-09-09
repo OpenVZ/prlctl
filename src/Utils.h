@@ -91,6 +91,7 @@ int parse_userpw(const std::string &userpw, std::string &user, std::string &pw);
 std::string parse_mac(const char *mac);
 const char *vmstate2str(VIRTUAL_MACHINE_STATE nVmState);
 int str2dev_assign_mode(const std::string &str);
+boost::optional<PRL_VM_BACKUP_MODE> str2backup_mode(const std::string& str);
 const char *dev_assign_mode2str(int mode);
 int read_passwd(const std::string &name, const std::string &server,
 	std::string &passwd);
