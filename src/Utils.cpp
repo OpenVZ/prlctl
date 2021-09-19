@@ -798,6 +798,17 @@ int str2dev_assign_mode(const std::string &str)
 		return AM_NONE;
 }
 
+boost::optional<PRL_VM_BACKUP_MODE> str2backup_mode(const std::string& str)
+{
+	if (str == "push-with-reversed-delta")
+		return PBM_PUSH_REVERSED_DELTA;
+	else if (str == "push")
+		return PBM_PUSH;
+
+	prl_err(-1, "Cannot recognize the backup mode", errno);
+	return {};
+}
+
 const char *dev_assign_mode2str(int mode)
 {
 	switch (mode) {

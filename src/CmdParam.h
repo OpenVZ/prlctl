@@ -410,6 +410,7 @@ public:
 	int cep_mechanism;
 	int cluster_mode;
 	std::string backup_path;
+	boost::optional<PRL_VM_BACKUP_MODE> backup_mode;
 	unsigned int backup_timeout;
 	bool change_backup_settings;
 	LoginInfo def_backup_storage;
@@ -1346,6 +1347,7 @@ enum cmdOptions {
 	CMD_BACKUP_STORAGE,
 	CMD_BACKUP_ID,
 	CMD_BACKUP_PATH,
+	CMD_BACKUP_MODE,
 	CMD_BACKUP_TMPDIR,
 	CMD_UNCOMPRESSED,
 	CMD_NO_REVERSED_DELTA,

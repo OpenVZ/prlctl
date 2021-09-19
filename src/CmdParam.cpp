@@ -374,6 +374,7 @@ static Option disp_set_options[] = {
 	{"cep", 'c', OptRequireArg, CMD_CEP_MECH_SETTINGS},
 	{"verbose-log", '\0', OptRequireArg, CMD_VERBOSE_LOG_LEVEL},
 	{"backup-path", '\0', OptRequireArg, CMD_BACKUP_PATH},
+	{"backup-mode",	'\0', OptRequireArg, CMD_BACKUP_MODE},
 	{"backup-tmpdir", '\0', OptRequireArg, CMD_BACKUP_TMPDIR},
 	{"backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
 		{"def-backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
@@ -884,7 +885,7 @@ static void usage_disp(const char * argv0)
 "  update-license\n"
 "  set [-s,--min-security-level <low|normal|high>]\n"
 "	[--mng-settings <allow|deny>] [{--device <device> --assignment <host|vm>}]\n"
-"	[--backup-path <path>] [--idle-connection-timeout <timeout>]\n"
+"	[--backup-path <path>] [--idle-connection-timeout <timeout>] [--backup-mode <push|push-with-reversed-delta>]\n"
 "	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
@@ -1447,6 +1448,11 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 			break;
 		case CMD_BACKUP_PATH:
 			param.disp.backup_path = val;
+			break;
+		case CMD_BACKUP_MODE:
+			param.disp.backup_mode = str2backup_mode(val);
+			if (!param.disp.backup_mode.is_initialized())
+				return invalid_action;
 			break;
 		case CMD_BACKUP_TIMEOUT:
 			if (parse_ui(val.c_str(), &param.disp.backup_timeout )) {
