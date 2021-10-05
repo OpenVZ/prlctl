@@ -4238,8 +4238,8 @@ int PrlVm::migrate(const MigrateParam &param)
 
 	/* start migration */
 	if (sessionid) {
-		prl_log(L_WARN, "This authentication method is deprecated and will be dropped in the next major release"
-				"Please use SSH-compatible RSA keys instead");
+		prl_log(L_WARN, "This authentication method is deprecated and will be dropped in the next major release. "
+				"Please use SSH-compatible RSA keys instead.");
 		MigrateParam newparam = param;
 		newparam.sessionid = sessionid;
 		if (security_level > newparam.security_level)
