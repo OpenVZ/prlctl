@@ -102,16 +102,16 @@ connect to the server:
 Set assignment mode for VTd devices.
 .TP
 \fB--backup-mode\fR <\fIpush\fR|\fIpush-with-reversed-delta\fR>
-Set the backup mode.
+Set the backup mode. If both the backup-mode and tmpdir options are set, tmpdir has higher priority. If only tmpdir is set, backup-mode is switched to \fBpush-with-reversed-delta\fR.
 .TP
 \fB--backup-path\fR <\fIpath\fR>
 Set the backup location on the local server.
 .TP
+\fB--backup-tmpdir\fR <\fBtmpdir\fR>
+Set the directory for temporary snapshots created during backup. If this directory is set without setting the backup mode as well, and if this directory is not empty, the backup mode automatically switches to \fBpush-with-reversed-delta\fR mode with a corresponding warning.
+.TP
 \fB--idle-connection-timeout\fR <\fItimeout\fR>
 Sets a timeout interval in seconds after which, if no data has been received from the storage server or backup client, the process of backup/restore is terminated.
-.TP
-\fB--backup-tmpdir\fR <\fBtmpdir\fR>
-Set the backup directory for temporary snapshot creation.
 .TP
 \fB--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR
 Set the default backup server. To unset, specify empty arguments.

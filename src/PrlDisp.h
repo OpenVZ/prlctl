@@ -102,7 +102,7 @@ private:
 	std::string get_def_backup_storage();
 	int set_def_backup_storage(const LoginInfo &server);
 	std::string get_backup_tmpdir();
-	int set_backup_tmpdir(const std::string &tmpdir);
+	int set_backup_tmpdir(const std::string &tmpdir, bool is_backup_mode_init);
 	int update_offline_service(const OfflineSrvParam &offline_service);
 	int list_network_classes_config();
 	int update_network_classes_config(const NetworkClassParam &param);
