@@ -794,8 +794,27 @@ std::string PrlDisp::get_backup_tmpdir()
 	return out;
 }
 
-int PrlDisp::set_backup_tmpdir(const std::string &tmpdir)
+int PrlDisp::set_backup_tmpdir(const std::string &tmpdir, bool is_backup_mode_init)
 {
+	if (!is_backup_mode_init && tmpdir != get_backup_tmpdir())
+	{
+		if (!tmpdir.empty())
+		{
+			if (get_backup_mode() != "push-with-reversed-delta")
+				fprintf(stderr, "WARNING: The tmpdir option was set without the backup-mode option. "
+								"The backup mode was automatically set to push-with-reversed-delta.\n");
+		}
+		else if (get_backup_mode() == "push-with-reversed-delta") {
+			fprintf(stderr, "WARNING: An empty tmpdir was set. The backup mode is still "
+							"push-with-reversed-delta. The delta will be created in the home "
+							"directory of the backed up VM.\n");
+		}
+		else {
+			fprintf(stderr, "WARNING: Empty tmpdir and backup-mode were set. "
+							"The backup mode will not be changed.\n");
+		}
+	}
+
 	int ret;
 
 	if ((ret = PrlDispCfg_SetBackupTmpDir(m_hDisp, tmpdir.c_str())))
@@ -1453,11 +1472,12 @@ int PrlDisp::set(const DispParam &param)
 		if ((ret = set_def_backup_storage(param.def_backup_storage)))
 			return ret;
 	}
+
 	if (param.backup_tmpdir) {
-		if ((ret = set_backup_tmpdir(param.backup_tmpdir.get())))
+		if ((ret = set_backup_tmpdir(param.backup_tmpdir.get(),
+									 param.backup_mode.is_initialized())))
 			return ret;
 	}
-
 	if (param.log_rotation != -1) {
 		if ((ret = switch_log_rotation(param.log_rotation)))
 			return ret;
