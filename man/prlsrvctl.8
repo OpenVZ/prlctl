@@ -108,7 +108,7 @@ Set the backup mode. If both the backup-mode and tmpdir options are set, tmpdir 
 Set the backup location on the local server.
 .TP
 \fB--backup-tmpdir\fR <\fBtmpdir\fR>
-Set the directory for temporary snapshots created during backup. If this directory is set without setting the backup mode as well, and if this directory is not empty, the backup mode automatically switches to \fBpush-with-reversed-delta\fR mode with a corresponding warning.
+Set the directory for temporary snapshots created during backup. If this directory is set without setting the backup mode as well, and if this value is not empty, the backup mode automatically switches to \fBpush-with-reversed-delta\fR mode with a corresponding warning.
 .TP
 \fB--idle-connection-timeout\fR <\fItimeout\fR>
 Sets a timeout interval in seconds after which, if no data has been received from the storage server or backup client, the process of backup/restore is terminated.
