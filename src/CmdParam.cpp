@@ -405,6 +405,7 @@ static Option disp_set_options[] = {
 		{"vnc-public-key", '\0', OptRequireArg, CMD_VNC_PUBLIC_KEY},
 	{"vnc-ssl-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
 		{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
+	{"vnc-clipboard", '\0', OptRequireArg, CMD_VNC_CLIPBOARD},
 	{"vm-cpulimit-type", '\0', OptRequireArg, CMD_VM_CPULIMIT_TYPE},
 	{"vcmmd-policy", '\0', OptRequireArg, CMD_VCMMD_POLICY},
 	OPTION_END
@@ -892,7 +893,7 @@ static void usage_disp(const char * argv0)
 "	[--vm-cpulimit-type <full|guest>]\n"
 "	[--vcmmd-policy <density|performance>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
-"	[--vnc-ssl-certificate <fname> --vnc-ssl-key <fname>]\n"
+"	[--vnc-ssl-certificate <fname> --vnc-ssl-key <fname>] [--vnc-clipboard <on|off>]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
 "  user set --def-vm-home <path>\n"
 //"  statistics [-a, --all] [--loop] [--filter name]\n"
@@ -1688,6 +1689,14 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 				return invalid_action;
 			vnc_private_key = true;
 			param.disp.set_vnc_encryption = true;
+			break;
+		case CMD_VNC_CLIPBOARD:
+			if ((param.disp.set_vnc_clipboard = str2on_off(val)) == -1) {
+				fprintf(stderr, "An incorrect value for"
+					" --vnc-clipboard is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
 			break;
 		case GETOPTERROR:
 		default:

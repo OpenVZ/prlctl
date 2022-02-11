@@ -432,6 +432,7 @@ public:
 	bool set_vnc_encryption;
 	std::string vnc_public_key;
 	std::string vnc_private_key;
+	int set_vnc_clipboard;
 	int vm_cpulimit_type;
 	std::string vcmmd_policy;
 
@@ -452,6 +453,7 @@ public:
 		allow_attach_screenshots(-1),
 		lock_edit_settings(-1),
 		set_vnc_encryption(false),
+		set_vnc_clipboard(-1),
 		vm_cpulimit_type(-1)
 	{}
 };
@@ -1470,6 +1472,7 @@ enum cmdOptions {
 	CMD_SET_RESTRICT_EDITING,
 	CMD_VNC_PUBLIC_KEY,
 	CMD_VNC_PRIVATE_KEY,
+	CMD_VNC_CLIPBOARD,
 	CMD_TEMPLATE_SIGN,
 	CMD_AUTOCOMPACT,
 	CMD_ATTACH_BACKUP_ID,

@@ -373,6 +373,7 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 		f.add("CPU masked features", print_masked_features());
 	}
 
+	f.add("VNC Clipboard:", get_vnc_clipboard() ? "on" : "off");
 	f.add("Verbose log", m_verbose_log_level ? "on" : "off");
 }
 
@@ -1464,6 +1465,11 @@ int PrlDisp::set(const DispParam &param)
 				return ret;
 	}
 
+	if (param.set_vnc_clipboard != -1) {
+		if ((ret = set_vnc_clipboard(param.set_vnc_clipboard)))
+			return ret;
+	}
+
 	if (param.backup_timeout) {
 		if ((ret = set_backup_timeout(param.backup_timeout)))
 			return ret;
@@ -1621,6 +1627,35 @@ int PrlDisp::set_vnc_encryption(const std::string &public_key, const std::string
 	prl_log(0, "The VNC encryption has been successfully configured.");
 	return 0;
 
+}
+
+int PrlDisp::set_vnc_clipboard(int on_off)
+{
+	PRL_RESULT ret;
+
+	if ((ret = get_config_handle()))
+		return ret;
+
+	if ((ret = PrlDispCfg_SetVNCEnableClipboard(m_hDisp, on_off ? PRL_TRUE : PRL_FALSE)))
+		return prl_err(ret, "PrlDispCfg_SetVNCEnableClipboard: %s",
+			get_error_str(ret).c_str());
+	set_updated();
+
+	return 0;
+}
+
+int PrlDisp::get_vnc_clipboard()
+{
+	PRL_RESULT ret;
+	PRL_BOOL res = 0;
+
+	if ((ret = PrlDispCfg_IsVNCEnableClipboard(m_hDisp, &res)))
+	{
+		prl_err(ret, "PrlDispCfg_IsVNCEnableClipboard %s", get_error_str(ret).c_str());
+		return 0;
+	}
+
+	return res;
 }
 
 int PrlDisp::set_vm_cpulimit_type(int vm_cpulimit_type)

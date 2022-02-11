@@ -12,7 +12,7 @@ prlsrvctl \fBset\fR [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhi
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
 [\fR--vcmmd-policy\fR <\fIdensity\fR|\fIperformance\fR>]
-[\fR--vnc-ssl-certificate\fR <\fIfname\fR> \fR--vnc-ssl-key\fR <\fIfname\fR>]
+[\fR--vnc-ssl-certificate\fR <\fIfname\fR> \fR--vnc-ssl-key\fR <\fIfname\fR> \fR--vnc-clipboard\fR <\fIon\fR|\fIoff\fR>]
 [\fBOPTIONS\fR]
 .PP
 prlsrvctl \fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>] [\fBOPTIONS\fR]
@@ -132,6 +132,9 @@ Sets host's global vcmmd policy. NOTE: Before setting the policy, stop all virtu
 \fB--vnc-ssl-certificate\fR <\fIfname\fR> \fB--vnc-ssl-key\fR <\fIfname\fR>
 Install an SSL certificate and a private key to encrypt all VNC connections on
 node. To disable VNC encryption, specify empty arguments (e.g., '').
+.TP
+\fB--vnc-clipboard\fR <\fIon\fR|\fIoff\fR>
+Enables/disables Copy/Paste in VM's VNC console.
 .SS Managing @PRODUCT_NAME_SHORT@ server
 .IP "\fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>]" 4
 Install @PRODUCT_NAME_SHORT@ license.
