@@ -124,6 +124,8 @@ private:
 	std::string get_cpu_features();
 	std::string get_cpu_model();
 	int set_vnc_encryption(const std::string &public_key, const std::string &private_key);
+	int set_vnc_clipboard(int on_off);
+	int get_vnc_clipboard();
 	int set_vm_cpulimit_type(int vm_cpulimit_type);
 	int get_vcmmd_policy(std::string &policy, int nFlags = 0) const;
 
