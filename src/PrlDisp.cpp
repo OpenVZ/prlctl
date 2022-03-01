@@ -429,6 +429,19 @@ std::string PrlDisp::print_unmaskable_features()
 	return print_features_unmaskable(features, mask_caps);
 }
 
+bool PrlDisp::is_cpu_masking_support()
+{
+	PRL_UINT32 count = 0;
+	PrlHandle hResult;
+
+	PrlHandle hJob(PrlSrv_GetCpuMaskSupport(m_srv.get_handle(), 0));
+
+	if ( PRL_ERR_SUCCESS == get_job_result(hJob.get_handle(), hResult.get_ptr(), &count))
+		return true;
+
+	return false;
+}
+
 int PrlDisp::set_cpu_features_mask(std::string mask_changes)
 {
 	PRL_RESULT ret;
@@ -464,6 +477,12 @@ int PrlDisp::set_cpu_features_mask(std::string mask_changes)
 					goto syntax_error;
 			}
 		}
+	}
+
+	if(!is_cpu_masking_support())
+	{
+		fprintf(stderr, "WARNING: Node's processor does not support CPU feature 'masking'. "
+						"So it will only work for virtual machines, but not for containers.\n");
 	}
 
 	mask.setDups();
