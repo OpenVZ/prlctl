@@ -120,6 +120,7 @@ private:
 
 	std::string print_unmaskable_features();
 	std::string print_masked_features();
+	bool is_cpu_masking_support();
 	int set_cpu_features_mask(std::string mask_changes);
 	std::string get_cpu_features();
 	std::string get_cpu_model();
