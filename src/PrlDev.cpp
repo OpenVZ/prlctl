@@ -1706,11 +1706,8 @@ std::string PrlDevNet::get_veth_name() const
 	PRL_RESULT ret;
 	unsigned int l = sizeof(buf);
 
-	if ((get_id() != VENET0_ID) &&
-			PRL_FAILED(ret = PrlVmDevNet_GetHostInterfaceName(m_hDev, buf, &l))) {
-		prl_log(L_WARN, "PrlVmDevNet_GetHostInterfaceName:%s",
-			get_error_str(ret).c_str());
-	}
+	if (PRL_FAILED(ret = PrlVmDevNet_GetHostInterfaceName(m_hDev, buf, &l)))
+		prl_log(L_WARN, "PrlVmDevNet_GetHostInterfaceName:%s", get_error_str(ret).c_str());
 
 	return std::string(buf);
 }
@@ -1725,40 +1722,29 @@ void PrlDevNet::append_info(PrlOutFormatter &f)
 
 	std::string out;
 	char buf[4096];
-	unsigned int len;
+	unsigned int len = sizeof(buf);
 	PRL_BOOL bEnabled;
 	ip_list_t ips;
 
 	PRL_NET_ADAPTER_EMULATED_TYPE type = (PRL_NET_ADAPTER_EMULATED_TYPE)get_emu_type();
 
-#ifdef _LIN_
-	PRL_VM_TYPE vm_type = m_vm.get_vm_type();
-	if (vm_type == PVT_CT && type == PNA_ROUTED) {
-		f.open_dev(VENET0_STR);
-		f.add_isenabled(true);
-		f.add("type", "routed", true, true);
-		get_ip(ips);
-		if (!ips.empty())
-			f.add("ips", ips.to_str(), true, true);
-		f.close(true);
-		return;
-	}
-#endif
-	f.open_dev(get_id().c_str());
-	f.add_isenabled(is_enable());
+	bool venet_in_ct = m_vm.get_vm_type() == PVT_CT && type == PNA_ROUTED;
 
-	std::string vnet = get_vnetwork();
-#ifdef _LIN_
+	if (venet_in_ct)
+		f.open_dev(VENET0_STR);
+	else
+		f.open_dev(get_id().c_str());
+
 	f.add("dev", get_veth_name(), true, true);
+	f.add_isenabled(is_enable());
 	std::string ifname = get_sname();
 	if (!ifname.empty())
 		f.add("ifname", ifname.c_str(), true, true);
-#endif
 
 	if (type == PNA_BRIDGE) {
 		f.add("type", "bridge", true);
 	} else if (type == PNA_BRIDGED_ETHERNET) {
-		f.add("network", vnet, true, true);
+		f.add("network", get_vnetwork(), true, true);
 	} else {
 		if (type == PNA_ROUTED) {
 			f.add("type", "routed", true);
