@@ -3792,7 +3792,24 @@ int PrlVm::set(const CmdParamData &param)
 	if (param.dev.cmd == Set) {
 		if ((ret = get_dev_info()))
 			return ret;
-		if (param.dev.name.empty()) {
+
+		if (param.dev.name.empty() && get_vm_type() == PVT_CT &&
+				param.dev.net.is_updated())
+		{
+			dev = m_DevList.find(VENET0_ID);
+			if (!dev)
+			{
+				DevInfo venet;
+				venet.name = VENET0_STR;
+				venet.mode = DEV_TYPE_NET_ROUTED;
+
+				if ((ret = create_dev(DEV_NET, venet)))
+					return ret;
+				dev = m_DevList.back();
+				set_updated();
+			}
+		}
+		else if (param.dev.name.empty()) {
 			/* set params to the first device in the list */
 			dev = m_DevList.find(param.dev.type);
 		} else {
