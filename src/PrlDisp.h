@@ -83,6 +83,7 @@ public:
 	int up_listen_interface(const std::string &iface);
 	int is_network_shaping_enabled();
 	void get_net_shaping_rate_info(std::ostringstream &os);
+	std::string get_vnc_default_address();
 	~PrlDisp();
 
 private:
@@ -127,6 +128,7 @@ private:
 	int set_vnc_encryption(const std::string &public_key, const std::string &private_key);
 	int set_vnc_clipboard(int on_off);
 	int get_vnc_clipboard();
+	int set_vnc_default_address(const std::string& addr);
 	int set_vm_cpulimit_type(int vm_cpulimit_type);
 	int get_vcmmd_policy(std::string &policy, int nFlags = 0) const;
 
