@@ -136,6 +136,7 @@ void set_full_info_mode();
 bool is_full_info_mode();
 void normalize_ip(std::string &val);
 std::string capability2str(const CapParam &capability);
+bool is_valid_ip(const std::string& ip);
 
 struct FeatureDescription;
 

@@ -1745,6 +1745,13 @@ VncParam PrlVm::get_vnc_param()
 	if (PrlVmCfg_GetVNCHostName(m_hVm, buf, &len) == 0)
 		vnc.address = buf;
 
+	std::string defaultVnc = m_srv.get_disp()->get_vnc_default_address();
+
+	if (!defaultVnc.empty()
+			&& defaultVnc != PrlVm::defaultHostName
+			&& vnc.address == PrlVm::defaultHostName)
+		vnc.global_vnc_address = defaultVnc;
+
 	return vnc;
 }
 
@@ -4947,6 +4954,9 @@ void VncParam::append_info(PrlOutFormatter &f) const
 
 	if (!address.empty())
 		f.add("address", address, true);
+
+	if (!global_vnc_address.empty())
+		f.add("global address", global_vnc_address, true);
 
 	f.close(true);
 }

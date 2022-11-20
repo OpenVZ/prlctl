@@ -374,6 +374,7 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	}
 
 	f.add("VNC Clipboard:", get_vnc_clipboard() ? "on" : "off");
+	f.add("VNC Default address:", get_vnc_default_address());
 	f.add("Verbose log", m_verbose_log_level ? "on" : "off");
 }
 
@@ -1489,6 +1490,11 @@ int PrlDisp::set(const DispParam &param)
 			return ret;
 	}
 
+	if (!param.vnc_default_address.empty()) {
+		if ((ret = set_vnc_default_address(param.vnc_default_address)))
+			return ret;
+	}
+
 	if (param.backup_timeout) {
 		if ((ret = set_backup_timeout(param.backup_timeout)))
 			return ret;
@@ -1675,6 +1681,39 @@ int PrlDisp::get_vnc_clipboard()
 	}
 
 	return res;
+}
+
+int PrlDisp::set_vnc_default_address(const std::string& addr)
+{
+	int ret;
+	if ((ret = get_config_handle()))
+		return ret;
+
+	if ((ret = PrlDispCfg_SetDefaultVNCHostName(m_hDisp, addr.c_str())))
+		return prl_err(ret, "PrlDispCfg_SetDefaultVNCHostName: %s",
+					get_error_str(ret).c_str());
+
+	set_updated();
+	return 0;
+}
+
+std::string PrlDisp::get_vnc_default_address()
+{
+	int ret;
+	if ((ret = get_config_handle()))
+		return {};
+
+	unsigned int len;
+	char buf[4096];
+	len = sizeof(buf);
+
+	if ((ret = PrlDispCfg_GetDefaultVNCHostName(m_hDisp, buf, &len))) {
+		prl_err(ret, "PrlDispCfg_GetDefaultVNCHostName: %s",
+				get_error_str(ret).c_str());
+		return {};
+	}
+
+	return std::string{buf};
 }
 
 int PrlDisp::set_vm_cpulimit_type(int vm_cpulimit_type)
