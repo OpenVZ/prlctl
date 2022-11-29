@@ -956,11 +956,12 @@ int PrlVm::exec(const CmdParamData &param)
 	PrlApi_CreateStringsList(hEnvs.get_ptr());
 #ifndef _WIN_
 	if (action == VmEnterAction &&
-	    m_ostype == PVS_GUEST_TYPE_LINUX) {
+		(m_ostype == PVS_GUEST_TYPE_LINUX ||
+		m_ostype == PVS_GUEST_TYPE_FREEBSD)) {
 		const char *envs_enter[] = {"HOME=/",
 			"HISTFILE=/dev/null",
 			"PATH=/bin:/sbin:/usr/bin:/usr/sbin:.",
-			"SHELL=/bin/bash",
+			(m_ostype == PVS_GUEST_TYPE_LINUX) ? "SHELL=/bin/bash" : "SHELL=/bin/csh",
 		};
 		const char *envs[] = { "TERM" };
 		char buf[64];
@@ -993,7 +994,8 @@ int PrlVm::exec(const CmdParamData &param)
 
 		if (action == VmEnterAction) {
 #ifdef _LIN_		
-			if (m_ostype == PVS_GUEST_TYPE_LINUX) {
+			if (m_ostype == PVS_GUEST_TYPE_LINUX ||
+				m_ostype == PVS_GUEST_TYPE_FREEBSD) {
 				struct termios ts;
 				struct sigaction sa = { 0 };
 
