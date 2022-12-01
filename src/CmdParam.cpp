@@ -2946,6 +2946,12 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			param.vnc.nopasswd = 1;
 			break;
 		case CMD_VNC_ADDRESS:
+			if (!is_valid_ip(val)) {
+				fprintf(stderr, "An incorrect value for"
+					" vnc-address is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
 			param.vnc.address = val;
 			break;
 		case CMD_USERNAME:
