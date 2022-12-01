@@ -406,6 +406,7 @@ static Option disp_set_options[] = {
 	{"vnc-ssl-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
 		{"vnc-private-key", '\0', OptRequireArg, CMD_VNC_PRIVATE_KEY},
 	{"vnc-clipboard", '\0', OptRequireArg, CMD_VNC_CLIPBOARD},
+	{"vnc-default-address", '\0', OptRequireArg, CMD_VNC_DEFAULT_ADDRESS},
 	{"vm-cpulimit-type", '\0', OptRequireArg, CMD_VM_CPULIMIT_TYPE},
 	{"vcmmd-policy", '\0', OptRequireArg, CMD_VCMMD_POLICY},
 	OPTION_END
@@ -1697,6 +1698,15 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
+			break;
+		case CMD_VNC_DEFAULT_ADDRESS:
+			if (!is_valid_ip(val)) {
+				fprintf(stderr, "An incorrect value for"
+					" vnc-default-address is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
+			param.disp.vnc_default_address = val;
 			break;
 		case GETOPTERROR:
 		default:

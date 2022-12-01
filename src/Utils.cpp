@@ -1846,6 +1846,17 @@ std::string capability2str(const CapParam &capability)
 	return output;
 }
 
+bool is_valid_ip(const std::string& ip)
+{
+	struct sockaddr_in sa_ip4;
+	int result_ip4 = inet_pton(AF_INET, ip.c_str(), &(sa_ip4.sin_addr));
+
+	struct sockaddr_in sa_ip6;
+	int result_ip6 = inet_pton(AF_INET6, ip.c_str(), &(sa_ip6.sin_addr));
+
+	return result_ip4 == 1 || result_ip6 == 1;
+}
+
 namespace Netfilter
 {
 static Mode mode_map[] = {

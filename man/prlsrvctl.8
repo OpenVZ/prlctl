@@ -12,7 +12,7 @@ prlsrvctl \fBset\fR [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhi
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
 [\fR--vcmmd-policy\fR <\fIdensity\fR|\fIperformance\fR>]
-[\fR--vnc-ssl-certificate\fR <\fIfname\fR> \fR--vnc-ssl-key\fR <\fIfname\fR> \fR--vnc-clipboard\fR <\fIon\fR|\fIoff\fR>]
+[\fR--vnc-ssl-certificate\fR <\fIfname\fR> \fR--vnc-ssl-key\fR <\fIfname\fR> \fR--vnc-clipboard\fR \fR--vnc-clipboard\fR --vnc-default-address <\fIon\fR|\fIoff\fR>]
 [\fBOPTIONS\fR]
 .PP
 prlsrvctl \fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>] [\fBOPTIONS\fR]
@@ -135,6 +135,9 @@ node. To disable VNC encryption, specify empty arguments (e.g., '').
 .TP
 \fB--vnc-clipboard\fR <\fIon\fR|\fIoff\fR>
 Enables/disables Copy/Paste in VM's VNC console.
+.TP
+\fB--vnc-default-address\fR <\fIip\fR>
+Specify a default VNC address for all created VMs after setting the option. If used, vnc-default-address shows up in the VE configuration as an additional VNC address marked as a global address. The vnc-default-address parameter will not be considered when creating a VNC server if the VM has its own VNC address other than 0.0.0.0.
 .SS Managing @PRODUCT_NAME_SHORT@ server
 .IP "\fBinstall-license\fR \fB-k,--key\fR <\fIkey\fR> [\fB-n,--name <\fIname\fR>] [\fB-c,--company\fR <\fIname\fR>]" 4
 Install @PRODUCT_NAME_SHORT@ license.

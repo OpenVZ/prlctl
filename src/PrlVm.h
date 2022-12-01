@@ -77,6 +77,7 @@ private:
 	bool m_select_boot_dev;
 	std::string m_ext_boot_dev;
 	str_list_t m_confirmation_list;
+	static constexpr const char* defaultHostName = "0.0.0.0";
 
 public:
 	PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,

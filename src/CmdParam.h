@@ -432,6 +432,7 @@ public:
 	bool set_vnc_encryption;
 	std::string vnc_public_key;
 	std::string vnc_private_key;
+	std::string vnc_default_address;
 	int set_vnc_clipboard;
 	int vm_cpulimit_type;
 	std::string vcmmd_policy;
@@ -553,6 +554,7 @@ struct VncParam {
 	PRL_UINT32	port;
 	PRL_UINT32	ws_port; // read-only
 	std::string	address;
+	std::string	global_vnc_address;
 	std::string	passwd;
 	int		nopasswd;
 
@@ -1473,6 +1475,7 @@ enum cmdOptions {
 	CMD_VNC_PUBLIC_KEY,
 	CMD_VNC_PRIVATE_KEY,
 	CMD_VNC_CLIPBOARD,
+	CMD_VNC_DEFAULT_ADDRESS,
 	CMD_TEMPLATE_SIGN,
 	CMD_AUTOCOMPACT,
 	CMD_ATTACH_BACKUP_ID,
