@@ -893,6 +893,7 @@ static void usage_disp(const char * argv0)
 "	[--cpu-features-mask <mask|off>]\n"
 "	[--vm-cpulimit-type <full|guest>]\n"
 "	[--vcmmd-policy <density|performance>]\n"
+"	[--vnc-default-address <on|off>]\n"
 "	[--allow-attach-screenshots <on|off>]\n"
 "	[--vnc-ssl-certificate <fname> --vnc-ssl-key <fname>] [--vnc-clipboard <on|off>]\n"
 "  user list [-o,--output name[,name...]] [-j, --json]\n"
