@@ -69,7 +69,7 @@ restart list"
 	local capture_flags='--file'
 	local clone_flags='--name'
 	local clone_optional_flags='--template --location'
-	local create_flags='-c --config --location -o --ostype -d --distribution --ostemplate'
+	local create_flags='-c --config --location -o --ostype -d --distribution --ostemplate --chipset'
 	local list_flags='-a --all -t --template -o --output -s --sort -i --info -f --full -j --json --vmtype'
 	local migrate_flags='--location --no-compression'
 	local snapshot_flags='-n --name -d --description'
@@ -270,6 +270,9 @@ restart list"
 			;;
 		--vmtype)
 			opts='ct vm all'
+			;;
+		--chipset)
+			opts='q35 piix'
 			;;
 
 		*) # processing actions' local options

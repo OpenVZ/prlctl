@@ -949,6 +949,7 @@ public:
 	boost::optional<rate_list_t> rate;
 	int ratebound;
 	unsigned vmtype;
+	PRL_CHIPSET_TYPE chipset;
 
 	// dry_run mech
 	bool dry_run;
@@ -1057,6 +1058,7 @@ public:
 		batch(false),
 		ratebound(-1),
 		vmtype(PVTF_VM | PVTF_CT),
+		chipset(PRL_CHIPSET_TYPE::CHIP_Q35),
 		dry_run(false),
 		mnt_opts(0),
 		mnt_info(0),
@@ -1493,6 +1495,7 @@ enum cmdOptions {
 	CMD_RESET_PWDB,
 	CMD_RESTORE_LIVE,
 	CMD_ABACKUP, 
+	CMD_CHIPSET,
 };
 
 #endif // __CMDPARAM_H__

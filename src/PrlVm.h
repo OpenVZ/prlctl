@@ -257,6 +257,10 @@ public:
 	int monitor();
 	std::string get_backup_path() const;
 	int set_backup_path(const std::string &path);
+	PRL_CHIPSET_TYPE get_chipset_type() const;
+	int set_chipset_type(const PRL_CHIPSET_TYPE type_);
+	PRL_UINT32 get_chipset_version() const;
+	int set_chipset_version(const PRL_UINT32 version_);
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);

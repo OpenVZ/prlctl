@@ -849,6 +849,8 @@ int PrlSrv::create_vm(const CmdParamData &param)
 	if (!param.uuid.empty())
 		PrlVmCfg_SetUuid(vm->get_handle(), param.uuid.c_str());
 
+	vm->set_chipset_type(param.chipset);
+
 	if ((ret = vm->reg(param.vm_location, nFlags)))
 		return prl_err(ret, "Failed to create the virtual machine.");
 	prl_log(0, "The VM has been successfully created.");
