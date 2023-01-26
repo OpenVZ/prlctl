@@ -4772,9 +4772,11 @@ int cmdParam::parse_memguarantee(const char *value, CmdParamData &param)
 		return 0;
 	}
 
-	if (parse_ui(value, (unsigned int *)&param.memguarantee.value))
+	unsigned int memguarantee_value;
+	if (parse_ui(value, &memguarantee_value))
 		return 1;
 
+	param.memguarantee.value = (PRL_UINT32) memguarantee_value;
 	// only value in percents is possible
 	param.memguarantee.type = PRL_MEMGUARANTEE_PERCENTS;
 
