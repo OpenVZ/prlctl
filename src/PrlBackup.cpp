@@ -456,7 +456,7 @@ int PrlSrv::do_vm_abackup(const PrlVm& vm, const BackupParam& param)
 			break;
 		}
 
-		std::auto_ptr<cbt_bitmap> bmap(get_cbt_bitmap(hDisk.get_handle(),
+		std::unique_ptr<cbt_bitmap> bmap(get_cbt_bitmap(hDisk.get_handle(),
 					param.flags == PBT_FULL ? NULL : param.uuid.c_str()));
 		if (bmap.get() == NULL)
 			break;
@@ -505,7 +505,7 @@ int PrlSrv::backup_vm(const CmdParamData& param)
 				param.id.c_str());
 	}
 
-	std::auto_ptr<PrlVm> vm(v);
+	std::unique_ptr<PrlVm> vm(v);
 
 	PrlSrv storage;
 	if (!param.backup.storage.server.empty() &&

@@ -794,7 +794,7 @@ int PrlSrv::create_vm(const CmdParamData &param)
 		if ((ret = get_vm_config(param.ostemplate, &v)))
 			return ret;
 
-		std::auto_ptr<PrlVm> vm(v);
+		std::unique_ptr<PrlVm> vm(v);
 		if (!v || !vm->is_template())
 			return prl_err(1, "Failed to find the %s template.",
 					param.ostemplate.c_str());

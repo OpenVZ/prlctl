@@ -648,11 +648,7 @@ int PrlVm::snapshot_create(const SnapshotParam &param)
 	std::string err;
 
 	prl_log(0, "Creating the snapshot...");
-#if __USE_ISOCXX11
 	std::unique_ptr<Snapshot::Event> e;
-#else 
-	std::auto_ptr<Snapshot::Event> e;
-#endif
 	if (param.wait && (get_vm_type() == PVT_VM))
 		e.reset(new Snapshot::Event(m_hVm, m_VmState));
 
@@ -695,11 +691,7 @@ int PrlVm::snapshot_switch_to(const SnapshotParam &param)
 		return prl_err(-1, "No snapshot to revert to.");
 	
 	prl_log(0, "Switch to the snapshot %s", id.c_str());
-#if __USE_ISOCXX11
 	std::unique_ptr<Snapshot::Event> e;
-#else
-	std::auto_ptr<Snapshot::Event> e;
-#endif
 	if (param.wait && (get_vm_type() == PVT_VM))
 		e.reset(new Snapshot::Event(m_hVm, m_VmState));
 
