@@ -130,9 +130,27 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	get_home_dir(m_home);
 }
 
+const char *PrlVm::get_vm_type_str(PRL_VM_TYPE type_) const
+{
+	return (type_ == PVT_VM) ? "VM" : "CT";
+}
+
 const char *PrlVm::get_vm_type_str() const
 {
-	return (get_vm_type() == PVT_VM) ? "VM" : "CT";
+	return get_vm_type_str(get_vm_type());
+}
+
+const char *PrlVm::get_chipset_type_str() const
+{
+	std::string result = "UNKNOWN";
+	PRL_CHIPSET_TYPE type = get_chipset_type();
+	if (type == PRL_CHIPSET_TYPE::CHIP_PCI440FX )
+		result = "piix";
+	else if (type == PRL_CHIPSET_TYPE::CHIP_Q35 )
+		result = "q35";
+	else if (type == PRL_CHIPSET_TYPE::CHIP_RHEL7 )
+		result = "rhel7";
+	return result.c_str();
 }
 
 PRL_VM_TYPE PrlVm::get_vm_type() const
@@ -4619,9 +4637,12 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 		f.add("EnvID", get_ctid());
 	}
 
+	PRL_VM_TYPE vm_type = get_vm_type();
 	f.add("Name", get_name());
 	f.add("Description", get_desc());
-	f.add("Type", get_vm_type_str());
+	f.add("Type", get_vm_type_str(vm_type));
+	if (vm_type == PVT_VM)
+		f.add("Chipset", get_chipset_type_str());
 	f.add("State", vmstate2str(get_state()));
 	f.add("OS", get_dist());
 	f.add("Template", m_template ? "yes" : "no");
@@ -4769,7 +4790,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.close();
 
 	FeaturesParam feature = get_features();
-	if (get_vm_type() == PVT_CT) {
+	if (vm_type == PVT_CT) {
 		f.add("Features", feature2str(feature));
 	} else {
 		if (feature.mask & FT_SmartMount) {
