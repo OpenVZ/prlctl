@@ -112,6 +112,7 @@ static Option create_options[] = {
 	{"ostemplate", 't', OptRequireArg, CMD_OSTEMPLATE},
 	{"changesid", 's', OptNoArg, CMD_CHANGE_SID},
 	{"vmtype", '\0', OptRequireArg, CMD_VMTYPE},
+	{"chipset", '\0', OptRequireArg, CMD_CHIPSET},
 	{"no-hdd", '\0', OptNoArg, CMD_NO_HDD},
 	{"hdd-block-size", '\0', OptRequireArg, CMD_HDD_BLOCK_SIZE},
 	{"lion-recovery", '\0', OptNoArg, CMD_LION_RECOVERY},
@@ -750,7 +751,7 @@ static void usage_vm(const char * argv0)
 "  clone <ID | NAME> --name <NEW_NAME> [--template]] [--dst path] [--changesid] [--linked] [--detach-external-hdd <yes|no>]\n"
 "  console <ID | NAME>\n"
 "  create <NAME> {--ostemplate <name> | -o, --ostype <name|list> | -d,--distribution <name|list>} [--vmtype ct|vm]\n"
-"                [--dst <path>] [--changesid] [--no-hdd] [--encryption-keyid <keyid>]\n"
+"                [--dst <path>] [--changesid] [--no-hdd] [--encryption-keyid <keyid>] [--chipset piix|q35]\n"
 "  delete <ID | NAME>\n"
 "  installtools <ID | NAME>\n"
 "  enter <ID | NAME>\n"
@@ -2207,6 +2208,17 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 			} else {
 				 fprintf(stderr, "An incorrect value for"
 					" --vmtype is specified: %s\n", val.c_str());
+				return invalid_action;
+			}
+			break;
+		case CMD_CHIPSET:
+			if (val == "q35") {
+				param.chipset = PRL_CHIPSET_TYPE::CHIP_Q35;
+			} else if (val == "piix") {
+				param.chipset = PRL_CHIPSET_TYPE::CHIP_PCI440FX;
+			} else {
+				 fprintf(stderr, "An incorrect value for"
+					" --chipset is specified: %s\n", val.c_str());
 				return invalid_action;
 			}
 			break;

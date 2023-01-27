@@ -47,6 +47,7 @@
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
 #include <PrlOses.h>
+#include <PrlEnums.h>
 #include <boost/foreach.hpp>
 #include <boost/archive/iterators/binary_from_base64.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
@@ -129,9 +130,27 @@ PrlVm::PrlVm(PrlSrv &srv, PRL_HANDLE hVm, const std::string &uuid,
 	get_home_dir(m_home);
 }
 
+const char *PrlVm::get_vm_type_str(PRL_VM_TYPE type_) const
+{
+	return (type_ == PVT_VM) ? "VM" : "CT";
+}
+
 const char *PrlVm::get_vm_type_str() const
 {
-	return (get_vm_type() == PVT_VM) ? "VM" : "CT";
+	return get_vm_type_str(get_vm_type());
+}
+
+const char *PrlVm::get_chipset_type_str() const
+{
+	std::string result = "UNKNOWN";
+	PRL_CHIPSET_TYPE type = get_chipset_type();
+	if (type == PRL_CHIPSET_TYPE::CHIP_PCI440FX )
+		result = "piix";
+	else if (type == PRL_CHIPSET_TYPE::CHIP_Q35 )
+		result = "q35";
+	else if (type == PRL_CHIPSET_TYPE::CHIP_RHEL7 )
+		result = "rhel7";
+	return result.c_str();
 }
 
 PRL_VM_TYPE PrlVm::get_vm_type() const
@@ -2063,6 +2082,70 @@ unsigned PrlVm::get_cpu_sockets() const
 			get_error_str(e).c_str());
 	}
 	return output;
+}
+
+PRL_CHIPSET_TYPE PrlVm::get_chipset_type() const
+{
+	PRL_CHIPSET_TYPE type = PRL_CHIPSET_TYPE::CHIP_Q35;
+	PRL_RESULT ret = PrlVmCfg_GetChipsetType(m_hVm, &type);
+	if (PRL_FAILED(ret))
+	{
+		prl_err(-1, "PrlVmCfg_GetChipsetType: %s",
+			get_error_str(ret).c_str());
+	}
+
+	return type;
+}
+
+int PrlVm::set_chipset_type(PRL_CHIPSET_TYPE type_)
+{
+	if (type_ < PRL_CHIPSET_TYPE::CHIP_MIN_NUMBER || type_ > PRL_CHIPSET_TYPE::CHIP_MAX_NUMBER)
+	{
+		return prl_err(-1, "An incorrect value for chipset parameter (%u).",
+				type_);
+	}
+	prl_log(0, "set chipset type = %u", type_);
+	PRL_RESULT e = PrlVmCfg_SetChipsetType(m_hVm, type_);
+	if (PRL_FAILED(e))
+	{
+		return prl_err(e, ":PrlVmCfg_SetChipsetType %s",
+			get_error_str(e).c_str());
+	}
+
+	//set default version
+	e = set_chipset_version(type_ == PRL_CHIPSET_TYPE::CHIP_PCI440FX ?
+			(PRL_UINT32)PRL_I440FX_VERSION::PCI440FX_DEFAULT : (PRL_UINT32)PRL_Q35_VERSION::Q35_DEFAULT );
+	if (PRL_FAILED(e))
+		return e;
+
+	set_updated();
+	return 0;
+}
+
+PRL_UINT32 PrlVm::get_chipset_version() const
+{
+	PRL_UINT32 version = 0;
+	PRL_RESULT ret = PrlVmCfg_GetChipsetVersion(m_hVm, &version);
+	if (PRL_FAILED(ret))
+	{
+		prl_err(-1, "PrlVmCfg_GetChipsetVersion: %s",
+			get_error_str(ret).c_str());
+	}
+
+	return version;
+}
+
+int PrlVm::set_chipset_version(PRL_UINT32 version_)
+{
+	prl_log(0, "set chipset version = %u", version_);
+	PRL_RESULT ret = PrlVmCfg_SetChipsetVersion(m_hVm, version_ );
+	if (PRL_FAILED(ret))
+	{
+		return prl_err(ret, ":PrlVmCfg_SetChipsetVersion %s",
+			get_error_str(ret).c_str());
+	}
+	set_updated();
+	return 0;
 }
 
 PRL_VM_ACCELERATION_LEVEL PrlVm::get_cpu_acc_level() const
@@ -4546,9 +4629,12 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 		f.add("EnvID", get_ctid());
 	}
 
+	PRL_VM_TYPE vm_type = get_vm_type();
 	f.add("Name", get_name());
 	f.add("Description", get_desc());
-	f.add("Type", get_vm_type_str());
+	f.add("Type", get_vm_type_str(vm_type));
+	if (vm_type == PVT_VM)
+		f.add("Chipset", get_chipset_type_str());
 	f.add("State", vmstate2str(get_state()));
 	f.add("OS", get_dist());
 	f.add("Template", m_template ? "yes" : "no");
@@ -4696,7 +4782,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.close();
 
 	FeaturesParam feature = get_features();
-	if (get_vm_type() == PVT_CT) {
+	if (vm_type == PVT_CT) {
 		f.add("Features", feature2str(feature));
 	} else {
 		if (feature.mask & FT_SmartMount) {

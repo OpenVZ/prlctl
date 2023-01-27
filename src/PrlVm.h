@@ -251,12 +251,18 @@ public:
 	int set_templates(str_list_t lstTemplates);
 	int load_config();
 	const char *get_vm_type_str() const;
+	const char *get_vm_type_str(PRL_VM_TYPE type_) const;
 	int set_template_sign(int template_sign);
 	int set_nested_virt(int enabled);
 	int reinstall(const CmdParamData &param);
 	int monitor();
 	std::string get_backup_path() const;
 	int set_backup_path(const std::string &path);
+	PRL_CHIPSET_TYPE get_chipset_type() const;
+	int set_chipset_type(const PRL_CHIPSET_TYPE type_);
+	PRL_UINT32 get_chipset_version() const;
+	int set_chipset_version(const PRL_UINT32 version_);
+	const char *get_chipset_type_str() const;
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);
