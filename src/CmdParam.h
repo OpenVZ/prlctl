@@ -621,28 +621,6 @@ struct CapParam {
 	}
 };
 
-namespace Netfilter
-{
-
-struct Mode
-{
-
-	Mode() : name("not set"), id(PCNM_NOT_SET) {
-	}
-
-	Mode(const std::string& name_, PRL_NETFILTER_MODE id_) : name(name_), id(id_) {
-	}
-
-	bool isValid() const {
-		return id != PCNM_NOT_SET && name != "not set";
-	}
-
-	std::string name;
-	PRL_NETFILTER_MODE id;
-};
-
-} //namespace Netfilter
-
 struct VNetParam {
 	enum Command {
 		Add,
@@ -929,7 +907,6 @@ public:
 	VncParam vnc;
 	FeaturesParam features;
 	CapParam cap;
-	Netfilter::Mode netfilter;
 	str_list_t nameserver;
 	boost::optional<str_list_t> searchdomain;
 	std::string hostname;
@@ -1337,9 +1314,6 @@ enum cmdOptions {
 	CMD_USERPASSWD,
 	CMD_HOST_ADMIN,
 	CMD_CRYPTED,
-
-	CMD_NETFILTER,
-
 	CMD_ASSIGNMENT,
 
 	CMD_BACKUP_FULL,

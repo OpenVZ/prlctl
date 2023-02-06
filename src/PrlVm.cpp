@@ -3287,40 +3287,6 @@ int PrlVm::set_cap(const CapParam &capability)
 	return 0;
 }
 
-int PrlVm::set_netfilter(const Netfilter::Mode& netfilter)
-{
-	if (get_vm_type() != PVT_CT)
-		return prl_err(-1, "Netfilter can be set for Containers only.");
-
-	if (get_state() == VMS_RUNNING)
-		return prl_err(-1, "Unable to set netfilter for the running Container.");
-
-	int ret = PrlVmCfg_SetNetfilterMode(m_hVm, netfilter.id);
-	if (ret)
-		return prl_err(ret, "PrlVmCfg_SetNetfilterMode: %s", get_error_str(ret).c_str());
-
-	prl_log(0, "Set netfilter: %s", netfilter.name.c_str());
-	set_updated();
-
-	return 0;
-}
-
-Netfilter::Mode PrlVm::get_netfilter() const
-{
-	if (get_vm_type() == PVT_VM)
-		return Netfilter::Mode();
-
-	PRL_NETFILTER_MODE m;
-	int ret = PrlVmCfg_GetNetfilterMode(m_hVm, &m);
-	if (ret)
-	{
-		prl_log(L_ERR, "PrlVmCfg_GetNetfilterMode: %s", get_error_str(ret).c_str());
-		return Netfilter::Mode();
-	}
-
-	return Netfilter::fromId(m);
-}
-
 int PrlVm::set_ct_resources(const CmdParamData &param)
 {
 	int ret;
@@ -3822,10 +3788,6 @@ int PrlVm::set(const CmdParamData &param)
 	}
 	if (!param.cap.empty()) {
 		if ((ret = set_cap(param.cap)))
-			return ret;
-	}
-	if (param.netfilter.isValid()) {
-		if ((ret = set_netfilter(param.netfilter)))
 			return ret;
 	}
 	if (!param.ct_resource.empty()) {
@@ -4843,12 +4805,7 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	if (!searchdomains.empty())
 		f.add("Search Domains", searchdomains);
 
-	if (is_full_info_mode())
-	{
-		Netfilter::Mode m = get_netfilter();
-		if (m.isValid())
-			f.add("Netfilter", m.name);
-
+	if (is_full_info_mode()) {
 		get_high_availability_info(f);
 		append_net_shaping_info(f);
 	}

@@ -81,8 +81,6 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-
 .br
 	[\fB--name\fR <\fIname\fR>] [\fB--rename-ext-disks\fR] [\fB--userpasswd\fR <\fIuser:passwd\fR> [\fB--host-admin\fR <\fIname\fR>]]
 .br
-	[\fB--netfilter\fR <\fIdisabled\fR|\fIstateless\fR|\fIstateful\fR|\fIfull\fR>]
-.br
 	[\fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR] [\fB--quotaugidlimit\fR \fInum\fR]
 .br
 	[\fB--features\fR \fIname\fR:\fBon\fR|\fBoff\fR[\fB,\fR...]]
@@ -401,17 +399,6 @@ If set to "yes", the hostname, nameserver, and search domain settings from the v
 .TP
 \fBContainer specific parameters\fR
 .TP
-\fB--netfilter\fR <\fIdisabled\fR|\fIstateless\fR|\fIstateful\fR|\fIfull\fR>
-Restrict access to iptable modules inside the Container. The following modes are available:
-.br
-\fIdisabled\fR  -- no modules are allowed.
-.br
-\fIstateless\fR -- all modules except NAT and conntracks are allowed.
-.br
-\fIstateful\fR  -- all modules except NAT are allowed.
-.br
-\fIfull\fR      -- (default) all modules are allowed.
-
 Note: This parameter cannot be applied to running Containers.
 .TP
 \fB--swappages\fR \fIpages\fR[:\fIpages\fR] \fB--swap\fR \fIbytes\fR

@@ -193,8 +193,6 @@ public:
 	PRL_VM_LOCATION get_location();
 	int set_features(const FeaturesParam &features);
 	int set_cap(const CapParam &capability);
-	int set_netfilter(const Netfilter::Mode& netfilter);
-	Netfilter::Mode get_netfilter() const;
 	int set_ct_resources(const CmdParamData &param);
 	std::string get_hostname();
 	std::string get_nameservers();

@@ -330,8 +330,6 @@ static Option set_options[] = {
 
 	{"capability",	'\0', OptRequireArg, CMD_SET_CAP},
 
-	{"netfilter",	'\0', OptRequireArg, CMD_NETFILTER},
-
 	{"ha-enable", '\0', OptRequireArg, CMD_HA_ENABLE},
 		{"ha_enable", '\0', OptRequireArg, CMD_HA_ENABLE},
 		{"ha", '\0', OptRequireArg, CMD_HA_ENABLE},
@@ -817,7 +815,6 @@ static void usage_vm(const char * argv0)
 "Container management options are:\n"
 "    [--swappages P[:P]] [--swap N] [--quotaugidlimit <n>]\n"
 "    [--autocompact <on | off>]\n"
-"    [--netfilter <disabled | stateless | stateful | full>]\n"
 "    [--features <name>:<on|off>[,<name>:<on:off>...]]\n"
 "Boot order management options are:\n"
 "	 [--device-bootorder \"<name1 name2 ...>\"]\n"
@@ -3328,14 +3325,6 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 		case CMD_SET_CAP:
 			if (param.set_cap(val.c_str()))
 				return invalid_action;
-			break;
-		case CMD_NETFILTER:
-			param.netfilter = Netfilter::fromString(val);
-			if (!param.netfilter.isValid()) {
-				fprintf(stderr, "An incorrect netfilter mode ('%s') was specified.\n",
-					val.c_str());
-				return invalid_action;
-			}
 			break;
 		case CMD_MNT_OPT:
 			if (parse_mnt_opt(val, &param.mnt_opts)) {

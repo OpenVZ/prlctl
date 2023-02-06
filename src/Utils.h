@@ -176,14 +176,6 @@ private:
 std::string print_features_masked(const CpuFeatures &features, const CpuFeatures &mask);
 std::string print_features_unmaskable(const CpuFeatures &features, const CpuFeatures &maskCaps);
 
-namespace Netfilter
-{
-
-Mode fromId(PRL_NETFILTER_MODE src);
-Mode fromString(const std::string& src);
-
-} // namespace Netfilter
-
 const char *prl_ct_resource2str(PRL_CT_RESOURCE id);
 int prlerr2exitcode(PRL_RESULT result);
 void xplatform_sleep(unsigned uiMsec);

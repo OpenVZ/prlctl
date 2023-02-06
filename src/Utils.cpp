@@ -1846,40 +1846,6 @@ std::string capability2str(const CapParam &capability)
 	return output;
 }
 
-namespace Netfilter
-{
-static Mode mode_map[] = {
-	Mode("disabled", PCNM_DISABLED),
-	Mode("stateless", PCNM_STATELESS),
-	Mode("stateful", PCNM_STATEFUL),
-	Mode("full", PCNM_FULL),
-};
-
-Mode fromId(PRL_NETFILTER_MODE src) {
-	for (unsigned i = 0; i < sizeof(mode_map)/sizeof(mode_map[0]); ++i)
-	{
-		if (mode_map[i].id == src)
-			return mode_map[i];
-	}
-
-	return Mode();
-}
-
-Mode fromString(const std::string& src) {
-	std::string m(src);
-	std::transform(m.begin(), m.end(), m.begin(), ::tolower);
-
-	for (unsigned i = 0; i < sizeof(mode_map)/sizeof(mode_map[0]); ++i)
-	{
-		if (mode_map[i].name == src)
-			return mode_map[i];
-	}
-
-	return Mode();
-}
-
-} // namespace Netfilter
-
 const char *prl_ct_resource2str(PRL_CT_RESOURCE id)
 {
 	switch(id) {
