@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -882,6 +882,7 @@ public:
 	int auto_share_bluetooth;
 	int support_usb30;
 	int efi_boot;
+	bool update_nvram;
 	bool restrict_editing;
 	int select_boot_dev;
 	std::string ext_boot_dev;
@@ -1028,6 +1029,7 @@ public:
 		auto_share_bluetooth(-1),
 		support_usb30(-1),
 		efi_boot(-1),
+		update_nvram(false),
 		restrict_editing(false),
 		select_boot_dev(-1),
 		winsystray_in_macmenu(-1),
@@ -1261,6 +1263,7 @@ enum cmdOptions {
 	CMD_EFI_BOOT,
 	CMD_SELECT_BOOT_DEV,
 	CMD_EXT_BOOT_DEV,
+	CMD_UPDATE_NVRAM,
 
 	CMD_USER_DEF_VM_HOME,
 	CMD_USER_MNG_SETTINGS,
