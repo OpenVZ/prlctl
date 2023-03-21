@@ -101,7 +101,7 @@ prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-
 .br
 	[\fB--nested-virt\fR <\fIon\fR|\fIoff\fR>]
 .br
-	[\fB--efi-boot\fR <\fIon\fR|\fIoff\fR>] [\fB--select-boot-device\fR <\fIon\fR|\fIoff\fR>] [\fB--external-boot-device\fR <\fIname\fR>]
+	[\fB--efi-boot\fR <\fIon\fR|\fIoff\fR>] [\fB--select-boot-device\fR <\fIon\fR|\fIoff\fR>] [\fB--external-boot-device\fR <\fIname\fR>] [\fB--update-nvram\fR>]
 .br
 	[\fB--ha-enable\fR <\fIyes\fR|\fIno\fR>] [\fB--ha-prio\fR <\fInumber\fR>]
 .br
@@ -356,6 +356,9 @@ Enable or disable the selection of a boot device at the virtual environment star
 .TP
 \fB--external-boot-device\fR <\fIname\fR>
 Set an external device from which to boot the virtual environment.
+.TP
+\fB--update-nvram\fR>
+Update NVRAM loader on VM from 2M to 4M flash with all stored UEFI variables.
 .TP
 \fBVideo parameters\fR
 .TP

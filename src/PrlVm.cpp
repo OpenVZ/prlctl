@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -3933,6 +3933,18 @@ int PrlVm::set(const CmdParamData &param)
 		ret = PrlVmCfg_SetOptimizeModifiersMode(m_hVm, mode);
 		if (ret)
 			return prl_err(ret, "PrlVmCfg_SetOptimizeModifiersMode: %s",
+					get_error_str(ret).c_str());
+		set_updated();
+	}
+	if (param.update_nvram) {
+		PrlHandle hJob(PrlVm_UpdateNvram(m_hVm));
+		if ((ret = get_job_retcode(hJob.get_handle(), err)))
+			return prl_err(ret, "PrlVm_UpdateNvram: %s",
+					get_error_str(ret).c_str());
+		//update Config
+		ret = PrlVmCfg_UpdateNvram(m_hVm);
+		if (ret)
+			return prl_err(ret, "PrlVmCfg_UpdateNvram: %s",
 					get_error_str(ret).c_str());
 		set_updated();
 	}

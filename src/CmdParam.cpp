@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -229,6 +229,7 @@ static Option set_options[] = {
 	{"auto-share-bluetooth", '\0', OptRequireArg, CMD_AUTO_SHARE_BLUETOOTH},
 	{"support-usb30", '\0', OptRequireArg, CMD_SUPPORT_USB30},
 	{"efi-boot", '\0', OptRequireArg, CMD_EFI_BOOT},
+	{"update-nvram", '\0', OptNoArg, CMD_UPDATE_NVRAM},
 	{"select-boot-device", '\0', OptRequireArg, CMD_SELECT_BOOT_DEV},
 	{"external-boot-device", '\0', OptRequireArg, CMD_EXT_BOOT_DEV},
 	{"output", '\0', OptRequireArg, CMD_OUTPUT},
@@ -817,9 +818,11 @@ static void usage_vm(const char * argv0)
 "    [--autocompact <on | off>]\n"
 "    [--features <name>:<on|off>[,<name>:<on:off>...]]\n"
 "Boot order management options are:\n"
-"	 [--device-bootorder \"<name1 name2 ...>\"]\n"
+"    [--device-bootorder \"<name1 name2 ...>\"]\n"
 "    [--efi-boot <on | off>] [--select-boot-device <on | off>]\n"
 "    [--external-boot-device <name>]\n"
+"    [--external-boot-device <name>]\n"
+"    [--update-nvram]\n"
 "Video options are:\n"
 "    [--videosize <n>] [--3d-accelerate <off|highest|dx9>]\n"
 "    [--vertical-sync <on | off>]\n"
@@ -3087,6 +3090,9 @@ CmdParamData cmdParam::get_param(int argc, char **argv, Action action,
 					val.c_str());
 				return invalid_action;
 			}
+			break;
+		case CMD_UPDATE_NVRAM:
+			param.update_nvram = true;
 			break;
 		case CMD_SET_RESTRICT_EDITING:
 			param.restrict_editing = true;
