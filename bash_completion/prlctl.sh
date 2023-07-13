@@ -89,7 +89,7 @@ restart list"
 --vnc-mode --vnc-port --vnc-passwd --ioprio \
 --ha-enable --ha-prio \
 --device-bootorder --efi-boot --select-boot-device \
---external-boot-device --external-boot-device --update-nvram'
+--external-boot-device --external-boot-device --update-nvram --numa-nodes'
 	local set_device_hdd_flags='--image --type --size --split --iface --position --device --passthr \
 --encrypt --decrypt --encryption-keyid --reencrypt --nowipe'
 	local set_device_cdrom_flags='--device --image --iface --position --passthr'

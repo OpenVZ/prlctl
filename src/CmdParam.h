@@ -819,6 +819,7 @@ public:
 	/* VM param */
 	boost::optional<unsigned> cpu_cores;
 	boost::optional<unsigned> cpu_sockets;
+	boost::optional<unsigned> numa_nodes;
 	std::string cpu_hotplug;
 	unsigned int cpuunits;
 	PRL_CPULIMIT_DATA cpulimit;
@@ -1181,6 +1182,7 @@ enum cmdOptions {
 	CMD_POSITION,
 	CMD_CPUS,
 	CMD_CPU_SOCKETS,
+	CMD_NUMA_NODES,
 	CMD_CPU_HOTPLUG,
 	CMD_CPUUNITS,
 	CMD_CPULIMIT,

@@ -132,12 +132,14 @@ public:
 	int set_boot_dev(const PrlDev *dev, int bootindex, bool inuse = true) const;
 	unsigned int get_cpu_cores() const;
 	unsigned get_cpu_sockets() const;
+	unsigned int get_numa_nodes() const;
 	PRL_VM_ACCELERATION_LEVEL get_cpu_acc_level() const;
 	PRL_CPU_MODE get_cpu_mode() const;
 	bool is_cpu_hotplug_enabled() const;
 	int set_cpu_hotplug(const std::string &value);
 	int set_cpu_cores(unsigned value_);
 	int set_cpu_sockets(unsigned value_);
+	int set_numa_nodes(unsigned value_);
 	int set_cpuunits(unsigned int cpuunits);
 	int get_cpuunits(unsigned int *cpuunits);
 	int set_cpumask(const std::string &mask);

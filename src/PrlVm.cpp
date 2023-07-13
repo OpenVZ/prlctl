@@ -2072,6 +2072,17 @@ unsigned int PrlVm::get_cpu_cores() const
 	return count;
 }
 
+unsigned int PrlVm::get_numa_nodes() const
+{
+	PRL_RESULT ret;
+	unsigned int count = 0;
+
+	if ((ret = PrlVmCfg_GetNumaNodesCount(m_hVm, &count)))
+		prl_err(-1, "PrlVmCfg_GetNumaNodes: %s",
+			get_error_str(ret).c_str());
+	return count;
+}
+
 unsigned PrlVm::get_cpu_sockets() const
 {
 	unsigned output = 0;
@@ -2230,6 +2241,18 @@ int PrlVm::set_cpu_sockets(unsigned value_)
 	if (PRL_FAILED(e))
 	{
 		return prl_err(e, ":PrlVmCfg_SetCpuSocketsCount %s",
+			get_error_str(e).c_str());
+	}
+	set_updated();
+	return 0;
+}
+
+int PrlVm::set_numa_nodes(unsigned value_)
+{
+	PRL_RESULT e = PrlVmCfg_SetNumaNodesCount(m_hVm, value_);
+	if (PRL_FAILED(e))
+	{
+		return prl_err(e, ":PrlVmCfg_SetNumaNodesCount %s",
 			get_error_str(e).c_str());
 	}
 	set_updated();
@@ -3675,6 +3698,10 @@ int PrlVm::set(const CmdParamData &param)
 		if ((ret = set_cpu_sockets(param.cpu_sockets.get())))
 			return ret;
 	}
+	if (param.numa_nodes) {
+		if ((ret = set_numa_nodes(param.numa_nodes.get())))
+			return ret;
+	}
 	if (!param.cpu_hotplug.empty()) {
 		if ((ret = set_cpu_hotplug(param.cpu_hotplug)))
 			return ret;
@@ -4727,6 +4754,20 @@ void PrlVm::append_configuration(PrlOutFormatter &f)
 	f.add("size", get_memsize(), "Mb", true, true);
 	f.add("hotplug", is_mem_hotplug_enabled());
 	f.close(true);
+
+	{
+		f.open("NUMA nodes:", true);
+		unsigned int numa_nodes = get_numa_nodes();
+		if (numa_nodes > 1)
+		{
+			f.add("nodes", numa_nodes, "", true, true);
+		}
+		else
+		{
+			f.add("nodes", "disabled", true, false, true);
+		}
+		f.close(true);
+	}
 
 	std::string v3d = "off";
 	switch(get_3d_acceleration())
