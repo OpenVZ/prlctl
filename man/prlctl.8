@@ -304,7 +304,7 @@ Set the number of CPU sockets to be available to the VE.
 \fB--numa-nodes\fR <\fInum\fR>
 Set the number of NUMA nodes to be available to the VE. It is not compatible with the enabled options mem-hotplug and cpu-hotplug.
 The number of Numa nodes must be power of 2.
-The number of Numa nodes must be multiple of vCPUs number.
+The number of Numa nodes must be multiple of cpu-sockets number.
 .TP
 \fB--cpu-hotplug\fR <\fIon\fR|\fIoff\fR>
 Enable or disable CPU hot-plugging support in the virtual environment.
