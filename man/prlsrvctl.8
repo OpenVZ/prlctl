@@ -7,7 +7,7 @@ prlsrvctl \fBinfo\fR [\fB-j, --json\fR] [\fB--license\fR] [\fB-f, --full\fR]
 prlsrvctl \fBset\fR [\fR-s,--min-security-level\fR <\fIlow\fR|\fInormal\fR|\fIhigh\fR>]
 [{\fR--device\fR <\fIdevice\fR> \fR--assignment\fR <\fIhost\fR|\fIvm\fR>}]
 [\fR--backup-storage\fR \fB<user[[:passwd]@server[:port]]>\fR] [\fR--backup-path\fR <\fIpath\fR>]
-[\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-mode\fR <\fIpush\fR|\fIpush-with-reversed-delta\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR]
+[\fR--idle-connection-timeout\fR <\fItimeout\fR>] [\fR--backup-mode\fR <\fIpush\fR|\fIpush-with-reversed-delta\fR>] [\fR--backup-tmpdir\fR \fBtmpdir\fR] [\fR--backup-compression <\fIon\fR|\fIoff\fR>] [\fR--backup-tunnel <\fIon\fR|\fIoff\fR>]
 [\fR--allow-attach-screenshots\fR <\fIon\fR|\fIoff\fR>]
 [\fR--cpu-features-mask\fR <{{\fI+\fR,\fI-\fR}\fIfeature1\fR,\fIfeature=value\fR}[\fI,\fR...]>]
 [\fR--vm-cpulimit-type\fR <\fIfull\fR|\fIguest\fR>]
@@ -109,6 +109,12 @@ Set the backup location on the local server.
 .TP
 \fB--backup-tmpdir\fR <\fBtmpdir\fR>
 Set the directory for temporary snapshots created during backup. If this directory is set without setting the backup mode as well, and if this value is not empty, the backup mode automatically switches to \fBpush-with-reversed-delta\fR mode with a corresponding warning.
+.TP
+\fB--backup-compression\fR <\fBtmpdir\fR>
+Enables/disables using compression for backups by default.
+.TP
+\fB--backup-tunnel\fR <\fBtmpdir\fR>
+Enables/disables using tunnel for backups by default.
 .TP
 \fB--idle-connection-timeout\fR <\fItimeout\fR>
 Sets a timeout interval in seconds after which, if no data has been received from the storage server or backup client, the process of backup/restore is terminated.
@@ -320,4 +326,4 @@ Apply the traffic shaping setting to all running virtual environments.
 .BR prlctl (8)
 .SH COPYRIGHT
 Copyright (c) 2012-2017, Parallels International GmbH. All rights reserved.
-Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.

@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -100,6 +100,10 @@ private:
 	int set_backup_mode(PRL_VM_BACKUP_MODE mode);
 	int get_backup_timeout(unsigned int *tmo);
 	int set_backup_timeout(unsigned int tmo);
+	int get_backup_compression_flag(unsigned int *flag);
+	int set_backup_compression_flag(const unsigned int flag);
+	int get_backup_tunnel_flag(unsigned int *flag);
+	int set_backup_tunnel_flag(const unsigned int flag);
 	std::string get_def_backup_storage();
 	int set_def_backup_storage(const LoginInfo &server);
 	std::string get_backup_tmpdir();
