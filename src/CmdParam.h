@@ -434,6 +434,8 @@ public:
 	std::string vnc_private_key;
 	int vm_cpulimit_type;
 	std::string vcmmd_policy;
+	int backup_compression;
+	int backup_tunnel;
 
 public:
 	DispParam() :
@@ -452,7 +454,10 @@ public:
 		allow_attach_screenshots(-1),
 		lock_edit_settings(-1),
 		set_vnc_encryption(false),
-		vm_cpulimit_type(-1)
+		set_vnc_clipboard(-1),
+		vm_cpulimit_type(-1),
+		backup_compression(-1),
+		backup_tunnel(-1)
 	{}
 };
 
@@ -1330,6 +1335,8 @@ enum cmdOptions {
 	CMD_BACKUP_PATH,
 	CMD_BACKUP_MODE,
 	CMD_BACKUP_TMPDIR,
+	CMD_BACKUP_COMPRESSION,
+	CMD_BACKUP_TUNNEL,
 	CMD_UNCOMPRESSED,
 	CMD_NO_REVERSED_DELTA,
 	CMD_BACKUP_TIMEOUT,

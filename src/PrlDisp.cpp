@@ -6,7 +6,7 @@
  * @author igor@
  *
  * Copyright (c) 2005-2017, Parallels International GmbH
- * Copyright (c) 2017-2019 Virtuozzo International GmbH. All rights reserved.
+ * Copyright (c) 2017-2023 Virtuozzo International GmbH. All rights reserved.
  *
  * This file is part of OpenVZ. OpenVZ is free software; you can redistribute
  * it and/or modify it under the terms of the GNU General Public License as
@@ -363,6 +363,16 @@ void PrlDisp::append_info(PrlOutFormatter &f)
 	unsigned int tmo;
 	get_backup_timeout(&tmo);
 	f.add("Backup timeout", tmo, "");
+
+	if (is_full_info_mode())
+	{
+		unsigned int compression = 1;
+		unsigned int tunnel = 1;
+		get_backup_compression_flag(&compression);
+		get_backup_tunnel_flag(&tunnel);
+		f.add("Backup compression", compression ? "enabled" : "disabled");
+		f.add("Backup tunnel", tunnel ? "enabled" : "disabled");
+	}
 
 	f.add("Traffic shaping", is_network_shaping_enabled() ? "on" : "off");
 	if (is_full_info_mode()) {
@@ -748,6 +758,54 @@ int PrlDisp::set_backup_timeout(unsigned int tmo)
 
 	if ((ret = PrlDispCfg_SetBackupTimeout(m_hDisp, tmo)))
 		return prl_err(ret, "PrlDispCfg_SetBackupTimeout %s [%d]",
+				get_error_str(ret).c_str(), ret);
+
+	set_updated();
+	return 0;
+}
+
+int PrlDisp::get_backup_compression_flag(unsigned int *flag)
+{
+	int ret;
+
+	if ((ret = PrlDispCfg_IsBackupCompressionEnabled(m_hDisp, flag)))
+		return prl_err(ret, "PrlDispCfg_IsBackupCompressionEnabled %s [%d]",
+				get_error_str(ret).c_str(), ret);
+
+	set_updated();
+	return 0;
+}
+
+int PrlDisp::set_backup_compression_flag(const unsigned int flag)
+{
+	int ret;
+
+	if ((ret = PrlDispCfg_SetBackupCompression(m_hDisp, flag)))
+		return prl_err(ret, "PrlDispCfg_SetBackupTimeout %s [%d]",
+				get_error_str(ret).c_str(), ret);
+
+	set_updated();
+	return 0;
+}
+
+int PrlDisp::get_backup_tunnel_flag(unsigned int *flag)
+{
+	int ret;
+
+	if ((ret = PrlDispCfg_IsBackupTunnelEnabled(m_hDisp, flag)))
+		return prl_err(ret, "PrlDispCfg_IsBackupTunnelEnabled %s [%d]",
+				get_error_str(ret).c_str(), ret);
+
+	set_updated();
+	return 0;
+}
+
+int PrlDisp::set_backup_tunnel_flag(const unsigned int flag)
+{
+	int ret;
+
+	if ((ret = PrlDispCfg_SetBackupTunnel(m_hDisp, flag)))
+		return prl_err(ret, "PrlDispCfg_SetBackupTunnel %s [%d]",
 				get_error_str(ret).c_str(), ret);
 
 	set_updated();
@@ -1487,6 +1545,16 @@ int PrlDisp::set(const DispParam &param)
 	{
 		if ((ret = set_backup_mode(param.backup_mode.get())))
 				return ret;
+	}
+
+	if (param.backup_compression != -1) {
+		if ((ret = set_backup_compression_flag(param.backup_compression)))
+			return ret;
+	}
+
+	if (param.backup_tunnel != -1) {
+		if ((ret = set_backup_tunnel_flag(param.backup_tunnel)))
+			return ret;
 	}
 
 	if (param.backup_timeout) {

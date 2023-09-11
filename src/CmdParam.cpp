@@ -381,6 +381,8 @@ static Option disp_set_options[] = {
 		{"def-backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
 		{"default-backup-storage", '\0', OptRequireArg, CMD_BACKUP_STORAGE},
 	{"backup-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
+	{"backup-compression", '\0', OptRequireArg, CMD_BACKUP_COMPRESSION},
+	{"backup-tunnel", '\0', OptRequireArg, CMD_BACKUP_TUNNEL},
 	{"idle-connection-timeout", '\0', OptRequireArg, CMD_BACKUP_TIMEOUT},
 
 	{"add-offsrv", '\0', OptRequireArg, CMD_UPDATE_OFFLINE_SERVICE},
@@ -888,7 +890,7 @@ static void usage_disp(const char * argv0)
 "  set [-s,--min-security-level <low|normal|high>]\n"
 "	[--mng-settings <allow|deny>] [{--device <device> --assignment <host|vm>}]\n"
 "	[--backup-path <path>] [--idle-connection-timeout <timeout>] [--backup-mode <push|push-with-reversed-delta>]\n"
-"	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>]\n"
+"	[--backup-tmpdir <tmpdir>] [--backup-storage <user[[:passwd]@server[:port]]>] [--backup-compression <on|off>] [--backup-tunnel <on|off>]\n"
 "	[--verbose-log <on|off>]\n"
 "	[--cpu-features-mask <mask|off>]\n"
 "	[--vm-cpulimit-type <full|guest>]\n"
@@ -1690,6 +1692,22 @@ CmdParamData cmdParam::get_disp_param(int argc, char **argv, Action action,
 				return invalid_action;
 			vnc_private_key = true;
 			param.disp.set_vnc_encryption = true;
+			break;
+		case CMD_BACKUP_COMPRESSION:
+			if ((param.disp.backup_compression = str2on_off(val)) == -1) {
+				fprintf(stderr, "An incorrect value for"
+					" --backup-compression is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
+			break;
+		case CMD_BACKUP_TUNNEL:
+			if ((param.disp.backup_tunnel = str2on_off(val)) == -1) {
+				fprintf(stderr, "An incorrect value for"
+					" --backup-tunnel is specified: %s\n",
+					val.c_str());
+				return invalid_action;
+			}
 			break;
 		case GETOPTERROR:
 		default:
