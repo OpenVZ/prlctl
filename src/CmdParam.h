@@ -454,7 +454,6 @@ public:
 		allow_attach_screenshots(-1),
 		lock_edit_settings(-1),
 		set_vnc_encryption(false),
-		set_vnc_clipboard(-1),
 		vm_cpulimit_type(-1),
 		backup_compression(-1),
 		backup_tunnel(-1)
