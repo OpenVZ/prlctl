@@ -576,7 +576,7 @@ int PrlDisp::set_vcmmd_policy(const std::string &name)
 	PrlHandle hSetJob(PrlSrv_SetVcmmdConfig(m_srv.get_handle(), hVcmmd.get_handle(), 0));
 	if ((ret = get_job_retcode(hSetJob.get_handle(), err)))
 	{
-		if (ret == PRL_ERR_RUNNING_VM_OR_CT)
+		if (ret == PRL_ERR_RUNNING_VM)
 			fprintf(stderr, "WARNING: %s\n", err.c_str());
 		else
 			return prl_err(ret, "Failed to set vcmmd config: %s", err.c_str());
