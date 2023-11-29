@@ -506,15 +506,12 @@ int PrlSrv::backup_vm(const CmdParamData& param)
 	}
 
 	std::unique_ptr<PrlVm> vm(v);
-
 	PrlSrv storage;
 	if (!param.backup.storage.server.empty() &&
 			(ret = storage.login(param.backup.storage)))
 		return ret;
 
-	if (param.backup.abackup)
-		return do_vm_abackup(*vm, param.backup);
-	return do_vm_backup(*vm, param, storage);
+	return param.backup.abackup ? do_vm_abackup(*vm, param.backup) : do_vm_backup(*vm, param, storage);
 }
 
 int PrlSrv::backup_node(const CmdParamData& param)
@@ -591,6 +588,7 @@ int PrlSrv::restore_vm(const CmdParamData &param)
 		if (vm != NULL) {
 			vm_id = vm->get_uuid();
 			type = vm->get_vm_type_str();
+			delete vm;
 		}
 		prl_log(0, "Restore the %s %s", type, vm_id.c_str());
 	} else if (!bparam.id.empty()) {
@@ -676,6 +674,7 @@ int PrlSrv::backup_delete(const CmdParamData &param)
 		if (vm != NULL) {
 			vm_id = vm->get_uuid();
 			type = vm->get_vm_type_str();
+			delete vm;
 		}
 		prl_log(0, "Delete the %s backup", type);
 	} else if (!bparam.id.empty()) {
@@ -809,7 +808,10 @@ int PrlSrv::get_backup_tree(const CmdParamData &param, PrlBackupTree &tree, PrlS
 		if (ret != 0)
 			return ret;
 		if (vm != NULL)
+		{
 			id = vm->get_uuid();
+			delete vm;
+		}
 		prl_log(L_DEBUG, "filter: %s", id.c_str());
 	}
         else if(!bparam.id.empty()){

@@ -573,6 +573,7 @@ int PrlSrv::list_vm(const CmdParamData &param)
 			PrlVmCfg_GetConfigValidity(vm->get_handle(), &ret);
 			if (ret)
 			{
+				delete vm;
 				delete (&f);
 				return prl_err(ret, "Unable to get %s config: %s",
 						vm->get_vm_type_str(),
@@ -625,6 +626,10 @@ int PrlSrv::list_vm(const CmdParamData &param)
 	f.close_list();
 	fputs(f.get_buffer().c_str(), stdout);
 	delete (&f);
+	if (!param.id.empty() && vm_list.size() == 1) {
+		delete vm_list.front();
+		vm_list.clear();
+	}
 	return 0;
 }
 

@@ -448,6 +448,7 @@ int PrlSrv::status_vm(const CmdParamData &param)
 		vm->update_state();
 		out += " exist ";
 		out += vmstate2str(vm->get_state());
+		delete vm;
 	} else {
 		out = "VM ";
 		out += param.id;
