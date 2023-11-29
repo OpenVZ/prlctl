@@ -2798,6 +2798,7 @@ int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 		print_vnetwork_info(&hVirtNet, f, vnet);
 
 		fprintf(stdout, "%s", f.get_buffer().c_str());
+		delete (&f);
 	}
 
 	unreg_event_callback(server_event_handler);
@@ -2823,7 +2824,7 @@ int PrlSrv::vnetwork_list(const VNetParam &vnet, bool use_json)
 	f.close_list();
 
 	fprintf(stdout, "%s", f.get_buffer().c_str());
-
+	delete (&f);
 	return 0;
 }
 
@@ -3072,6 +3073,7 @@ int PrlSrv::priv_network(const PrivNetParam &privnet, bool use_json)
 		f.close_list();
 
 		fprintf(stdout, "%s", f.get_buffer().c_str());
+		delete (&f);
 	}
 
 	unreg_event_callback(server_event_handler);
@@ -3297,6 +3299,7 @@ int PrlSrv::ct_templates(const CtTemplateParam &tmpl, bool use_json)
 				err.c_str());
 	}
 
+	delete (&f);
 	return 0;
 }
 
@@ -3474,6 +3477,7 @@ int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 
 	fputs(f.get_buffer().c_str(), stdout);
 	fflush(stdout);
+	delete (&f);
 
 	return 0;
 }

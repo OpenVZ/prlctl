@@ -1666,6 +1666,7 @@ int PrlDisp::usbassign(const UsbParam &param, bool use_json)
 		}
 		f.close_list();
 		fprintf(stdout, "%s", f.get_buffer().c_str());
+		delete (&f);
 		break;
 	}
 	case UsbParam::Delete:
