@@ -485,7 +485,7 @@ int PrlSrv::list_vm(const CmdParamData &param)
 	int sort_fld;
 	bool sort_rev = false;
 	IntList field_order;
-	PrlOutFormatter &f = *(get_formatter(param.use_json));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(param.use_json));
 
 	if (param.list_all_fields) {
 		FieldVm *field;
@@ -495,7 +495,6 @@ int PrlSrv::list_vm(const CmdParamData &param)
 				printf("%-20s %s\n", field->name, field->hdr);
 			++field;
 		}
-		delete (&f);
 		return 0;
 	}
 
@@ -515,7 +514,6 @@ int PrlSrv::list_vm(const CmdParamData &param)
 		field_order = vm_field_tbl->get_field_order(order_str);
 		if (field_order.empty())
 		{
-			delete (&f);
 			return 1;
 		}
 	}
@@ -530,7 +528,6 @@ int PrlSrv::list_vm(const CmdParamData &param)
 		if (sort_fld < 0) {
 			fprintf(stderr, "%s is an invalid field name in"
 				" this query.\n", name.c_str());
-			delete (&f);
 			return 1;
 		}
 	} else if (!param.list_field.empty() && !field_order.empty()) {
@@ -548,7 +545,6 @@ int PrlSrv::list_vm(const CmdParamData &param)
 	if (param.id.empty()) {
 		if ((ret = update_vm_list(param.vmtype, flags)))
 		{
-			delete (&f);
 			return ret;
 		}
 
@@ -563,10 +559,7 @@ int PrlSrv::list_vm(const CmdParamData &param)
 
 		ret = get_vm_config(param, &vm);
 		if (ret)
-		{
-			delete (&f);
 			return ret;
-		}
 
 		vm_list.push_back(vm);
 		if (param.info) {
@@ -574,7 +567,6 @@ int PrlSrv::list_vm(const CmdParamData &param)
 			if (ret)
 			{
 				delete vm;
-				delete (&f);
 				return prl_err(ret, "Unable to get %s config: %s",
 						vm->get_vm_type_str(),
 						get_error_str(ret).c_str());
@@ -584,7 +576,7 @@ int PrlSrv::list_vm(const CmdParamData &param)
 
 	if (prl_get_log_verbose() == L_NORMAL)
 		prl_set_log_enable(0);
-	f.open_list();
+	f->open_list();
 
 	unsigned int idx;
 	for (unsigned int i = 0; i < vm_list.size(); ++i) {
@@ -614,18 +606,17 @@ int PrlSrv::list_vm(const CmdParamData &param)
 			}
 		}
 
-		f.tbl_row_open();
+		f->tbl_row_open();
 		if (param.info) {
-			vm->append_configuration(f);
+			vm->append_configuration(*f);
 		} else {
-			vm_field_tbl->print(vm, field_order, f);
+			vm_field_tbl->print(vm, field_order, *f);
 		}
-		f.tbl_row_close();
+		f->tbl_row_close();
 	}
 
-	f.close_list();
-	fputs(f.get_buffer().c_str(), stdout);
-	delete (&f);
+	f->close_list();
+	fputs(f->get_buffer().c_str(), stdout);
 	if (!param.id.empty() && vm_list.size() == 1) {
 		delete vm_list.front();
 		vm_list.clear();
@@ -780,7 +771,7 @@ int PrlSrv::list_user(const CmdParamData &param, bool use_json)
 	PRL_RESULT ret;
 	const char *order_str = 0;
 	int sort_fld = 2; // sort by name by default
-	PrlOutFormatter &f = *(get_formatter(use_json));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
 
 	if (!param.list_field.empty()) {
 		sort_fld = -1; // sort by --sort or first specified column
@@ -805,7 +796,7 @@ int PrlSrv::list_user(const CmdParamData &param, bool use_json)
 	PrlList<PrlUser *> users_list;
         if ((ret = get_user_info(users_list)))
                 return ret;
-	if (!param.list_no_hdr && f.type == OUT_FORMATTER_PLAIN)
+	if (!param.list_no_hdr && f->type == OUT_FORMATTER_PLAIN)
 		user_field_tbl->print_hdr(field_order);
 	/* Copy of UserList to perform sort operation */
 	std::vector<PrlUser *> users(users_list.begin(), users_list.end());
@@ -821,7 +812,7 @@ int PrlSrv::list_user(const CmdParamData &param, bool use_json)
 	std::vector<PrlUser *>::const_iterator it = users.begin(),
 						eit = users.end();
 
-	f.open_list();
+	f->open_list();
 	for (; it != eit; ++it) {
 #if 0
 		if (!param.id.empty()) {
@@ -832,11 +823,10 @@ int PrlSrv::list_user(const CmdParamData &param, bool use_json)
 			}
 		}
 #endif
-		user_field_tbl->print(f, *it, field_order);
+		user_field_tbl->print(*f, *it, field_order);
 	}
-	f.close_list();
+	f->close_list();
 
-	fprintf(stdout, "%s", f.get_buffer().c_str());
-	delete (&f);
+	fprintf(stdout, "%s", f->get_buffer().c_str());
 	return 0;
 }

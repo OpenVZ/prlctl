@@ -28,6 +28,7 @@
  */
 
 #include <stdio.h>
+#include <memory>
 
 #include <PrlApiDisp.h>
 #include <PrlApiNet.h>
@@ -1627,20 +1628,20 @@ int PrlDisp::usbassign(const UsbParam &param, bool use_json)
 	{
 	case UsbParam::List:
 	{
-		PrlOutFormatter &f = *(get_formatter(use_json));
+		std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
 		PRL_UINT32 nUsbIdents = 0;
 		res = PrlDispCfg_GetUsbIdentityCount( m_hDisp, &nUsbIdents );
 		if( !PRL_SUCCEEDED(res) )
 			return prl_err(res, "PrlDispCfg_GetUsbIdentityCount return");
 
-		f.open_list();
+		f->open_list();
 		for( PRL_UINT32 i = 0; i < nUsbIdents; i++ )
 		{
 			PrlHandle hUsbIdent;
 			char buf[4096];
 			unsigned int len;
 
-			f.tbl_row_open();
+			f->tbl_row_open();
 			res = PrlDispCfg_GetUsbIdentity(m_hDisp, i, hUsbIdent.get_ptr());
 			if( PRL_FAILED(res) )
 				return prl_err(res, "PrlDispCfg_GetUsbIdentity %d", i);
@@ -1649,24 +1650,23 @@ int PrlDisp::usbassign(const UsbParam &param, bool use_json)
 			res = PrlUsbIdent_GetFriendlyName(hUsbIdent.get_handle(), buf, &len);
 			if( PRL_FAILED(res) )
 				return prl_err(res, "PrlUsbIdent_GetFriendlyName");
-			f.tbl_add_item("Name", "%-40s ", buf);
+			f->tbl_add_item("Name", "%-40s ", buf);
 
 			len = sizeof(buf);
 			res = PrlUsbIdent_GetSystemName(hUsbIdent.get_handle(), buf, &len);
 			if( PRL_FAILED(res) )
 				return prl_err(res,"PrlUsbIdent_GetSystemName");
-			f.tbl_add_item("System name", "'%s' ", buf);
+			f->tbl_add_item("System name", "'%s' ", buf);
 
 			len = sizeof(buf);
 			res = PrlUsbIdent_GetVmUuidAssociation(hUsbIdent.get_handle(), buf, &len);
 			if (PRL_FAILED(res))
 				return prl_err(res,"PrlUsbIdent_GetVmUuidAssociation");
-			f.tbl_add_uuid("VM UUID", "%s", buf);
-			f.tbl_row_close();
+			f->tbl_add_uuid("VM UUID", "%s", buf);
+			f->tbl_row_close();
 		}
-		f.close_list();
-		fprintf(stdout, "%s", f.get_buffer().c_str());
-		delete (&f);
+		f->close_list();
+		fprintf(stdout, "%s", f->get_buffer().c_str());
 		break;
 	}
 	case UsbParam::Delete:

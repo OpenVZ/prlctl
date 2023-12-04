@@ -1688,24 +1688,23 @@ void PrlSrv::append_info(PrlOutFormatter &f)
 
 int PrlSrv::print_info(bool is_license_info, bool use_json)
 {
-	PrlOutFormatter &f = *(get_formatter(use_json));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
 
-	f.open_object();
+	f->open_object();
 
 	if (is_license_info)
-		append_lic_verbose_info(f);
+		append_lic_verbose_info(*f);
 	else {
-		append_info(f);
-		append_lic_info(f);
-		append_hw_info(f);
+		append_info(*f);
+		append_lic_info(*f);
+		append_hw_info(*f);
 	}
 
-	f.close_object();
-	std::string out = f.get_buffer();
+	f->close_object();
+	std::string out = f->get_buffer();
 	printf("%s", out.c_str());
 	if (use_json)
 		printf("\n");
-	delete (&f);
 	return 0;
 }
 
@@ -2794,12 +2793,9 @@ int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 			return prl_err(ret, "Failed to delete Virtual Network"
 				" %s: %s", vnet.vnet.c_str(), err.c_str());
 	} else if (vnet.cmd == VNetParam::Info) {
-		PrlOutFormatter &f = *(get_formatter(use_json, "\t"));
-
-		print_vnetwork_info(&hVirtNet, f, vnet);
-
-		fprintf(stdout, "%s", f.get_buffer().c_str());
-		delete (&f);
+		std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
+		print_vnetwork_info(&hVirtNet, *f, vnet);
+		fprintf(stdout, "%s", f->get_buffer().c_str());
 	}
 
 	unreg_event_callback(server_event_handler);
@@ -2810,22 +2806,21 @@ int PrlSrv::vnetwork(const VNetParam &vnet, bool use_json)
 int PrlSrv::vnetwork_list(const VNetParam &vnet, bool use_json)
 {
 	PRL_RESULT ret;
-	PrlOutFormatter &f = *(get_formatter(use_json));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
 
 	if ((ret = fill_vnetworks_list(m_VNetList)))
 		return ret;
 
-	if (f.type == OUT_FORMATTER_PLAIN)
+	if (f->type == OUT_FORMATTER_PLAIN)
 		fprintf(stdout, "%-17s %-9s %-14s %-14s %-15s\n",
 			"Network ID", "Type", "Bound To", "Bridge", "Slave interfaces");
 	PrlVNetList::const_iterator it = m_VNetList.begin();
-	f.open_list();
+	f->open_list();
 	for (; it != m_VNetList.end(); ++it)
-		print_vnetwork_info(*it, f, vnet);
-	f.close_list();
+		print_vnetwork_info(*it, *f, vnet);
+	f->close_list();
 
-	fprintf(stdout, "%s", f.get_buffer().c_str());
-	delete (&f);
+	fprintf(stdout, "%s", f->get_buffer().c_str());
 	return 0;
 }
 
@@ -3057,24 +3052,23 @@ int PrlSrv::priv_network(const PrivNetParam &privnet, bool use_json)
 			return prl_err(ret, "Failed to remove the IP private network"
 				" %s: %s", privnet.name.c_str(), err.c_str());
 	} else if (privnet.cmd == PrivNetParam::List) {
-		PrlOutFormatter &f = *(get_formatter(use_json));
+		std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
 
 		if ((ret = fill_priv_networks_list(m_PrivNetList)))
 			return ret;
 
-		if (f.type == OUT_FORMATTER_PLAIN)
+		if (f->type == OUT_FORMATTER_PLAIN)
 			fprintf(stdout, "Name              G Netmasks\n");
 		PrlPrivNetList::const_iterator it = m_PrivNetList.begin();
-		f.open_list();
+		f->open_list();
 		for (; it != m_PrivNetList.end(); ++it) {
-			f.tbl_row_open();
-			print_priv_network_info(*it, f);
-			f.tbl_row_close();
+			f->tbl_row_open();
+			print_priv_network_info(*it, *f);
+			f->tbl_row_close();
 		}
-		f.close_list();
+		f->close_list();
 
-		fprintf(stdout, "%s", f.get_buffer().c_str());
-		delete (&f);
+		fprintf(stdout, "%s", f->get_buffer().c_str());
 	}
 
 	unreg_event_callback(server_event_handler);
@@ -3261,7 +3255,8 @@ void PrlSrv::print_ct_template_info(const PrlHandle *phTmpl, size_t width, PrlOu
 
 int PrlSrv::ct_templates(const CtTemplateParam &tmpl, bool use_json)
 {
-	PrlOutFormatter &f = *(get_formatter(use_json));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(use_json));
+
 	PRL_RESULT ret;
 
 	if (tmpl.cmd == CtTemplateParam::List) {
@@ -3280,16 +3275,16 @@ int PrlSrv::ct_templates(const CtTemplateParam &tmpl, bool use_json)
 				width = strlen(buf);
 		}
 
-		if (f.type == OUT_FORMATTER_PLAIN)
+		if (f->type == OUT_FORMATTER_PLAIN)
 			fprintf(stdout, "%-*s Type Arch   Cached Description\n", (int)(width+1), "Name");
-		f.open_list();
+		f->open_list();
 		for (it = list.begin(); it != list.end(); ++it) {
-			f.tbl_row_open();
-			print_ct_template_info(*it, width, f);
-			f.tbl_row_close();
+			f->tbl_row_open();
+			print_ct_template_info(*it, width, *f);
+			f->tbl_row_close();
 		}
-		f.close_list();
-		fprintf(stdout, "%s", f.get_buffer().c_str());
+		f->close_list();
+		fprintf(stdout, "%s", f->get_buffer().c_str());
 	} else if (tmpl.cmd == CtTemplateParam::Remove) {
 		std::string err;
 		PrlHandle hJob(PrlSrv_RemoveCtTemplate(m_hSrv, tmpl.name.c_str(),
@@ -3300,7 +3295,6 @@ int PrlSrv::ct_templates(const CtTemplateParam &tmpl, bool use_json)
 				err.c_str());
 	}
 
-	delete (&f);
 	return 0;
 }
 
@@ -3429,22 +3423,22 @@ int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 	}
 
 	PrlEvent_GetIssuerId(hEvent, buf, &buflen);
-	PrlOutFormatter &f = *(get_formatter(true));
+	std::unique_ptr<PrlOutFormatter> f(get_formatter(true));
 
 	if (evt_type == PET_DSP_EVT_VM_STATE_CHANGED) {
-		f.open_object();
-		f.add("event_type", "VM_STATE_CHANGED");
-		f.open("vm_info");
-		f.add_uuid("ID", buf);
+		f->open_object();
+		f->add("event_type", "VM_STATE_CHANGED");
+		f->open("vm_info");
+		f->add_uuid("ID", buf);
 
 		int s;
 		PrlHandle hParam;
 
 		if (PrlEvent_GetParamByName(hEvent, EVT_PARAM_VMINFO_VM_STATE, hParam.get_ptr()) == 0 &&
 			PrlEvtPrm_ToInt32(hParam, &s) == 0)
-			f.add("State", vmstate2str((VIRTUAL_MACHINE_STATE)s));
-		f.close();
-		f.close_object();
+			f->add("State", vmstate2str((VIRTUAL_MACHINE_STATE)s));
+		f->close();
+		f->close_object();
 	} else if (evt_type == PET_DSP_EVT_VM_CONFIG_CHANGED ||
 			evt_type == PET_DSP_EVT_VM_CREATED ||
 			evt_type == PET_DSP_EVT_VM_ADDED) {
@@ -3452,33 +3446,31 @@ int server_event_handler_monitor(PRL_HANDLE hEvent, void *data)
 		PrlVm *vm;
 
 		srv->get_vm_config(std::string(buf), &vm, false);
-		f.open_object();
+		f->open_object();
 		const char *e = evt2str(evt_type);
 		if (e)
-			f.add("event_type", e);
+			f->add("event_type", e);
 		else
-			f.add("event_type", evt_type);
-
-		f.open("vm_info");
-		vm->append_configuration(f);
-		f.close();
-		f.close_object();
+			f->add("event_type", evt_type);
+		f->open("vm_info");
+		vm->append_configuration(*f);
+		f->close();
+		f->close_object();
 	} else {
-		f.open_object();
+		f->open_object();
 		const char *e = evt2str(evt_type);
 		if (e)
-			f.add("event_type", e);
+			f->add("event_type", e);
 		else
-			f.add("event_type", evt_type);
-		f.open("vm_info");
-		f.add_uuid("ID", buf);
-		f.close();
-		f.close_object();
+			f->add("event_type", evt_type);
+		f->open("vm_info");
+		f->add_uuid("ID", buf);
+		f->close();
+		f->close_object();
 	}
 
-	fputs(f.get_buffer().c_str(), stdout);
+	fputs(f->get_buffer().c_str(), stdout);
 	fflush(stdout);
-	delete (&f);
 
 	return 0;
 }
