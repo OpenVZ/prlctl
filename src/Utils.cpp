@@ -2228,6 +2228,42 @@ static const RegisterDescriptionItem s_cpuid_80000008_EAX_items[] = {
 	TERMINATOR_ITEM
 };
 
+static const struct RegisterDescriptionItem s_cpuid_00000007_ECX_items[] = {
+	RESERVED_FLAG,                 /* 0 */
+	FLAG_ITEM("avx512vbmi"),       /* 1 */
+	FLAG_ITEM("umip"),             /* 2 */
+	FLAG_ITEM("pku"),              /* 3 */
+	FLAG_ITEM("ospke"),            /* 4 */
+	FLAG_ITEM("waitpkg"),          /* 5 */
+	FLAG_ITEM("avx512_vbmi2"),     /* 6 */
+	FLAG_ITEM("shstk"),            /* 7 */
+	FLAG_ITEM("gfni"),             /* 8 */
+	FLAG_ITEM("vaes"),             /* 9 */
+	FLAG_ITEM("vpclmulqdq"),       /* 10 */
+	FLAG_ITEM("avx512_vnni"),      /* 11 */
+	FLAG_ITEM("avx512_bitalg"),    /* 12 */
+	FLAG_ITEM("tme"),              /* 13 */
+	FLAG_ITEM("avx512_vpopcntdq"), /* 14 */
+	RESERVED_FLAG,                 /* 15 */
+	FLAG_ITEM("la57"),             /* 16 */
+	RESERVED_FLAG,                 /* 17 */
+	RESERVED_FLAG,                 /* 18 */
+	RESERVED_FLAG,                 /* 19 */
+	RESERVED_FLAG,                 /* 20 */
+	RESERVED_FLAG,                 /* 21 */
+	FLAG_ITEM("rdpid"),            /* 22 */
+	RESERVED_FLAG,                 /* 23 */
+	FLAG_ITEM("bus_lock_detect"),  /* 24 */
+	FLAG_ITEM("cldemote"),         /* 25 */
+	RESERVED_FLAG,                 /* 26 */
+	FLAG_ITEM("movdiri"),          /* 27 */
+	FLAG_ITEM("movdir64b"),        /* 28 */
+	FLAG_ITEM("enqcmd"),           /* 29 */
+	FLAG_ITEM("sgx_lc"),           /* 30 */
+	RESERVED_FLAG,                 /* 31 */
+	TERMINATOR_ITEM,
+};
+
 static const RegisterDescriptionItem s_cpuid_00000007_EDX_items[] = {
 	RESERVED_AREA(0, 8),
 	FLAG_ITEM("srbds_ctrl"),
@@ -2254,6 +2290,7 @@ static const RegisterDescriptionItem * const s_register_descriptions[PCFE_MAX] =
 	s_cpuid_80000007_EDX_items,
 	s_cpuid_80000008_EAX_items,
 	s_cpuid_0000000D_01_EAX_items,
+	s_cpuid_00000007_ECX_items,
 	s_cpuid_00000007_EDX_items,
 };
 
