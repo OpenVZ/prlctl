@@ -2,7 +2,7 @@ DEBUG=1
 
 VERSION ?= $(shell cat ../Makefile.version)
 CFLAGS += -DVERSION=\"$(VERSION)\"
-CFLAGS += $(if $(DEBUG),-g -O0 -DDEBUG,-O2) -std=c++11 -D_LIN_ -Wall -c \
+CFLAGS += $(if $(DEBUG),-g -O0 -DDEBUG,-O2) -std=c++14 -D_LIN_ -Wall -c \
 	-I/usr/include/prlsdk -I/usr/include/prlcommon
 LDFLAGS += $(if $(DEBUG),-g  -rdynamic,) -lprl_sdk -lprlcommon -lpthread
 
