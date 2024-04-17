@@ -4123,7 +4123,10 @@ CmdParamData cmdParam::get_vm(int argc, char **argv)
 		return get_param(argc, argv, VmStatusAction, no_options, 2);
 	} else if (!strcmp(argv[1], "reinstall")) {
 		return get_param(argc, argv, VmReinstallAction,
-                                    reinstall_options, 2);
+								reinstall_options, 2);
+	}
+	else if (!strcmp(argv[1], "ct2vm")) {
+		return get_param(argc, argv, CtConvertVm, no_options, 2);
 	} else if (!strcmp(argv[i], "monitor")) {
 		return get_param(argc, argv, VmMonitorAction, no_options, 2);
 	} else if (!strcmp(argv[i], "server")) {

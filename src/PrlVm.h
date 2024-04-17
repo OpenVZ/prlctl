@@ -263,6 +263,7 @@ public:
 	PRL_UINT32 get_chipset_version() const;
 	int set_chipset_version(const PRL_UINT32 version_);
 	const char *get_chipset_type_str() const;
+	int convertCT(const CmdParamData &param);
 
 private:
 	PrlDev *new_dev(PRL_HANDLE hDev, DevType type, unsigned int idx);

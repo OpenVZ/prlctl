@@ -629,6 +629,8 @@ int PrlSrv::run_action(const CmdParamData &param)
 		return vm->reinstall(param);
 	case VmInternalCmd:
 		return vm->internal_cmd(param.argv);
+	case CtConvertVm:
+		return vm->convertCT(param);
 	default:
 		return -1;
 	}

@@ -5126,6 +5126,29 @@ int PrlVm::reinstall(const CmdParamData &param)
 	return ret;
 }
 
+int PrlVm::convertCT(const CmdParamData &param)
+{
+	int ret = 0;
+	std::string err;
+	if (get_vm_type() != PVT_CT)
+	{
+		prl_err(ret, "Failed to convert VM to VM, converting is possible only for CT");
+		ret = -1;
+		return ret;
+	}
+
+	prl_log(0, "Converting CT into VM.");
+
+	PrlHandle hJob(PrlCt_Convert(m_hVm));
+	if ((ret = get_job_retcode(hJob.get_handle(), err)))
+		return prl_err(ret, "PrlCt_Convert: %s",
+				get_error_str(ret).c_str());
+
+	prl_log(0, "The CT has been successfully converted into VM.");
+
+	return ret;
+}
+
 int PrlVm::monitor()
 {
 	char c;
