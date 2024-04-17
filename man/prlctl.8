@@ -51,6 +51,8 @@ prlctl \fBresume\fR <\fIve_id\fR|\fIve_name\fR> [\fBOPTIONS\fR]
 .PP
 prlctl \fBrestart\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
+prlctl \fBct2vm\fR <\fICT_id\fR|\fICT_name\fR>
+.PP
 prlctl \fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>
 .PP
 prlctl \fBset\fR <\fIve_id\fR|\fIve_name\fR> [\fB--cpus\fR <\fIn\fR>] [\fB--cpu-sockets\fR <\fIn\fR>] [\fB--memsize\fR <\fIn\fR>] [\fB--videosize\fR <\fIn\fR>]
@@ -232,6 +234,8 @@ Unregister the specified virtual environment.
 Suspend the specified virtual environment.
 .IP "\fBresume\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Resume the specified virtual environment.
+.IP "\fBconvert\fR <\fICT_id\fR|\fICT_name\fR>" 4
+Convert the specified container to VM.
 .IP "\fBreset-uptime\fR <\fIve_id\fR|\fIve_name\fR>" 4
 Resets the specified virtual environment uptime counter (counter start date/time also will be reset with this action).
 .IP "\fBmount\fR <\fIve_id\fR|\fIve_name\fR> [{\fB-o\fR <\fIro\fR|\fIrw\fR> | \fB--info\fR}]" 4
